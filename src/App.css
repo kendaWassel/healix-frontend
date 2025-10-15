@@ -4,4 +4,7 @@
     --white: #fefefe;
     --card-border: #D9D9D9;
 }
+button{
+    cursor: pointer;
+}
 
