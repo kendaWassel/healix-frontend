@@ -1,108 +1,105 @@
-import { useState,useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./DoctorRegister.module.css";
 const DoctorRegister = () => {
-    const [passwordShown, setPasswordShown] = useState(false);
-    const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
-    const [checked,setChecked]=useState(false);
-    const [isLoading,setIsLoading]=useState(false);
-    const [error,setError]=useState();
-    const [successMsg,setSuccessMsg]=useState();
-    const [newUser, setNewUser] = useState({
-        role: "doctor",
-      full_name: "" ,
-      email: "",
-      doctor_image: "",
-      phone: "",
-      password: "" ,
-      specialization: "",
-      gender: "male",
-      from: "",
-      to: "",
-        consultation_fee: "",
-        certificate_file_id: "",
-    });
-    const inputRef = useRef(null);
-  
-    const handleSubmit =(e)=>{
-        e.preventDefault();
-    }
-    // const handleSubmit = (e) => {
-    //   e.preventDefault();
-    //   setError(null);
-    //   setSuccessMsg(null);
-    //   setIsLoading(true);
-  
-    //   if (newUser.pass.value !== newUser.confirmPass?.value) {
-    //     setError("Passwords do not match");
-    //     return;
-    //   }
-  
-    //   const user = {
-    //     name: { value: newUser.name.value },
-    //     mail: { value: newUser.email.value },
-    //     field_name: { value: newUser.firstName.value || "Unknown" },
-    //     field_surname: { value: newUser.lastName.value || "Unknown" },
-    //     field_mobile: { value: newUser.mobile.value || "96300000000" },
-    //     field_gender: { target_id: newUser.gender.target_id || "9" },
-    //     pass: { value: newUser.pass.value },
-    //   };
-  
-  
-    //   fetch(`https://api/user/registerpass?_format=json`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(user),
-    //   })
-    //     .then((response) => {
-    //       if (!response.ok) {
-    //         return response.json().then((serverError) => {
-    //           throw new Error(serverError.message || "Registration failed");
-    //         });
-    //       }
-    //       return response.json();
-    //     })
-    //     .then((data) => {
-    //       setSuccessMsg("Check your email for Activation link");
-    //       setNewUser({
-    //         role: "doctor",
-    //   full_name: "" ,
-    //   email: "",
-    //   doctor_image: "",
-    //   phone: "",
-    //   password: "" ,
-    //   specialization: "",
-    //   gender: "male",
-    //     working_hours: "",
-    //     certificate_file: "",
-// }
-    //       )
-  
-    //       setTimeout(()=>{
-    //         navigate('/signin');
-    //     }, 2000)
-    //     })
-    //     .catch((error) => {
-    //       setError(error.message || "Failed to create user. Please try again.");
-    //     }).finally(()=>{
-    //       setIsLoading(false)
-    //     })
-    //     ;
-    // };
- 
-    useEffect(()=>{
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const [successMsg, setSuccessMsg] = useState();
+  const [newUser, setNewUser] = useState({
+    role: "doctor",
+    full_name: "",
+    email: "",
+    doctor_image_id: null,
+    phone: "",
+    password: "",
+    specialization: "",
+    gender: "",
+    from: "",
+    to: "",
+    consultation_fee: null,
+    certificate_file_id: null,
+  });
+  const inputRef = useRef(null);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setError(null);
+  //   setSuccessMsg(null);
+  //   setIsLoading(true);
+
+  //   if (newUser.pass.value !== newUser.confirmPass?.value) {
+  //     setError("Passwords do not match");
+  //     return;
+  //   }
+
+  //   const user = {
+  //     name: { value: newUser.name.value },
+  //     mail: { value: newUser.email.value },
+  //     field_name: { value: newUser.firstName.value || "Unknown" },
+  //     field_surname: { value: newUser.lastName.value || "Unknown" },
+  //     field_mobile: { value: newUser.mobile.value || "96300000000" },
+  //     field_gender: { target_id: newUser.gender.target_id || "9" },
+  //     pass: { value: newUser.pass.value },
+  //   };
+
+  //   fetch(`https://api/user/registerpass?_format=json`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(user),
+  //   })
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         return response.json().then((serverError) => {
+  //           throw new Error(serverError.message || "Registration failed");
+  //         });
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setSuccessMsg("Check your email for Activation link");
+  //       setNewUser({
+  //         role: "doctor",
+  //   full_name: "" ,
+  //   email: "",
+  //   doctor_image: "",
+  //   phone: "",
+  //   password: "" ,
+  //   specialization: "",
+  //   gender: "male",
+  //     working_hours: "",
+  //     certificate_file: "",
+  // }
+  //       )
+
+  //       setTimeout(()=>{
+  //         navigate('/signin');
+  //     }, 2000)
+  //     })
+  //     .catch((error) => {
+  //       setError(error.message || "Failed to create user. Please try again.");
+  //     }).finally(()=>{
+  //       setIsLoading(false)
+  //     })
+  //     ;
+  // };
+
+  useEffect(() => {
     inputRef.current.focus();
+  }, []);
 
-  },[]);
-
-//     useEffect(()=>{
-//     inputRef.current.focus();
-//     if(userData.isAuthorized) {
-//       navigate('/logged');
-//     }
-//   },[navigate]);
+  //     useEffect(()=>{
+  //     inputRef.current.focus();
+  //     if(userData.isAuthorized) {
+  //       navigate('/logged');
+  //     }
+  //   },[navigate]);
 
   return (
     <div className="flex">
@@ -130,69 +127,116 @@ const DoctorRegister = () => {
                 Fill your information to register
               </p>
             </div>
-            {error ? 
-                  <div className="alert alert-danger">
-                    {error}
-                  </div>
-                  : 
-                  ""
-            }
-            {successMsg ? 
-                  <div className="alert alert-success">
-                    {successMsg}
-                  </div>
-                  : 
-                  ""
-            }
-            <form className={`${styles.form}`} onSubmit={handleSubmit}>   
-                {/* name  and phone*/}
+            {error ? <div className="alert alert-danger">{error}</div> : ""}
+            {successMsg ? (
+              <div className="alert alert-success">{successMsg}</div>
+            ) : (
+              ""
+            )}
+            <form className={`${styles.form}`} onSubmit={handleSubmit}>
+              {/* photo */}
+              <div>
+                <label htmlFor="photo">
+                  <svg
+                    width="47"
+                    height="42"
+                    viewBox="0 0 47 42"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M39.5413 12.0416V7.45825H34.958V5.16659H39.5413V0.583252H41.833V5.16659H46.4163V7.45825H41.833V12.0416H39.5413ZM21.208 34.3395C23.602 34.3395 25.6256 33.5137 27.2786 31.8622C28.9317 30.2107 29.7582 28.1871 29.7582 25.7916C29.7582 23.396 28.9317 21.3725 27.2786 19.721C25.6256 18.0694 23.602 17.2429 21.208 17.2414C18.814 17.2398 16.7904 18.0664 15.1374 19.721C13.4843 21.3755 12.6578 23.3991 12.6578 25.7916C12.6578 28.1841 13.4843 30.2076 15.1374 31.8622C16.7904 33.5168 18.814 34.3433 21.208 34.3418M21.208 32.0501C19.4282 32.0501 17.9401 31.452 16.7438 30.2558C15.5476 29.0595 14.9495 27.5714 14.9495 25.7916C14.9495 24.0117 15.5476 22.5237 16.7438 21.3274C17.9401 20.1312 19.4282 19.533 21.208 19.533C22.9879 19.533 24.4759 20.1312 25.6722 21.3274C26.8684 22.5237 27.4666 24.0117 27.4666 25.7916C27.4666 27.5714 26.8684 29.0595 25.6722 30.2558C24.4759 31.452 22.9879 32.0501 21.208 32.0501ZM4.28634 41.8333C3.23065 41.8333 2.34988 41.4803 1.64405 40.7745C0.938216 40.0687 0.584536 39.1871 0.583008 38.1299V13.4533C0.583008 12.3976 0.936689 11.5168 1.64405 10.811C2.35141 10.1051 3.23217 9.75145 4.28634 9.74992H11.0628L15.3024 5.16659H29.4947V12.9239H34.078V17.5072H41.833V38.1322C41.833 39.1864 41.4801 40.0671 40.7743 40.7745C40.0684 41.4819 39.1869 41.8348 38.1297 41.8333H4.28634Z"
+                      fill="#39CCCC"
+                    />
+                  </svg>
+                  <h3 className="text-[var(--text-color)]">Add Photo</h3>
+                </label>
+                <input
+                  type="file"
+                  name="photo"
+                  id="d-photo"
+                  onChange={(e) =>
+                    setNewUser({
+                      ...newUser,
+                      doctor_image: e.target.files[0],
+                    })
+                  }
+                  disabled={isLoading}
+                />
+              </div>
+              {/* name  and phone*/}
+              <div>
                 <div>
-                    <div>
-                        <label htmlFor="name">                      
-<svg width="33" height="34" viewBox="0 0 33 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path opacity="0.4" d="M16.1567 33.1567C25.0798 33.1567 32.3135 25.9232 32.3135 17C32.3135 8.07687 25.0798 0.843262 16.1567 0.843262C7.23361 0.843262 0 8.07687 0 17C0 25.9232 7.23361 33.1567 16.1567 33.1567Z" fill="#39CCCC"/>
-<path d="M16.1564 8.80859C12.812 8.80859 10.0977 11.5229 10.0977 14.8673C10.0977 18.1471 12.6666 20.813 16.0756 20.9099C16.1241 20.9099 16.1887 20.9099 16.2211 20.9099C16.2534 20.9099 16.3018 20.9099 16.3342 20.9099C16.3503 20.9099 16.3665 20.9099 16.3665 20.9099C19.6301 20.7968 22.199 18.1471 22.2152 14.8673C22.2152 11.5229 19.5009 8.80859 16.1564 8.80859Z" fill="#39CCCC"/>
-<path d="M27.1126 28.8754C24.2367 31.5251 20.3914 33.1569 16.1584 33.1569C11.9253 33.1569 8.08 31.5251 5.2041 28.8754C5.59186 27.4051 6.64205 26.0641 8.17694 25.0301C12.5877 22.0896 19.7613 22.0896 24.1398 25.0301C25.6908 26.0641 26.7249 27.4051 27.1126 28.8754Z" fill="#39CCCC"/>
-</svg>
-                        </label>
-                        <input 
-                        type="text" 
-                        name="name" 
-                        id="name" 
-                        ref={inputRef}
-                        value={newUser.full_name}
-                        placeholder="Type full name"
-                        onChange={(e)=>
-                        setNewUser({
-                            ...newUser,
-                            full_name: e.target.value
-                        })
-                        }
-                        disabled={isLoading}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="phone">                      
-                        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M27.2423 21.6183L23.644 21.2075C23.2209 21.1578 22.792 21.2046 22.3896 21.3445C21.9872 21.4844 21.6217 21.7136 21.3206 22.015L18.714 24.6217C14.6926 22.5759 11.4239 19.3072 9.37815 15.2858L11.999 12.665C12.6081 12.0558 12.9056 11.2058 12.8065 10.3417L12.3956 6.77166C12.3156 6.08046 11.9841 5.44286 11.4641 4.98042C10.9442 4.51798 10.2723 4.26303 9.57648 4.26416H7.12565C5.52481 4.26416 4.19315 5.59583 4.29231 7.19666C5.04315 19.295 14.719 28.9567 26.8031 29.7075C28.404 29.8067 29.7356 28.475 29.7356 26.8742V24.4233C29.7498 22.9925 28.6731 21.7883 27.2423 21.6183Z" fill="#39CCCC"/>
-</svg>
-                        </label>
-                        <input 
-                        type="tel" 
-                        name="phone" 
-                        id="phone" 
-                        value={newUser.phone}
-                        placeholder="Type phone number"
-                        onChange={(e)=>
-                        setNewUser({
-                            ...newUser,
-                            phone: e.target.value
-                        })
-                        }
-                        disabled={isLoading}
-                        />
-                    </div>
+                  <label htmlFor="name">
+                    <svg
+                      width="33"
+                      height="34"
+                      viewBox="0 0 33 34"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        opacity="0.4"
+                        d="M16.1567 33.1567C25.0798 33.1567 32.3135 25.9232 32.3135 17C32.3135 8.07687 25.0798 0.843262 16.1567 0.843262C7.23361 0.843262 0 8.07687 0 17C0 25.9232 7.23361 33.1567 16.1567 33.1567Z"
+                        fill="#39CCCC"
+                      />
+                      <path
+                        d="M16.1564 8.80859C12.812 8.80859 10.0977 11.5229 10.0977 14.8673C10.0977 18.1471 12.6666 20.813 16.0756 20.9099C16.1241 20.9099 16.1887 20.9099 16.2211 20.9099C16.2534 20.9099 16.3018 20.9099 16.3342 20.9099C16.3503 20.9099 16.3665 20.9099 16.3665 20.9099C19.6301 20.7968 22.199 18.1471 22.2152 14.8673C22.2152 11.5229 19.5009 8.80859 16.1564 8.80859Z"
+                        fill="#39CCCC"
+                      />
+                      <path
+                        d="M27.1126 28.8754C24.2367 31.5251 20.3914 33.1569 16.1584 33.1569C11.9253 33.1569 8.08 31.5251 5.2041 28.8754C5.59186 27.4051 6.64205 26.0641 8.17694 25.0301C12.5877 22.0896 19.7613 22.0896 24.1398 25.0301C25.6908 26.0641 26.7249 27.4051 27.1126 28.8754Z"
+                        fill="#39CCCC"
+                      />
+                    </svg>
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    ref={inputRef}
+                    value={newUser.full_name}
+                    placeholder="Type full name"
+                    onChange={(e) =>
+                      setNewUser({
+                        ...newUser,
+                        full_name: e.target.value,
+                      })
+                    }
+                    disabled={isLoading}
+                  />
                 </div>
+                <div>
+                  <label htmlFor="phone">
+                    <svg
+                      width="34"
+                      height="34"
+                      viewBox="0 0 34 34"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M27.2423 21.6183L23.644 21.2075C23.2209 21.1578 22.792 21.2046 22.3896 21.3445C21.9872 21.4844 21.6217 21.7136 21.3206 22.015L18.714 24.6217C14.6926 22.5759 11.4239 19.3072 9.37815 15.2858L11.999 12.665C12.6081 12.0558 12.9056 11.2058 12.8065 10.3417L12.3956 6.77166C12.3156 6.08046 11.9841 5.44286 11.4641 4.98042C10.9442 4.51798 10.2723 4.26303 9.57648 4.26416H7.12565C5.52481 4.26416 4.19315 5.59583 4.29231 7.19666C5.04315 19.295 14.719 28.9567 26.8031 29.7075C28.404 29.8067 29.7356 28.475 29.7356 26.8742V24.4233C29.7498 22.9925 28.6731 21.7883 27.2423 21.6183Z"
+                        fill="#39CCCC"
+                      />
+                    </svg>
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={newUser.phone}
+                    placeholder="Type phone number"
+                    onChange={(e) =>
+                      setNewUser({
+                        ...newUser,
+                        phone: e.target.value,
+                      })
+                    }
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
             </form>
           </div>
         </div>
