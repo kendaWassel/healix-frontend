@@ -2,13 +2,14 @@ import LandingPage from "./pages/landingPage/LandingPage";
 import { Routes } from "react-router";
 import DoctorRegister from "./pages/registers/doctorRegister/DoctorRegister";
 import "./App.css";
+import PatientRegister from "./pages/registers/patientRegister/PatientRegister";
 
-function App() {
+export default function App() {
   return (
     <>
-      <DoctorRegister />
+      <PatientRegister />
     </>
   );
 }
 
-export default App;
+
