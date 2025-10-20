@@ -8,7 +8,7 @@ import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-s
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -44,29 +44,30 @@ function Login() {
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-           <FontAwesomeIcon icon={faEnvelope} className={styles.icon} />
+           <FontAwesomeIcon icon={faEnvelope} className="icon" />
           <input
             type="email"
             placeholder="Type email"
             value={email}
             onChange={(e) => setEmail(e.target.value)} 
-            required/>
+            required
             disabled={isLoading}
+            />
             {/* {accept && EmailError===422 &&<p className="Error">Email is already taken</p>} */}
         </div>
 
         <div className="input-group">
-          <FontAwesomeIcon icon={faLock} className={styles.icon} />
+          <FontAwesomeIcon icon={faLock} className="icon" />
           <input
             type="password"
             placeholder="Type Password.."
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={isLoading}
           />
-           disabled={isLoading}
            {/* {password.length<8 && accept && <p className="Error">password must be more than 8 characters</p>} */}
-           <FontAwesomeIcon icon={faEye-faEyeSlash} className={styles.icon} />
+           <FontAwesomeIcon icon={faEye-faEyeSlash} className="icon" />
         </div>
 
         <button type="submit" className="btn">
