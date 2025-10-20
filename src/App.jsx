@@ -9,6 +9,16 @@ function App() {
   return (
     <>
         <FormPage/>
+import "./App.css";
+import PatientRegister from "./pages/registers/patientRegister/PatientRegister";
+import DeliveryRegister from "./pages/registers/dileveryRegister/DileveryRegister";
+export default function App() {
+  return (
+    <>
+  
+    <DeliveryRegister/>
+  
+     
     </>
   )
 }
