@@ -2,10 +2,31 @@
     --cyan: #39CCCC;
     --dark-blue: #052443;
     --white: #fefefe;
-    --card-border: #D9D9D9;
+    --card-border: #A1A1A1;
     --text-color: #767676;
+    width: 100%;
+}
+body{
+    margin: 0 !important;
 }
 button{
     cursor: pointer;
 }
+input:focus,select:focus{
+    border: none;
+    outline: none;
+}
+.floatedDiv{
+    width: 50%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+  .contentCol{
+    flex: 0 0 auto;
+    width: 50%;
+    margin-right: auto !important;
+  }
 

@@ -44,18 +44,18 @@ function Login() {
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-           <i class="fas fa-envelope"></i>
+           <i className="fas fa-envelope"></i>
           <input
             type="email"
             placeholder="Type email"
             value={email}
             onChange={(e) => setEmail(e.target.value)} 
             required/>
-            {accept && EmailError===422 &&<p className="Error">Email is already taken</p>}
+            {/* {accept && EmailError===422 &&<p className="Error">Email is already taken</p>} */}
         </div>
 
         <div className="input-group">
-         <i class="fas fa-lock"></i>
+         <i className="fas fa-lock"></i>
           <input
             type="password"
             placeholder="Type Password.."
@@ -63,8 +63,8 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-           {password.length<8 && accept && <p className="Error">password must be more than 8 characters</p>}
-          <i class="ri-eye-off-line eye-icon" id="togglePassword"></i>
+           {/* {password.length<8 && accept && <p className="Error">password must be more than 8 characters</p>} */}
+          <i className="ri-eye-off-line eye-icon" id="togglePassword"></i>
         </div>
 
         <button type="submit" className="btn">

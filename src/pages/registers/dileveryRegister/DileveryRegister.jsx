@@ -14,6 +14,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 
 export default function DeliveryRegister() {
+  const [passwordShown, setPasswordShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
@@ -26,11 +27,11 @@ export default function DeliveryRegister() {
     full_name: "",
     email: "",
     phone: "",
+    delivery_image_id:"",
     password: "",
-    password_confirmation: "",
     vehicle_type: "",
     plate_number: "",
-    bank_account: "",
+    driving_license_id:"",
   });
 
   useEffect(() => {
@@ -72,10 +73,11 @@ export default function DeliveryRegister() {
           full_name: "",
           email: "",
           phone: "",
+          delivery_image_id:"",
           password: "",
           vehicle_type: "",
           plate_number: "",
-          bank_account: "",
+          driving_license_id:"",
         });
       })
       .catch((err) => {
@@ -176,7 +178,7 @@ export default function DeliveryRegister() {
           <FontAwesomeIcon icon={faLock} className={styles.icon} />
           <input
             id="password"
-            type="password"
+            type={passwordShown ? "text" : "password"}
             placeholder="Type password..."
             value={newUser.password}
             onChange={(e) =>
@@ -237,7 +239,10 @@ export default function DeliveryRegister() {
             type="file"
             className={styles.fileInput}
             accept=".pdf,.jpg,.jpeg,.png"
-            onChange={handleFileChange}
+            onChange={(e) => {
+              handleFileChange(e);
+              setNewUser({ ...newUser, driving_license_id: e.target.files[0] });
+            }}
           />
         </div>
 
