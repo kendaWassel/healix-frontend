@@ -38,24 +38,25 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h2>Log <span className="highlight">in</span>/
+      <h2>Log <span className="highlight">in</span>
       </h2>
       <p>Enter your credential to login</p>
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-           <i className="fas fa-envelope"></i>
+           <FontAwesomeIcon icon={faEnvelope} className={styles.icon} />
           <input
             type="email"
             placeholder="Type email"
             value={email}
             onChange={(e) => setEmail(e.target.value)} 
             required/>
+            disabled={isLoading}
             {/* {accept && EmailError===422 &&<p className="Error">Email is already taken</p>} */}
         </div>
 
         <div className="input-group">
-         <i className="fas fa-lock"></i>
+          <FontAwesomeIcon icon={faLock} className={styles.icon} />
           <input
             type="password"
             placeholder="Type Password.."
@@ -63,8 +64,9 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+           disabled={isLoading}
            {/* {password.length<8 && accept && <p className="Error">password must be more than 8 characters</p>} */}
-          <i className="ri-eye-off-line eye-icon" id="togglePassword"></i>
+           <FontAwesomeIcon icon={faEye-faEyeSlash} className={styles.icon} />
         </div>
 
         <button type="submit" className="btn">
