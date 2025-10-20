@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function PatientRegister() {
+  const [passwordShown, setPasswordShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
@@ -27,11 +28,11 @@ export default function PatientRegister() {
     email: "",
     phone: "",
     password: "",
-    password_confirmation: "",
-    age: "",
+    birth_date:"",
     gender: "",
-    medical_history: "",
     address: "",
+    latitude: null, 
+    longitude: null ,
   });
 
   useEffect(() => {
@@ -69,11 +70,11 @@ export default function PatientRegister() {
           email: "",
           phone: "",
           password: "",
-          password_confirmation: "",
-          age: "",
+          birth_date:"",
           gender: "",
-          medical_history: "",
           address: "",
+          latitude: null, 
+          longitude: null ,
         });
       })
       .catch((err) => {
@@ -131,10 +132,10 @@ export default function PatientRegister() {
         <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
           <FontAwesomeIcon icon={faCakeCandles} className={styles.icon} />
           <input
-            id="age"
+            id="birth_date"
             type="date"
-            value={newUser.age}
-            onChange={(e) => setNewUser({ ...newUser, age: e.target.value })}
+            value={newUser.birth_date}
+            onChange={(e) => setNewUser({ ...newUser, birth_date: e.target.value })}
             required
             disabled={isLoading}
           />
@@ -159,7 +160,7 @@ export default function PatientRegister() {
           <FontAwesomeIcon icon={faLock} className={styles.icon} />
           <input
             id="password"
-            type="password"
+            type={passwordShown ? "text" : "password"}
             placeholder="Type password..."
             value={newUser.password}
             onChange={(e) =>
@@ -168,6 +169,7 @@ export default function PatientRegister() {
             required
             disabled={isLoading}
           />
+  
         </div>
 
         <div

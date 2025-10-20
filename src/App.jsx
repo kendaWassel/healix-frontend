@@ -7,7 +7,8 @@ import DeliveryRegister from "./pages/registers/dileveryRegister/DileveryRegiste
 export default function App() {
   return (
     <>
-      <DeliveryRegister />
+  
+    <DeliveryRegister/>
   
      
     </>
