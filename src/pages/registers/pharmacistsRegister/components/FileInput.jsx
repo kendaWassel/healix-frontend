@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Upload } from "lucide-react";
-import './InputField.css';
+import './InputField.module.css';
 
 const FileInput = ({ placeholder }) => {
   const inputRef = useRef();

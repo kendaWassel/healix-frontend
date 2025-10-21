@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import "./style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import styles from "./AdminLogin.module.css"; 
 
 
 
-function Login() {
-  const [email, setEmail] = useState("");
+const AdminLogin = () => {
+    const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = (e) => {
@@ -37,14 +37,14 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h2>Log <span className="highlight">in</span>
+    <div className={`${styles.loginContainer}`}>
+      <h2>Log <span className={`${styles.highlight}`}>in</span>
       </h2>
       <p>Enter your credential to login</p>
 
       <form onSubmit={handleSubmit}>
-        <div className="input-group">
-           <FontAwesomeIcon icon={faEnvelope} className="icon" />
+        <div className={`${styles.inputGroup}`}>
+           <FontAwesomeIcon icon={faEnvelope} className={`${styles.icon}`} />
           <input
             type="email"
             placeholder="Type email"
@@ -56,8 +56,8 @@ function Login() {
             {/* {accept && EmailError===422 &&<p className="Error">Email is already taken</p>} */}
         </div>
 
-        <div className="input-group">
-          <FontAwesomeIcon icon={faLock} className="icon" />
+        <div className={`${styles.inputGroup}`}>
+          <FontAwesomeIcon icon={faLock} className={`${styles.icon}`} />
           <input
             type="password"
             placeholder="Type Password.."
@@ -67,23 +67,19 @@ function Login() {
             disabled={isLoading}
           />
            {/* {password.length<8 && accept && <p className="Error">password must be more than 8 characters</p>} */}
-           <FontAwesomeIcon icon={faEye-faEyeSlash} className="icon" />
+           <FontAwesomeIcon icon={faEye-faEyeSlash} className={`${styles.icon}`} />
         </div>
 
-        <button type="submit" className="btn">
+        <button type="submit" className={`${styles.btn}`}>
           Sign in
         </button>
       </form>
 
-      <p className="register-text">
+      <p className={`${styles.registerText}`}>
         Don’t have an account yet? <a href="#">Register</a>
       </p>
     </div>
-  );
+  )
 }
-export default Login;
 
-
-
-
-
+export default AdminLogin

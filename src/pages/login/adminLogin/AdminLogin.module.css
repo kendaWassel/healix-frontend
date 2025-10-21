@@ -1,14 +1,4 @@
-body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to right, #e0eafc, #cfdef3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-}
-
-.login-container {
+.loginContainer{
     background: #fff;
     padding: 55px;
     border-radius: 15px;
@@ -17,29 +7,25 @@ body {
     width: 100%;
     text-align: center;
     box-sizing: border-box;
-   
-
 }
-
-h2 {
+.loginContainer h2{
     margin-bottom: 10px;
     text-align: center;
     font-size: 26px;
     font-weight: 600;
     color: #1a2b49;
 }
-.highlight {
-  color: #39CCCC ;
-}
-p {
+.loginContainer p{
     text-align: center;
     color: #767676;
     font-size: 16px;
     margin-bottom: 20px;
     margin-top: 1px;
 }
-
-.input-group {
+.highlight{
+    color: #39CCCC ;
+}
+.inputGroup{
     margin: 15px 0;
     position: relative;
     display: flex;
@@ -49,8 +35,7 @@ p {
     margin-right: 0;
     border: 1px solid #ccc;
 }
-
-.input-group input {
+.inputGroup input{
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -60,19 +45,16 @@ p {
     flex: 1;
     border: 1px solid #ccc;
 }
-
-.eye-icon {
-  cursor: pointer;
-  color: #767676;
-  font-size: 18px;
-}
-
-
-.input-group input:focus {
+.inputGroup input:focus{
     border-color: #0066cc;
 }
+.icon{
 
-.btn {
+}
+.inputGroup{
+
+}
+.btn{
     width: 100%;
     padding: 10px;
     background:#052443;
@@ -82,28 +64,18 @@ p {
     font-size: 16px;
     cursor: pointer;
 }
-
-.btn:hover {
+.btn:hover{
     background: #004b8a;
 }
-
-.register-text {
+.registerText{
     margin-top: 20px;
     font-size: 13px;
     color: #767676;
 }
-
-.register-text a {
+.registerText a{
     color:  #39CCCC;
     text-decoration: none;
 }
-
-.register-text a:hover {
+.registerText a:hover{
     text-decoration: underline;
-}
-
-.error {
-  color: red;
-  font-size: 12px;
-  margin-bottom: 6px;
 }
