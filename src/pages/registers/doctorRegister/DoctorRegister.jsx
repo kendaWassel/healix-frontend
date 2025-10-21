@@ -12,7 +12,7 @@ const DoctorRegister = () => {
     role: "doctor",
     full_name: "",
     email: "",
-    doctor_image: null,
+    doctor_image_id: null,
     phone: "",
     password: "",
     specialization: "",
@@ -20,78 +20,109 @@ const DoctorRegister = () => {
     from: "",
     to: "",
     consultation_fee: null,
-    certificate_file: null,
+    certificate_file_id: null,
   });
+  const [photoFile, setPhotoFile] = useState(null);
+  const [certificateFile, setCertificateFile] = useState(null);
   const [certificateFileName, setCertificateFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
   // const handleSubmit = (e) => {
   //   e.preventDefault();
-  //   setError(null);
-  //   setSuccessMsg(null);
-  //   setIsLoading(true);
-
-  //   if (newUser.pass.value !== newUser.confirmPass?.value) {
-  //     setError("Passwords do not match");
-  //     return;
-  //   }
-
-  //   const user = {
-  //     name: { value: newUser.name.value },
-  //     mail: { value: newUser.email.value },
-  //     field_name: { value: newUser.firstName.value || "Unknown" },
-  //     field_surname: { value: newUser.lastName.value || "Unknown" },
-  //     field_mobile: { value: newUser.mobile.value || "96300000000" },
-  //     field_gender: { target_id: newUser.gender.target_id || "9" },
-  //     pass: { value: newUser.pass.value },
-  //   };
-
-  //   fetch(`https://api/user/registerpass?_format=json`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(user),
-  //   })
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         return response.json().then((serverError) => {
-  //           throw new Error(serverError.message || "Registration failed");
-  //         });
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setSuccessMsg("Check your email for Activation link");
-  //       setNewUser({
-  //         role: "doctor",
-  //   full_name: "" ,
-  //   email: "",
-  //   doctor_image: "",
-  //   phone: "",
-  //   password: "" ,
-  //   specialization: "",
-  //   gender: "male",
-  //     working_hours: "",
-  //     certificate_file: "",
-  // }
-  //       )
-
-  //       setTimeout(()=>{
-  //         navigate('/signin');
-  //     }, 2000)
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message || "Failed to create user. Please try again.");
-  //     }).finally(()=>{
-  //       setIsLoading(false)
-  //     })
-  //     ;
   // };
+
+  const uploadImage = async (photoFile) => {
+    console.log("uploading image: ", photoFile);
+
+    const response = await fetch("http://127.0.0.1:8000/api/uploads/image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: {
+        image: photoFile,
+        category: "profile",
+      },
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || "Image upload failed");
+    }
+    const data = await response.json();
+    console.log("image uploaded: ", data);
+    return data.image_id;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccessMsg(null);
+    setIsLoading(true);
+
+    // const imageId = await uploadImage(photoFile);
+
+    // setNewUser({ ...newUser, doctor_image_id: imageId });
+
+    const user = {
+      role: newUser.role,
+      full_name: newUser.full_name,
+      email: newUser.email,
+      doctor_image_id: newUser.doctor_image_id,
+      phone: newUser.phone,
+      password: newUser.password,
+      specialization: ["Dermatology"],
+      gender: newUser.gender,
+      from: newUser.from,
+      to: newUser.to,
+      consultation_fee: newUser.consultation_fee,
+      certificate_file_id: newUser.certificate_file_id,
+    };
+
+    console.log("user's data: ", user);
+
+    fetch(`http://127.0.0.1:8000/api/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((serverError) => {
+            throw new Error(serverError.message || "Registration failed");
+          });
+        }
+        console.log("success sending user's data ");
+        return response.json();
+      })
+      .then((data) => {
+        console.log("message from api: ", data.message);
+        setSuccessMsg("Check your email for Activation link");
+        setNewUser({
+          role: "doctor",
+          full_name: "",
+          email: "",
+          doctor_image_id: null,
+          phone: "",
+          password: "",
+          specialization: "",
+          gender: "",
+          from: "",
+          to: "",
+          consultation_fee: null,
+          certificate_file_id: null,
+        });
+      })
+      .catch((error) => {
+        setError(error.message || "Failed to create user. Please try again.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   useEffect(() => {
     inputRef.current.focus();
@@ -190,10 +221,7 @@ const DoctorRegister = () => {
                       };
                       reader.readAsDataURL(file);
                     }
-                    setNewUser({
-                      ...newUser,
-                      doctor_image: file,
-                    });
+                    setPhotoFile(file);
                   }}
                   disabled={isLoading}
                 />
@@ -403,8 +431,8 @@ const DoctorRegister = () => {
                     </svg>
                   </label>
                   <input
-                  name="d-pass"
-                  id="d-pass"
+                    name="d-pass"
+                    id="d-pass"
                     type={passwordShown ? "text" : "password"}
                     placeholder="Type Password..."
                     value={newUser.password}
@@ -469,7 +497,6 @@ const DoctorRegister = () => {
                         certificate_file: file,
                       });
                     }}
-                    required
                     disabled={isLoading}
                   />
                 </div>
@@ -587,16 +614,17 @@ const DoctorRegister = () => {
                 type="submit"
                 className="rounded-[8px] p-[2rem] bg-[var(--dark-blue)] text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed shadow-[0px_3px_8px_#2d2d2de3] duration-200 hover:bg-[#0a3460]"
                 disabled={
-                  newUser.full_name.length < 4 ||
-                  newUser.email.length < 10 ||
-                  newUser.phone.length < 10 ||
-                  newUser.password.length < 10 ||
-                  newUser.specialization === "" ||
-                  newUser.gender === "" ||
-                  newUser.from === "" ||
-                  newUser.to === "" ||
-                  newUser.consultation_fee === null ||
-                  newUser.certificate_file === null ||
+                  // newUser.full_name.length < 4 ||
+                  // newUser.email.length < 10 ||
+                  // newUser.phone.length < 10 ||
+                  // newUser.password.length < 6 ||
+                  // newUser.specialization === "" ||
+                  // newUser.gender === "" ||
+                  // newUser.from === "" ||
+                  // newUser.to === "" ||
+                  // newUser.consultation_fee === null ||
+                  // newUser.doctor_image_id=== null||
+                  // newUser.certificate_file_id === null ||
                   isLoading
                 }
               >
