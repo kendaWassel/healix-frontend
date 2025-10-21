@@ -1,16 +1,16 @@
 import React from "react";
-import "./InputField.css";
+import styles from "./InputField.module.css";
 
 const InputField = ({ icon: Icon, placeholder, type = "text", extraIcon: ExtraIcon }) => {
   return (
-    <div className="input-field">
-      {Icon && <Icon className="icon" />}
+    <div className={`${styles.inputField}`}>
+      {Icon && <Icon className={`${styles.icon}`} />}
       <input
         type={type}
         placeholder={placeholder}
-        className="input"
+        className={`${styles.input}`}
       />
-      {ExtraIcon && <ExtraIcon className="icon extra-icon" />}
+      {ExtraIcon && <ExtraIcon className={`${styles.icon} ${styles.extraIcon}`} />}
     </div>
   );
 };

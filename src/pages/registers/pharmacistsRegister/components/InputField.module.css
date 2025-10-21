@@ -1,0 +1,55 @@
+.inputField {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff;
+    border: 1.5px solid #ccc;
+    border-radius: 12px;
+    padding: 10px 14px;
+    width: 95%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease;
+  }
+  
+  .inputField:focus-within {
+    border-color: aqua;
+  }
+  
+  .filePlaceholder {
+    color: #828181;
+    font-size: 15px;
+  }
+  
+  .filePlaceholder.has-file {
+    color: #333;
+  }
+  
+  
+  .icon {
+    width: 20px;
+    height: 20px;
+      color: aqua; 
+  }
+  
+  .eyeIcon {
+    color: #545454;
+    cursor: pointer;
+  }
+  
+  .input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: #333;
+    background-color: transparent;
+  }
+  
+  .extraIcon {
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  
+  .extraIcon:hover {
+    opacity: 0.7;
+  }
