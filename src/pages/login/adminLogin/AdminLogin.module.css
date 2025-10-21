@@ -1,0 +1,81 @@
+.loginContainer{
+    background: #fff;
+    padding: 55px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+.loginContainer h2{
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    color: #1a2b49;
+}
+.loginContainer p{
+    text-align: center;
+    color: #767676;
+    font-size: 16px;
+    margin-bottom: 20px;
+    margin-top: 1px;
+}
+.highlight{
+    color: #39CCCC ;
+}
+.inputGroup{
+    margin: 15px 0;
+    position: relative;
+    display: flex;
+    padding: 10px 12px;
+    border-radius: 11px;
+    margin-left: 10px;
+    margin-right: 0;
+    border: 1px solid #ccc;
+}
+.inputGroup input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 11px;
+    outline: none;
+    font-size: 16px;
+    flex: 1;
+    border: 1px solid #ccc;
+}
+.inputGroup input:focus{
+    border-color: #0066cc;
+}
+.icon{
+
+}
+.inputGroup{
+
+}
+.btn{
+    width: 100%;
+    padding: 10px;
+    background:#052443;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.btn:hover{
+    background: #004b8a;
+}
+.registerText{
+    margin-top: 20px;
+    font-size: 13px;
+    color: #767676;
+}
+.registerText a{
+    color:  #39CCCC;
+    text-decoration: none;
+}
+.registerText a:hover{
+    text-decoration: underline;
+}

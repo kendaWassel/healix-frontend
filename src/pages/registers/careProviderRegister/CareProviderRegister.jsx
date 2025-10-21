@@ -2,8 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
 import LogoImage from "../../../components/logoImage/LogoImage";
-import styles from "./DoctorRegister.module.css";
-const DoctorRegister = () => {
+import styles from "../doctorRegister/DoctorRegister.module.css";
+const CareProviderRegister = () => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
@@ -12,15 +12,13 @@ const DoctorRegister = () => {
     role: "doctor",
     full_name: "",
     email: "",
-    doctor_image: null,
     phone: "",
+    care_provider_image: null,
     password: "",
-    specialization: "",
+    type: "",
     gender: "",
-    from: "",
-    to: "",
-    consultation_fee: null,
-    certificate_file: null,
+    license_file: null,
+    session_fee: null,
   });
   const [certificateFileName, setCertificateFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -103,10 +101,9 @@ const DoctorRegister = () => {
   //       navigate('/logged');
   //     }
   //   },[navigate]);
-
   return (
     <div className="relative flex">
-      <div className={`contentCol h-[100%]`}>
+      <div className={`${styles.contentCol} h-[100%]`}>
         <div className="flex items-start md:py-[2rem] py-[1rem] md:ps-[2rem] ps-[1rem]">
           <button>
             <svg
@@ -126,7 +123,7 @@ const DoctorRegister = () => {
           <div className="flex-grow-1 flex flex-col items-center">
             <div className={`${styles.formHeading} `}>
               <h1 className="md:text-[25px] sm:text-[20px] text-[18px] text-[var(--dark-blue)] font-bold">
-                Doctor Account Setup
+                Care Provider Account Setup
               </h1>
               <p className="font-medium sm:text-[18px] text-[var(--text-color)] my-[1rem]">
                 Fill your information to register
@@ -153,7 +150,7 @@ const DoctorRegister = () => {
                   {photoPreview ? (
                     <img
                       src={photoPreview}
-                      alt="Doctor photo preview"
+                      alt="Care Provider photo preview"
                       className="w-full h-full object-cover rounded-[50%]"
                     />
                   ) : (
@@ -192,7 +189,7 @@ const DoctorRegister = () => {
                     }
                     setNewUser({
                       ...newUser,
-                      doctor_image: file,
+                      care_provider_image: file,
                     });
                   }}
                   disabled={isLoading}
@@ -201,7 +198,7 @@ const DoctorRegister = () => {
               {/* name  and phone*/}
               <div className="flex md:flex-row flex-col gap-[2rem] items-center">
                 <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px]">
-                  <label htmlFor="d-name">
+                  <label htmlFor="name">
                     <svg
                       width="33"
                       height="34"
@@ -226,8 +223,8 @@ const DoctorRegister = () => {
                   </label>
                   <input
                     type="text"
-                    name="d-name"
-                    id="d-name"
+                    name="name"
+                    id="name"
                     ref={inputRef}
                     value={newUser.full_name}
                     placeholder="Type full name"
@@ -280,10 +277,10 @@ const DoctorRegister = () => {
                   />
                 </div>
               </div>
-              {/* spec and gender  */}
+              {/* type and gender  */}
               <div className=" flex md:flex-row flex-col gap-[2rem] items-center">
                 <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px]">
-                  <label htmlFor="specialization">
+                  <label htmlFor="type">
                     <svg
                       width="32"
                       height="36"
@@ -298,22 +295,22 @@ const DoctorRegister = () => {
                     </svg>
                   </label>
                   <select
-                    name="specialization"
-                    id="specialization"
-                    value={newUser.specialization}
+                    name="type"
+                    id="type"
+                    value={newUser.type}
                     onChange={(e) =>
                       setNewUser({
                         ...newUser,
-                        specialization: e.target.value,
+                        type: e.target.value,
                       })
                     }
                     required
                     disabled={isLoading}
                     className="text-[var(--text-color)]"
                   >
-                    <option value="">Specialization</option>
-                    <option value="first">first</option>
-                    <option value="second">second</option>
+                    <option value="">Type</option>
+                    <option value="physiotherapist">Physiotherapist</option>
+                    <option value="nurse">Nurse</option>
                   </select>
                 </div>
                 <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px]">
@@ -356,7 +353,7 @@ const DoctorRegister = () => {
               </div>
               {/* email  */}
               <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-0 grow border-1 border-[var(--card-border)] rounded-[8px]">
-                <label htmlFor="d-email">
+                <label htmlFor="email">
                   <svg
                     width="37"
                     height="37"
@@ -371,8 +368,8 @@ const DoctorRegister = () => {
                   </svg>
                 </label>
                 <input
-                  type="d-email"
-                  name="d-email"
+                  type="email"
+                  name="email"
                   id="email"
                   placeholder="Type email"
                   value={newUser.email}
@@ -386,7 +383,7 @@ const DoctorRegister = () => {
               {/* password  */}
               <div className="basis-0 grow md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center border-1 border-[var(--card-border)] rounded-[8px]">
                 <div className="flex items-center gap-[1rem] basis-0 grow">
-                  <label htmlFor="d-pass">
+                  <label htmlFor="pass">
                     <svg
                       width="30"
                       height="31"
@@ -403,8 +400,6 @@ const DoctorRegister = () => {
                     </svg>
                   </label>
                   <input
-                  name="d-pass"
-                  id="d-pass"
                     type={passwordShown ? "text" : "password"}
                     placeholder="Type Password..."
                     value={newUser.password}
@@ -433,7 +428,7 @@ const DoctorRegister = () => {
                   className={`${styles.customFileInput} md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px] cursor-pointer`}
                   onClick={() => document.getElementById("certificate").click()}
                 >
-                  <label htmlFor="d-certificate">
+                  <label htmlFor="cp-certificate">
                     <svg
                       width="36"
                       height="37"
@@ -455,18 +450,18 @@ const DoctorRegister = () => {
                     </svg>
                   </label>
                   <div className={styles.fileDisplay}>
-                    {certificateFileName || "Medical Certificate"}
+                    {certificateFileName || "Upload Lisence File"}
                   </div>
                   <input
                     type="file"
-                    name="d-certificate"
-                    id="d-certificate"
+                    name="cp-certificate"
+                    id="cp-certificate"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setCertificateFileName(file ? file.name : "");
                       setNewUser({
                         ...newUser,
-                        certificate_file: file,
+                        license_file: file,
                       });
                     }}
                     required
@@ -475,7 +470,7 @@ const DoctorRegister = () => {
                 </div>
                 <div className="basis-1/2 grow-0 md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center border-1 border-[var(--card-border)] rounded-[8px]">
                   <div className="w-[100%] flex items-center gap-[0.5rem]">
-                    <label htmlFor="fee">
+                    <label htmlFor="cp-fee">
                       <svg
                         width="37"
                         height="36"
@@ -499,14 +494,14 @@ const DoctorRegister = () => {
                     </label>
                     <input
                       type="number"
-                      name="fee"
-                      id="fee"
-                      value={newUser.consultation_fee}
-                      placeholder="Consultation fee..."
+                      name="cp-fee"
+                      id="cp-fee"
+                      value={newUser.session_fee}
+                      placeholder="Session fee..."
                       onChange={(e) =>
                         setNewUser({
                           ...newUser,
-                          consultation_fee: e.target.value,
+                          session_fee: e.target.value,
                         })
                       }
                       className="w-[70%]"
@@ -515,71 +510,6 @@ const DoctorRegister = () => {
                     />
                   </div>
                   <span className="text-[var(--text-color)]">$</span>
-                </div>
-              </div>
-              {/* working hours  */}
-              <div className=" flex md:flex-row flex-col gap-[2rem] items-center">
-                <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px]">
-                  <label htmlFor="from">
-                    <svg
-                      width="37"
-                      height="36"
-                      viewBox="0 0 37 36"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M18.5 3C26.7845 3 33.5 9.7155 33.5 18C33.5 26.2845 26.7845 33 18.5 33C10.2155 33 3.5 26.2845 3.5 18C3.5 9.7155 10.2155 3 18.5 3ZM18.5 6C15.3174 6 12.2652 7.26428 10.0147 9.51472C7.76428 11.7652 6.5 14.8174 6.5 18C6.5 21.1826 7.76428 24.2348 10.0147 26.4853C12.2652 28.7357 15.3174 30 18.5 30C21.6826 30 24.7348 28.7357 26.9853 26.4853C29.2357 24.2348 30.5 21.1826 30.5 18C30.5 14.8174 29.2357 11.7652 26.9853 9.51472C24.7348 7.26428 21.6826 6 18.5 6ZM18.5 9C18.8674 9.00005 19.222 9.13493 19.4966 9.37907C19.7711 9.62321 19.9465 9.95962 19.9895 10.3245L20 10.5V17.379L24.0605 21.4395C24.3295 21.7094 24.4857 22.0717 24.4973 22.4526C24.509 22.8335 24.3752 23.2046 24.1231 23.4904C23.8711 23.7763 23.5197 23.9555 23.1403 23.9916C22.7609 24.0277 22.382 23.9181 22.0805 23.685L21.9395 23.5605L17.4395 19.0605C17.2064 18.8272 17.0566 18.5235 17.0135 18.1965L17 18V10.5C17 10.1022 17.158 9.72064 17.4393 9.43934C17.7206 9.15804 18.1022 9 18.5 9Z"
-                        fill="#39CCCC"
-                      />
-                    </svg>
-                  </label>
-                  <input
-                    type="time"
-                    name="from"
-                    id="from"
-                    value={newUser.from}
-                    onChange={(e) =>
-                      setNewUser({
-                        ...newUser,
-                        from: e.target.value,
-                      })
-                    }
-                    required
-                    disabled={isLoading}
-                    className="text-[var(--text-color)]"
-                  />
-                </div>
-                <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px]">
-                  <label htmlFor="to">
-                    <svg
-                      width="37"
-                      height="36"
-                      viewBox="0 0 37 36"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M18.5 3C26.7845 3 33.5 9.7155 33.5 18C33.5 26.2845 26.7845 33 18.5 33C10.2155 33 3.5 26.2845 3.5 18C3.5 9.7155 10.2155 3 18.5 3ZM18.5 6C15.3174 6 12.2652 7.26428 10.0147 9.51472C7.76428 11.7652 6.5 14.8174 6.5 18C6.5 21.1826 7.76428 24.2348 10.0147 26.4853C12.2652 28.7357 15.3174 30 18.5 30C21.6826 30 24.7348 28.7357 26.9853 26.4853C29.2357 24.2348 30.5 21.1826 30.5 18C30.5 14.8174 29.2357 11.7652 26.9853 9.51472C24.7348 7.26428 21.6826 6 18.5 6ZM18.5 9C18.8674 9.00005 19.222 9.13493 19.4966 9.37907C19.7711 9.62321 19.9465 9.95962 19.9895 10.3245L20 10.5V17.379L24.0605 21.4395C24.3295 21.7094 24.4857 22.0717 24.4973 22.4526C24.509 22.8335 24.3752 23.2046 24.1231 23.4904C23.8711 23.7763 23.5197 23.9555 23.1403 23.9916C22.7609 24.0277 22.382 23.9181 22.0805 23.685L21.9395 23.5605L17.4395 19.0605C17.2064 18.8272 17.0566 18.5235 17.0135 18.1965L17 18V10.5C17 10.1022 17.158 9.72064 17.4393 9.43934C17.7206 9.15804 18.1022 9 18.5 9Z"
-                        fill="#39CCCC"
-                      />
-                    </svg>
-                  </label>
-                  <input
-                    type="time"
-                    name="to"
-                    id="to"
-                    value={newUser.to}
-                    onChange={(e) =>
-                      setNewUser({
-                        ...newUser,
-                        to: e.target.value,
-                      })
-                    }
-                    required
-                    disabled={isLoading}
-                    className="text-[var(--text-color)]"
-                  />
                 </div>
               </div>
               {/* register button  */}
@@ -591,12 +521,10 @@ const DoctorRegister = () => {
                   newUser.email.length < 10 ||
                   newUser.phone.length < 10 ||
                   newUser.password.length < 10 ||
-                  newUser.specialization === "" ||
+                  newUser.type === "" ||
                   newUser.gender === "" ||
-                  newUser.from === "" ||
-                  newUser.to === "" ||
-                  newUser.consultation_fee === null ||
-                  newUser.certificate_file === null ||
+                  newUser.session_fee === null ||
+                  newUser.license_file === null ||
                   isLoading
                 }
               >
@@ -611,4 +539,4 @@ const DoctorRegister = () => {
   );
 };
 
-export default DoctorRegister;
+export default CareProviderRegister;
