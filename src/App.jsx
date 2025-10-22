@@ -5,11 +5,12 @@ import "./App.css";
 import PatientRegister from "./pages/registers/patientRegister/PatientRegister";
 import DeliveryRegister from "./pages/registers/dileveryRegister/DileveryRegister";
 import Login from "./pages/login/Login";
+import NewAccountSetup from "./pages/registers/newaccountsetup/NewAccountSetup";
 // import Login from "./login";
 export default function App() {
   return (
     <>
-      <Login />
+    <NewAccountSetup/>
     </>
   );
 }
