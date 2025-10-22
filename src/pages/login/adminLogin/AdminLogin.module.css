@@ -1,81 +1,49 @@
-.loginContainer{
-    background: #fff;
-    padding: 55px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    max-width: 500px;
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
-}
-.loginContainer h2{
-    margin-bottom: 10px;
-    text-align: center;
-    font-size: 26px;
-    font-weight: 600;
-    color: #1a2b49;
-}
-.loginContainer p{
-    text-align: center;
-    color: #767676;
-    font-size: 16px;
-    margin-bottom: 20px;
-    margin-top: 1px;
-}
-.highlight{
-    color: #39CCCC ;
-}
-.inputGroup{
-    margin: 15px 0;
+.hiddenFileInput {
     position: relative;
-    display: flex;
-    padding: 10px 12px;
-    border-radius: 11px;
-    margin-left: 10px;
-    margin-right: 0;
-    border: 1px solid #ccc;
-}
-.inputGroup input{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 11px;
-    outline: none;
-    font-size: 16px;
+    overflow: hidden;
+  }
+  .hiddenFileInput input[type="file"] {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+  }
+  
+  .hiddenFileInput input[type="file"]::-webkit-file-upload-button {
+    display: none;
+  }
+  
+  .hiddenFileInput input[type="file"]::file-selector-button {
+    display: none;
+  }
+  
+  .customFileInput {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .customFileInput input[type="file"] {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .customFileInput input[type="file"]::-webkit-file-upload-button {
+    display: none;
+  }
+  
+  .customFileInput input[type="file"]::file-selector-button {
+    display: none;
+  }
+  
+  .fileDisplay {
     flex: 1;
-    border: 1px solid #ccc;
-}
-.inputGroup input:focus{
-    border-color: #0066cc;
-}
-.icon{
-
-}
-.inputGroup{
-
-}
-.btn{
-    width: 100%;
-    padding: 10px;
-    background:#052443;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
-.btn:hover{
-    background: #004b8a;
-}
-.registerText{
-    margin-top: 20px;
-    font-size: 13px;
-    color: #767676;
-}
-.registerText a{
-    color:  #39CCCC;
-    text-decoration: none;
-}
-.registerText a:hover{
-    text-decoration: underline;
-}
+    color: var(--text-color);
+    font-size: 14px;
+    padding: 0.5rem;
+    min-height: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
