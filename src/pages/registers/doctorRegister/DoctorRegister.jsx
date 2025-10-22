@@ -35,7 +35,7 @@ const DoctorRegister = () => {
   const uploadImage = async (photoFile) => {
     console.log("uploading image: ", photoFile);
 
-    const response = await fetch("http://127.0.0.1:8000/api/uploads/image", {
+    const response = await fetch("/api/uploads/image", {
       method: "POST",
       headers: {
         "Content-Type": "multipart/form-data",
@@ -82,7 +82,7 @@ const DoctorRegister = () => {
 
     console.log("user's data: ", user);
 
-    fetch(`http://127.0.0.1:8000/api/auth/register`, {
+    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
