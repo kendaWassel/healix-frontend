@@ -9,87 +9,108 @@ const CareProviderRegister = () => {
   const [error, setError] = useState();
   const [successMsg, setSuccessMsg] = useState();
   const [newUser, setNewUser] = useState({
-    role: "doctor",
+    role: "care_provider",
     full_name: "",
     email: "",
     phone: "",
-    care_provider_image: null,
+    care_provider_image_id: null,
     password: "",
     type: "",
     gender: "",
-    license_file: null,
+    license_file_id: null,
     session_fee: null,
   });
   const [certificateFileName, setCertificateFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const uploadImage = async (photoFile) => {
+    console.log("uploading image: ", photoFile);
+
+    const response = await fetch("/api/uploads/image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: {
+        image: photoFile,
+        category: "profile",
+      },
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || "Image upload failed");
+    }
+    const data = await response.json();
+    console.log("image uploaded: ", data);
+    return data.image_id;
   };
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   setError(null);
-  //   setSuccessMsg(null);
-  //   setIsLoading(true);
 
-  //   if (newUser.pass.value !== newUser.confirmPass?.value) {
-  //     setError("Passwords do not match");
-  //     return;
-  //   }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccessMsg(null);
+    setIsLoading(true);
 
-  //   const user = {
-  //     name: { value: newUser.name.value },
-  //     mail: { value: newUser.email.value },
-  //     field_name: { value: newUser.firstName.value || "Unknown" },
-  //     field_surname: { value: newUser.lastName.value || "Unknown" },
-  //     field_mobile: { value: newUser.mobile.value || "96300000000" },
-  //     field_gender: { target_id: newUser.gender.target_id || "9" },
-  //     pass: { value: newUser.pass.value },
-  //   };
+    // const imageId = await uploadImage(photoFile);
 
-  //   fetch(`https://api/user/registerpass?_format=json`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(user),
-  //   })
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         return response.json().then((serverError) => {
-  //           throw new Error(serverError.message || "Registration failed");
-  //         });
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setSuccessMsg("Check your email for Activation link");
-  //       setNewUser({
-  //         role: "doctor",
-  //   full_name: "" ,
-  //   email: "",
-  //   doctor_image: "",
-  //   phone: "",
-  //   password: "" ,
-  //   specialization: "",
-  //   gender: "male",
-  //     working_hours: "",
-  //     certificate_file: "",
-  // }
-  //       )
+    // setNewUser({ ...newUser, doctor_image_id: imageId });
 
-  //       setTimeout(()=>{
-  //         navigate('/signin');
-  //     }, 2000)
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message || "Failed to create user. Please try again.");
-  //     }).finally(()=>{
-  //       setIsLoading(false)
-  //     })
-  //     ;
-  // };
+    const user = {
+      role: newUser.role,
+      full_name: newUser.full_name,
+      email: newUser.email,
+      phone: newUser.phone,
+      care_provider_image_id: newUser.care_provider_image_id,
+      password: newUser.password,
+      type: newUser.type,
+      gender: newUser.gender,
+      session_fee: newUser.session_fee,
+      license_file_id: null,
+    };
+
+    console.log("user's data: ", user);
+
+    fetch(`/api/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((serverError) => {
+            throw new Error(serverError.message || "Registration failed");
+          });
+        }
+        console.log("success sending user's data ");
+        return response.json();
+      })
+      .then((data) => {
+        console.log("message from api: ", data.message);
+        setSuccessMsg("Check your email for Activation link");
+        setNewUser({
+          role: "care_provider",
+          full_name: "",
+          email: "",
+          phone: "",
+          care_provider_image_id: null,
+          password: "",
+          type: "",
+          gender: "",
+          license_file_id: null,
+          session_fee: null,
+        });
+      })
+      .catch((error) => {
+        setError(error.message || "Failed to create user. Please try again.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   useEffect(() => {
     inputRef.current.focus();
@@ -103,7 +124,7 @@ const CareProviderRegister = () => {
   //   },[navigate]);
   return (
     <div className="relative flex">
-      <div className={`${styles.contentCol} h-[100%]`}>
+      <div className={`contentCol h-[100%]`}>
         <div className="flex items-start md:py-[2rem] py-[1rem] md:ps-[2rem] ps-[1rem]">
           <button>
             <svg
@@ -121,7 +142,7 @@ const CareProviderRegister = () => {
           </button>
           {/* form  */}
           <div className="flex-grow-1 flex flex-col items-center">
-            <div className={`${styles.formHeading} `}>
+            <div className={`${styles.formHeading} text-center`}>
               <h1 className="md:text-[25px] sm:text-[20px] text-[18px] text-[var(--dark-blue)] font-bold">
                 Care Provider Account Setup
               </h1>
@@ -144,7 +165,7 @@ const CareProviderRegister = () => {
                 className={`${styles.hiddenFileInput} flex flex-col justify-center md:w-[100px] md:h-[100px] w-[80px] h-[80px] border-1 border-[var(--card-border)] rounded-[50%] mx-[auto] overflow-hidden`}
               >
                 <label
-                  htmlFor="d-photo"
+                  htmlFor="photo"
                   className="flex flex-col items-center cursor-pointer w-full h-full justify-center"
                 >
                   {photoPreview ? (
@@ -175,8 +196,8 @@ const CareProviderRegister = () => {
                 </label>
                 <input
                   type="file"
-                  name="d-photo"
-                  id="d-photo"
+                  name="photo"
+                  id="photo"
                   accept="image/*"
                   onChange={(e) => {
                     const file = e.target.files[0];
@@ -187,10 +208,7 @@ const CareProviderRegister = () => {
                       };
                       reader.readAsDataURL(file);
                     }
-                    setNewUser({
-                      ...newUser,
-                      care_provider_image: file,
-                    });
+                    setPhotoFile(file);
                   }}
                   disabled={isLoading}
                 />
@@ -428,7 +446,7 @@ const CareProviderRegister = () => {
                   className={`${styles.customFileInput} md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px] cursor-pointer`}
                   onClick={() => document.getElementById("certificate").click()}
                 >
-                  <label htmlFor="cp-certificate">
+                  <label htmlFor="certificate">
                     <svg
                       width="36"
                       height="37"
@@ -454,8 +472,8 @@ const CareProviderRegister = () => {
                   </div>
                   <input
                     type="file"
-                    name="cp-certificate"
-                    id="cp-certificate"
+                    name="certificate"
+                    id="certificate"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setCertificateFileName(file ? file.name : "");
@@ -470,7 +488,7 @@ const CareProviderRegister = () => {
                 </div>
                 <div className="basis-1/2 grow-0 md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center border-1 border-[var(--card-border)] rounded-[8px]">
                   <div className="w-[100%] flex items-center gap-[0.5rem]">
-                    <label htmlFor="cp-fee">
+                    <label htmlFor="fee">
                       <svg
                         width="37"
                         height="36"
@@ -494,8 +512,8 @@ const CareProviderRegister = () => {
                     </label>
                     <input
                       type="number"
-                      name="cp-fee"
-                      id="cp-fee"
+                      name="fee"
+                      id="fee"
                       value={newUser.session_fee}
                       placeholder="Session fee..."
                       onChange={(e) =>
@@ -517,14 +535,15 @@ const CareProviderRegister = () => {
                 type="submit"
                 className="rounded-[8px] p-[2rem] bg-[var(--dark-blue)] text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed shadow-[0px_3px_8px_#2d2d2de3] duration-200 hover:bg-[#0a3460]"
                 disabled={
-                  newUser.full_name.length < 4 ||
-                  newUser.email.length < 10 ||
-                  newUser.phone.length < 10 ||
-                  newUser.password.length < 10 ||
-                  newUser.type === "" ||
-                  newUser.gender === "" ||
-                  newUser.session_fee === null ||
-                  newUser.license_file === null ||
+                  // newUser.full_name.length < 4 ||
+                  // newUser.email.length < 10 ||
+                  // newUser.phone.length < 10 ||
+                  // newUser.password.length < 10 ||
+                  // newUser.type === "" ||
+                  // newUser.gender === "" ||
+                  // newUser.care_provider_image_id === null||
+                  // newUser.session_fee === null ||
+                  // newUser.license_file_id === null ||
                   isLoading
                 }
               >
