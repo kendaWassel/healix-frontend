@@ -1,5 +1,7 @@
 import styles from "./NewAccountSetup.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   faArrowLeft,
   faPills,
@@ -9,7 +11,7 @@ import {
   faUserNurse,
   faPersonWalking,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+
 
 const accountTypes = [
   {
@@ -17,36 +19,44 @@ const accountTypes = [
     title: "For Pharmacists",
     desc: "Receive and process medications orders",
     icon: faPills,
+    dest:"/pharmacist-register"
+  
   },
   {
     key: "doctor",
     title: "For Doctors",
     desc: "Provide online consultations",
     icon: faUserDoctor,
+    dest: "/doctor-register"
   },
   {
     key: "patient",
     title: "For Patients",
     desc: "Access a network of trusted healthcare professionals",
     icon: faUser,
+    dest:"/patient-register"
+
   },
   {
     key: "delivery",
     title: "For Delivery Agents",
     desc: "Get assigned to deliver medications or transport care providers safely to patients",
     icon: faTruckMedical,
+    dest: "/delivery-register"
   },
   {
     key: "nurse",
     title: "For Nurses",
     desc: "Provide at-home medical care",
     icon: faUserNurse,
+    dest: "/nurse-register"
   },
   {
     key: "physiotherapist",
     title: "For Physiotherapists",
     desc: "Provide at-home physical care",
     icon: faPersonWalking,
+    dest:"/physiotherapist-register"
   },
 ];
 
@@ -55,6 +65,9 @@ export default function NewAccountSetup() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
+
+
+  const navigate=useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,6 +93,7 @@ export default function NewAccountSetup() {
     } finally {
       setIsLoading(false);
     }
+    if (selected) navigate(accountTypes.find(a => a.key === selected).dest);
   };
 
   return (
@@ -100,19 +114,32 @@ export default function NewAccountSetup() {
           <button
             key={type.key}
             type="button"
+          
             className={`${styles.accountButton} ${
               selected === type.key ? styles.selected : ""
             }`}
-            onClick={() => setSelected(type.key)}
+            onClick={() => {    
+              
+              setSelected(type.key)
+          
+            }}
           >
             <FontAwesomeIcon icon={type.icon} className={styles.icon} />
             <h3>{type.title}</h3>
             <p>{type.desc}</p>
+         
           </button>
         ))}
 
         <button
-          type="submit"
+          type="button"
+          onClick={ ()=> {
+            if(!selected) return ;
+            const dest = accountTypes.find((e)=>e.key===selected)?.dest;
+            if (dest) navigate(dest)
+          }
+          }
+  
           className={styles.continueButton}
           disabled={isLoading || !selected}
         >

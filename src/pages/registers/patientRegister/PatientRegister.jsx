@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./PatientRegister.module.css";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPhone,
@@ -87,7 +88,9 @@ export default function PatientRegister() {
     <div className={styles.formContainer}>
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
-          <FontAwesomeIcon icon={faArrowLeft} />
+          <Link to="/">
+          <FontAwesomeIcon icon={faArrowLeft}  />
+          </Link>
         </span>
         <h1>Patients Account Setup</h1>
         <p>Fill your information to register</p>

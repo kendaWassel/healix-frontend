@@ -82,7 +82,7 @@ const DoctorRegister = () => {
 
     console.log("user's data: ", user);
 
-    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
+    fetch(`/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
