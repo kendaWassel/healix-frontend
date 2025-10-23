@@ -50,6 +50,28 @@ const DoctorRegister = () => {
     console.log("image uploaded: ", data);
     return data.image_id;
   };
+  const uploadFile = async (certificateFile) => {
+    console.log("uploading file: ", certificateFile);
+
+    const response = await fetch("/api/uploads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: {
+        file: certificateFile,
+        category: "certificate",
+      },
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || "File upload failed");
+    }
+    const data = await response.json();
+    console.log("file uploaded: ", data);
+    return data.file_id;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +82,10 @@ const DoctorRegister = () => {
     // const imageId = await uploadImage(photoFile);
 
     // setNewUser({ ...newUser, doctor_image_id: imageId });
+
+    // const fileId = await uploadFile(certificateFile);
+
+    // setNewUser({ ...newUser, certificate_file_id: fileId });
 
     const user = {
       role: newUser.role,
@@ -488,10 +514,7 @@ const DoctorRegister = () => {
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setCertificateFileName(file ? file.name : "");
-                      setNewUser({
-                        ...newUser,
-                        certificate_file: file,
-                      });
+                      setCertificateFile(file);
                     }}
                     disabled={isLoading}
                   />

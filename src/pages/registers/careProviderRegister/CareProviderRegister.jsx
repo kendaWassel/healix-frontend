@@ -20,6 +20,8 @@ const CareProviderRegister = () => {
     license_file_id: null,
     session_fee: null,
   });
+  const [photoFile, setPhotoFile] = useState(null);
+  const [certificateFile, setCertificateFile] = useState(null);
   const [certificateFileName, setCertificateFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
@@ -46,7 +48,28 @@ const CareProviderRegister = () => {
     console.log("image uploaded: ", data);
     return data.image_id;
   };
+  const uploadFile = async (license_file) => {
+    console.log("uploading file: ", license_file);
 
+    const response = await fetch("/api/uploads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: {
+        file: license_file,
+        category: "certificate",
+      },
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || "File upload failed");
+    }
+    const data = await response.json();
+    console.log("file uploaded: ", data);
+    return data.file_id;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -55,7 +78,11 @@ const CareProviderRegister = () => {
 
     // const imageId = await uploadImage(photoFile);
 
-    // setNewUser({ ...newUser, doctor_image_id: imageId });
+    // setNewUser({ ...newUser, care_provider_image_id: imageId });
+
+    // const fileId = await uploadFile(certificateFile);
+
+    // setNewUser({ ...newUser, license_file_id: fileId });
 
     const user = {
       role: newUser.role,
@@ -477,10 +504,7 @@ const CareProviderRegister = () => {
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setCertificateFileName(file ? file.name : "");
-                      setNewUser({
-                        ...newUser,
-                        license_file: file,
-                      });
+                      setCertificateFile(file);
                     }}
                     required
                     disabled={isLoading}
