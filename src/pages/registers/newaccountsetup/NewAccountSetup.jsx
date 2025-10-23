@@ -2,6 +2,7 @@ import styles from "./NewAccountSetup.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LogoImage from "../../../components/logoImage/LogoImage";
 import {
   faArrowLeft,
   faPills,
@@ -98,6 +99,7 @@ export default function NewAccountSetup() {
 
   return (
     <div className={styles.formContainer}>
+      <title>Account Setup</title>
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
           <FontAwesomeIcon icon={faArrowLeft} />
@@ -146,6 +148,7 @@ export default function NewAccountSetup() {
           {isLoading ? "Loading..." : "Continue"}
         </button>
       </form>
+      <LogoImage/>
     </div>
   );
 }

@@ -1,132 +1,132 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+}
+
 .formContainer {
-    background-color: #fff;
-    padding: 55px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    max-width: 600px;
-    box-sizing: border-box;
-    justify-content: center;
-    align-items: center;
-    
-    margin: auto;
-    
-  
-  }
-  .formHeader {
-    text-align: center;
-    margin-bottom: 30px;
-    position: relative;
-    color: #052443;
-    font-weight: bold;
-  }
-  .formHeader h1 {
-    font-size: 24px;
-    color: #003366;
-    margin-bottom: 5px;
-  }
-  .formHeader p {
-    font-size: 16px;
-    color: #666;
-    margin-top: 0;
-  }
-  
-  
-  .backArrow {
-    position: absolute;
-    left: -10px;
-    top: -30px;
-    font-size: 24px;
-    color: #000000;
-    cursor: pointer;
-  }
-  .setupForm {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    justify-items: center;
-    margin-top: 60px;
-    width: auto;
+  background-color: #fff;
+  padding: 50px 60px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 855px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
 
-  }
-  
-
-    .accountButton {
-        width: 250px;
-        height: 145px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-        padding: 10px;
-        color: #333;
-      }
-      
-      .accountButton:hover {
-        background-color: white;
-        border-color: #39CCCC;
-      }
- 
-.accountButton:hover .icon {
-    color: #39CCCC; 
-  }
-  .selected {
-    border-color: #39CCCC;
-    background-color: white;
-    color: #39CCCC;
-    box-shadow: 0 4px 8px rgba(57, 204, 204, 0.25);
-  }
-  .icon {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color:#A1A1A1 ;
-    transition: color 0.3s ease;
-  }
-  
-
-
-
-  .accountButton h3 {
-    margin: 5px 0;
-    font-size: 16px;
-  }
-  .accountButton p {
-    font-size: 13px;
-    color: #666;
-  }
-.continueButton{
-  background-color: #052443;
-  color: #fff;
-  padding: 20px;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
+}
+.formHeader {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  color: #052443;
   font-weight: bold;
+}
+.formHeader h1 {
+  font-size: 30px;
+  color: #003366;
+  margin-top: 10px;
+}
+.formHeader p {
+  font-size: 20px;
+  color: #666;
+  margin-top: 10px;
+}
+
+
+.backArrow {
+  position: absolute;
+  left: 30px;
+  top: 20px;
+  font-size: 30px;
+  color: #000000;
   cursor: pointer;
-  transition: background-color 0.2s;
-  width: 206%;
-  margin: auto;
-  margin-top: 20px;
+}
+.setupForm {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  justify-items: center;
+  margin-top: 60px;
+  width: auto;
+  
+}
+
+
+  .accountButton {
+      width: 250px;
+      height: 170px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      padding: 5px;
+      color: #333;
+      margin-bottom: 0px;
+ 
+    }
+    
+    .accountButton:hover {
+      background-color: white;
+      border-color: #39CCCC;
+    }
+
+.accountButton:hover .icon {
+  color: #39CCCC; 
+}
+.selected {
+  border-color: #39CCCC;
+  background-color: white;
+  color: #39CCCC;
+  box-shadow: 0 4px 8px rgba(57, 204, 204, 0.25);
+}
+.icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color:#A1A1A1 ;
+  transition: color 0.3s ease;
+}
+
+
+.accountButton h3 {
+  margin: 5px 0;
+  font-size: 20px;
+}
+.accountButton p {
+  font-size: 17px;
+  color: #666;
+  
+}
+.continueButton{
+background-color: #052443;
+color: #fff;
+padding: 20px;
+border: none;
+border-radius: 10px;
+font-size: 18px;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.2s;
+width: 204%;
+margin: auto;
+
+
+
 
 }
 .continueButton:hover {
-  background-color: #003366;
+background-color: #003366;
 }
 .error {
-  color: red;
-  font-size: 14px;
-  margin-top: 0;
+color: red;
+font-size: 16px;
+margin-top: 0;
 }

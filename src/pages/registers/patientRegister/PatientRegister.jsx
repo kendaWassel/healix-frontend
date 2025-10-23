@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./PatientRegister.module.css";
+import LogoImage from "../../../components/logoImage/LogoImage";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,6 +16,7 @@ import {
   faArrowLeft,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
+
 
 export default function PatientRegister() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -85,7 +87,9 @@ export default function PatientRegister() {
   };
 
   return (
+    
     <div className={styles.formContainer}>
+         <title>Patient Account Setup</title>
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
           <Link to="/">
@@ -244,6 +248,9 @@ export default function PatientRegister() {
           {isLoading ? "Registering..." : "Register"}
         </button>
       </form>
+        <LogoImage/>
     </div>
+ 
+  
   );
 }
