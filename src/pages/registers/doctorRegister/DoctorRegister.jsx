@@ -28,10 +28,6 @@ const DoctorRegister = () => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  // };
-
   const uploadImage = async (photoFile) => {
     console.log("uploading image: ", photoFile);
 
@@ -82,7 +78,7 @@ const DoctorRegister = () => {
 
     console.log("user's data: ", user);
 
-    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
+    fetch(`/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -155,7 +151,7 @@ const DoctorRegister = () => {
           </button>
           {/* form  */}
           <div className="flex-grow-1 flex flex-col items-center">
-            <div className={`${styles.formHeading} `}>
+            <div className={`${styles.formHeading} text-center`}>
               <h1 className="md:text-[25px] sm:text-[20px] text-[18px] text-[var(--dark-blue)] font-bold">
                 Doctor Account Setup
               </h1>
@@ -178,7 +174,7 @@ const DoctorRegister = () => {
                 className={`${styles.hiddenFileInput} flex flex-col justify-center md:w-[100px] md:h-[100px] w-[80px] h-[80px] border-1 border-[var(--card-border)] rounded-[50%] mx-[auto] overflow-hidden`}
               >
                 <label
-                  htmlFor="d-photo"
+                  htmlFor="photo"
                   className="flex flex-col items-center cursor-pointer w-full h-full justify-center"
                 >
                   {photoPreview ? (
@@ -209,8 +205,8 @@ const DoctorRegister = () => {
                 </label>
                 <input
                   type="file"
-                  name="d-photo"
-                  id="d-photo"
+                  name="photo"
+                  id="photo"
                   accept="image/*"
                   onChange={(e) => {
                     const file = e.target.files[0];
@@ -229,7 +225,7 @@ const DoctorRegister = () => {
               {/* name  and phone*/}
               <div className="flex md:flex-row flex-col gap-[2rem] items-center">
                 <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px]">
-                  <label htmlFor="d-name">
+                  <label htmlFor="name">
                     <svg
                       width="33"
                       height="34"
@@ -254,8 +250,8 @@ const DoctorRegister = () => {
                   </label>
                   <input
                     type="text"
-                    name="d-name"
-                    id="d-name"
+                    name="name"
+                    id="name"
                     ref={inputRef}
                     value={newUser.full_name}
                     placeholder="Type full name"
@@ -384,7 +380,7 @@ const DoctorRegister = () => {
               </div>
               {/* email  */}
               <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-0 grow border-1 border-[var(--card-border)] rounded-[8px]">
-                <label htmlFor="d-email">
+                <label htmlFor="email">
                   <svg
                     width="37"
                     height="37"
@@ -399,8 +395,8 @@ const DoctorRegister = () => {
                   </svg>
                 </label>
                 <input
-                  type="d-email"
-                  name="d-email"
+                  type="email"
+                  name="email"
                   id="email"
                   placeholder="Type email"
                   value={newUser.email}
@@ -414,7 +410,7 @@ const DoctorRegister = () => {
               {/* password  */}
               <div className="basis-0 grow md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center border-1 border-[var(--card-border)] rounded-[8px]">
                 <div className="flex items-center gap-[1rem] basis-0 grow">
-                  <label htmlFor="d-pass">
+                  <label htmlFor="pass">
                     <svg
                       width="30"
                       height="31"
@@ -431,8 +427,8 @@ const DoctorRegister = () => {
                     </svg>
                   </label>
                   <input
-                    name="d-pass"
-                    id="d-pass"
+                    name="pass"
+                    id="pass"
                     type={passwordShown ? "text" : "password"}
                     placeholder="Type Password..."
                     value={newUser.password}
@@ -461,7 +457,7 @@ const DoctorRegister = () => {
                   className={`${styles.customFileInput} md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px] cursor-pointer`}
                   onClick={() => document.getElementById("certificate").click()}
                 >
-                  <label htmlFor="d-certificate">
+                  <label htmlFor="certificate">
                     <svg
                       width="36"
                       height="37"
@@ -487,8 +483,8 @@ const DoctorRegister = () => {
                   </div>
                   <input
                     type="file"
-                    name="d-certificate"
-                    id="d-certificate"
+                    name="certificate"
+                    id="certificate"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setCertificateFileName(file ? file.name : "");
