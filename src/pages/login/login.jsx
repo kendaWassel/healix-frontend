@@ -36,6 +36,45 @@ function Login() {
     console.log("Password:", password);
   };
 
+
+  /*const handleSubmit = (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccessMsg(null);
+    setIsLoading(true);
+
+
+    if (newUser.password !== newUser.password_confirmation) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+
+    fetch("https://api.example.com/user/register?_format=json", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Registration failed");
+        return response.json();
+      })
+      .then(() => {
+        setSuccessMsg("Check your email for Activation link");
+        setNewUser({
+          role: "Login",
+          email: "",
+          password: "",
+        });
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => setIsLoading(false));
+  };*/
+
+
   return (
     <div className="login-container">
       <h2>Log <span className="highlight">in</span>
@@ -49,10 +88,9 @@ function Login() {
             type="email"
             placeholder="Type email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)} 
-            required
             disabled={isLoading}
-            />
+            onChange={(e) => setEmail(e.target.value)} 
+            required/>
             {/* {accept && EmailError===422 &&<p className="Error">Email is already taken</p>} */}
         </div>
 
@@ -62,6 +100,7 @@ function Login() {
             type="password"
             placeholder="Type Password.."
             value={password}
+            disabled={isLoading}
             onChange={(e) => setPassword(e.target.value)}
             required
             disabled={isLoading}
