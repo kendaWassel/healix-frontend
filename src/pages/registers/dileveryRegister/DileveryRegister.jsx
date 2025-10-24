@@ -1,5 +1,7 @@
 import styles from "./DeliveryRegister.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import LogoImage from "../../../components/logoImage/LogoImage";
 import {
   faArrowLeft,
   faCircleUser,
@@ -92,9 +94,12 @@ export default function DeliveryRegister() {
 
   return (
     <div className={styles.formContainer}>
+         <title>Delivery Account Setup</title>
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
-          <FontAwesomeIcon icon={faArrowLeft} />
+        <Link to="/">
+          <FontAwesomeIcon icon={faArrowLeft}  />
+          </Link>
         </span>
         <h1>Delivery Agents Account Setup</h1>
         <p>Fill your information to register</p>
@@ -255,6 +260,7 @@ export default function DeliveryRegister() {
           {isLoading ? "Registering..." : "Register"}
         </button>
       </form>
+      <LogoImage/>
     </div>
   );
 }
