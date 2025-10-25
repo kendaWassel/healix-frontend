@@ -1,23 +1,15 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f8f8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-}
-
 .formContainer {
- 
   background-color: #fff;
   padding: 110px 100px;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   max-width: 850px;
   box-sizing: border-box;
-
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  justify-content: center;
+  align-items: center;
 }
 
 .formHeader {

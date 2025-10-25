@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LogoImage from "../../../components/logoImage/LogoImage";
+import { Link } from "react-router-dom";
 import {
   faArrowLeft,
   faPills,
@@ -102,7 +103,9 @@ export default function NewAccountSetup() {
       <title>Account Setup</title>
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
+        <Link to='/'>
           <FontAwesomeIcon icon={faArrowLeft} />
+          </Link>
         </span>
         <h1>New Account Setup</h1>
         <p>Choose your account type</p>

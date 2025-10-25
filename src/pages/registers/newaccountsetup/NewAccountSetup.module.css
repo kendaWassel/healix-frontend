@@ -1,29 +1,19 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f8f8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-}
-
 .formContainer {
   background-color: #fff;
-  padding: 50px 60px;
+  padding: 10px 10px;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  max-width: 855px;
+  max-width: 850px;
   box-sizing: border-box;
   justify-content: center;
   align-items: center;
-
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
 }
 .formHeader {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   position: relative;
   color: #052443;
   font-weight: bold;
