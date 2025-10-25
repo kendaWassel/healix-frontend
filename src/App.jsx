@@ -15,7 +15,9 @@ export default function App() {
     <>
     <BrowserRouter>
     <Routes>
-    <Route path="/" element={<NewAccountSetup />} />
+    <Route path="/" element={<LandingPage />} />
+    <Route path="/login" element={<Login/>}/>
+    <Route path="/register" element={<NewAccountSetup/>}/>
       <Route path="/patient-register" element={<PatientRegister/>}/>
       <Route path="/doctor-register" element={<DoctorRegister/>}/>
       <Route path="/pharmacist-register" element={<FormPage/>}/>

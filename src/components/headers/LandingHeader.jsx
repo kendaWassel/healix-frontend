@@ -1,5 +1,5 @@
 // import { Link } from "react-router"
-
+import { Link } from "react-router-dom";
 const LandingHeader = () => {
   return (
     <div
@@ -11,12 +11,12 @@ const LandingHeader = () => {
       <div
         className={`sign-buttons flex items-center md:gap-[1rem] gap-[0.5rem]`}
       >
-        <button className="text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[25px] sm:px-[0.8rem] sm:py-[0.5rem] font-medium">
+        <Link to='/login' className="text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[25px] sm:px-[0.8rem] sm:py-[0.5rem] font-medium">
           Sign in
-        </button>
-        <button className="text-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] duration-400 rounded-[25px] sm:px-[0.8rem] sm:py-[0.5rem] font-medium">
+        </Link>
+        <Link to='/register' className="text-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] duration-400 rounded-[25px] sm:px-[0.8rem] sm:py-[0.5rem] font-medium">
           Sign up
-        </button>
+        </Link>
       </div>
     </div>
   );
