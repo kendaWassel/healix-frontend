@@ -1,12 +1,4 @@
-body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to right, #e0eafc, #cfdef3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-}
+
 
 .login-container {
     background: #fff;
@@ -17,8 +9,13 @@ body {
     width: 100%;
     text-align: center;
     box-sizing: border-box;
-   
-
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #e0eafc, #cfdef3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
 }
 
 h2 {
