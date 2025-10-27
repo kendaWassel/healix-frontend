@@ -24,10 +24,6 @@ const AdminLogin = () => {
     setSuccessMsg(null);
     setIsLoading(true);
 
-    // const imageId = await uploadImage(photoFile);
-
-    // setNewUser({ ...newUser, doctor_image_id: imageId });
-
     const user = {
       email: newUser.email,
       password: newUser.password,
@@ -35,17 +31,18 @@ const AdminLogin = () => {
 
     console.log("user's data: ", user);
 
-    fetch(`http://127.0.0.1:8000/api/auth/register`, {
+    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
       },
       body: JSON.stringify(user),
     })
       .then((response) => {
         if (!response.ok) {
           return response.json().then((serverError) => {
-            throw new Error(serverError.message || "Registration failed");
+            throw new Error(serverError.message || "Login failed");
           });
         }
         console.log("success sending user's data ");
@@ -53,14 +50,14 @@ const AdminLogin = () => {
       })
       .then((data) => {
         console.log("message from api: ", data.message);
-        setSuccessMsg("Check your email for Activation link");
+        setSuccessMsg("Logged in successeully!!");
         setNewUser({
           email: "",
           password: "",
         });
       })
       .catch((error) => {
-        setError(error.message || "Failed to create user. Please try again.");
+        setError(error.message || "Failed to login. Please try again.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -118,7 +115,7 @@ const AdminLogin = () => {
             >
               {/* email  */}
               <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-0 grow border-1 border-[var(--card-border)] rounded-[8px]">
-                <label htmlFor="d-email">
+                <label htmlFor="email">
                   <svg
                     width="37"
                     height="37"
@@ -133,8 +130,8 @@ const AdminLogin = () => {
                   </svg>
                 </label>
                 <input
-                  type="d-email"
-                  name="d-email"
+                  type="email"
+                  name="email"
                   id="email"
                   placeholder="Type email"
                   value={newUser.email}
@@ -149,7 +146,7 @@ const AdminLogin = () => {
               {/* password  */}
               <div className="basis-0 grow md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center border-1 border-[var(--card-border)] rounded-[8px]">
                 <div className="flex items-center gap-[1rem] basis-0 grow">
-                  <label htmlFor="d-pass">
+                  <label htmlFor="pass">
                     <svg
                       width="30"
                       height="31"
@@ -166,8 +163,8 @@ const AdminLogin = () => {
                     </svg>
                   </label>
                   <input
-                    name="d-pass"
-                    id="d-pass"
+                    name="pass"
+                    id="pass"
                     type={passwordShown ? "text" : "password"}
                     placeholder="Type Password..."
                     value={newUser.password}
@@ -191,17 +188,17 @@ const AdminLogin = () => {
                 </div>
               </div>
 
-              {/* register button  */}
+              {/* login button  */}
               <button
                 type="submit"
                 className="rounded-[8px] p-[2rem] bg-[var(--dark-blue)] text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed shadow-[0px_3px_8px_#2d2d2de3] duration-200 hover:bg-[#0a3460]"
                 disabled={
-                  newUser.email.length < 10 ||
-                  newUser.password.length < 6 ||
+                  // newUser.email.length < 10 ||
+                  // newUser.password.length < 6 ||
                   isLoading
                 }
               >
-                Register
+                Login
               </button>
             </form>
           </div>

@@ -9,6 +9,7 @@ import Login from "./pages/login/Login";
 import NewAccountSetup from "./pages/registers/newaccountsetup/NewAccountSetup";
 import FormPage from "./pages/registers/pharmacistsRegister/FormPage";
 import CareProviderRegister from "./pages/registers/careProviderRegister/CareProviderRegister";
+import AdminLogin from './pages/login/adminLogin/AdminLogin'
 // import Login from "./login";
 export default function App() {
   return (
@@ -19,11 +20,11 @@ export default function App() {
     <Route path="/login" element={<Login/>}/>
     <Route path="/register" element={<NewAccountSetup/>}/>
       <Route path="/patient-register" element={<PatientRegister/>}/>
-      <Route path="/doctor-register" element={<DoctorRegister/>}/>
+      <Route path="/doctor-register" element={<DoctorRegister/>}/> {/*done*/} 
       <Route path="/pharmacist-register" element={<FormPage/>}/>
-      <Route path="/nurse-register" element={<CareProviderRegister/>}/>
-      <Route path="/physiotherapist-register" element={<CareProviderRegister/>}/>
-      <Route path="/delivery-register" element={<DeliveryRegister/>}/>
+      <Route path="/care-provider" element={<CareProviderRegister/>}/> {/*done*/}
+      <Route path="/delivery-register" element={<DeliveryRegister/>}/> {/*done*/}
+      <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
     </Routes>
     </BrowserRouter>
 

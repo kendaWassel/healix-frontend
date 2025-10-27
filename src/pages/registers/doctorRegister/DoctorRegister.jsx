@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faL } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import styles from "./DoctorRegister.module.css";
@@ -26,20 +26,61 @@ const DoctorRegister = () => {
   const [certificateFile, setCertificateFile] = useState(null);
   const [certificateFileName, setCertificateFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [specs, setSpecs] = useState([]);
+  const [specsLoaded, setSpecsLoaded] = useState(false);
   const inputRef = useRef(null);
+
+  const specsRequest = () => {
+    if (specsLoaded) return; // Prevent duplicate requests
+    
+    setIsLoading(true);
+    setError(null);
+    return fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/specializations`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((serverError) => {
+            throw new Error(serverError.message || "Specializations request failed");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('success getting specs: ', data);
+        // Handle the API response structure: {status: 'success', data: [...], message: '...'}
+        if (data.status === 'success' && data.data) {
+          setSpecs(data.data);
+          setSpecsLoaded(true);
+        } else {
+          throw new Error("Invalid response format");
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('failed getting specs:', error);
+        setError(error.message || "Failed to get specializations. Please try again.");
+        setIsLoading(false);
+      });
+  };
 
   const uploadImage = async (photoFile) => {
     console.log("uploading image: ", photoFile);
 
-    const response = await fetch("/api/uploads/image", {
+    const formData = new FormData();
+    formData.append('image', photoFile);
+    formData.append('category', 'profile');
+
+    const response = await fetch("https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/uploads/image", {
       method: "POST",
       headers: {
-        "Content-Type": "multipart/form-data",
+        "ngrok-skip-browser-warning": "true",
       },
-      body: {
-        image: photoFile,
-        category: "profile",
-      },
+      body: formData,
     });
 
     if (!response.ok) {
@@ -53,15 +94,16 @@ const DoctorRegister = () => {
   const uploadFile = async (certificateFile) => {
     console.log("uploading file: ", certificateFile);
 
-    const response = await fetch("/api/uploads", {
+    const formData = new FormData();
+    formData.append('file', certificateFile);
+    formData.append('category', 'certificate');
+
+    const response = await fetch("https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/uploads", {
       method: "POST",
       headers: {
-        "Content-Type": "multipart/form-data",
+        "ngrok-skip-browser-warning": "true",
       },
-      body: {
-        file: certificateFile,
-        category: "certificate",
-      },
+      body: formData,
     });
 
     if (!response.ok) {
@@ -77,39 +119,35 @@ const DoctorRegister = () => {
     e.preventDefault();
     setError(null);
     setSuccessMsg(null);
-    setIsLoading(true);
 
-    // const imageId = await uploadImage(photoFile);
 
-    // setNewUser({ ...newUser, doctor_image_id: imageId });
-
-    // const fileId = await uploadFile(certificateFile);
-
-    // setNewUser({ ...newUser, certificate_file_id: fileId });
+    const imageId = await uploadImage(photoFile);
+    const fileId = await uploadFile(certificateFile);
 
     const user = {
       role: newUser.role,
       full_name: newUser.full_name,
       email: newUser.email,
-      doctor_image_id: newUser.doctor_image_id,
+      doctor_image_id: imageId,
       phone: newUser.phone,
       password: newUser.password,
-      specialization: ["Dermatology"],
+      specialization: newUser.specialization,
       gender: newUser.gender,
       from: newUser.from,
       to: newUser.to,
-      consultation_fee: newUser.consultation_fee,
-      certificate_file_id: newUser.certificate_file_id,
+      consultation_fee: parseInt(newUser.consultation_fee) || 0,
+      certificate_file_id: fileId,
     };
 
     console.log("user's data: ", user);
 
-    fetch(`/api/auth/register`, {
+    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(user), 
     })
       .then((response) => {
         if (!response.ok) {
@@ -117,7 +155,7 @@ const DoctorRegister = () => {
             throw new Error(serverError.message || "Registration failed");
           });
         }
-        console.log("success sending user's data ");
+        console.log("success sending user's data");
         return response.json();
       })
       .then((data) => {
@@ -139,14 +177,16 @@ const DoctorRegister = () => {
         });
       })
       .catch((error) => {
+        console.error("Registration error:", error);
         setError(error.message || "Failed to create user. Please try again.");
       })
       .finally(() => {
-        setIsLoading(false);
+        // setIsLoading(false);
       });
   };
 
   useEffect(() => {
+    specsRequest();
     inputRef.current.focus();
   }, []);
 
@@ -175,7 +215,12 @@ const DoctorRegister = () => {
               />
             </svg>
           </button>
-          {/* form  */}
+          {isLoading ? 
+          <>
+          Loading ...
+          </>
+          :
+          //form
           <div className="flex-grow-1 flex flex-col items-center">
             <div className={`${styles.formHeading} text-center`}>
               <h1 className="md:text-[25px] sm:text-[20px] text-[18px] text-[var(--dark-blue)] font-bold">
@@ -362,8 +407,11 @@ const DoctorRegister = () => {
                     className="text-[var(--text-color)]"
                   >
                     <option value="">Specialization</option>
-                    <option value="first">first</option>
-                    <option value="second">second</option>
+                    {specs.map((spec) => (
+                      <option key={spec.id} value={spec.name}>
+                        {spec.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px]">
@@ -651,6 +699,7 @@ const DoctorRegister = () => {
               </button>
             </form>
           </div>
+        }
         </div>
       </div>
       <LogoImage />
