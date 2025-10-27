@@ -5,8 +5,11 @@ import DoctorRegister from "./pages/registers/doctorRegister/DoctorRegister";
 import "./App.css";
 import PatientRegister from "./pages/registers/patientRegister/PatientRegister";
 import DeliveryRegister from "./pages/registers/dileveryRegister/DileveryRegister";
-import Login from "./pages/login/Login";
+import UserLogin from "./pages/login/UserLogin/UserLogin";
 import NewAccountSetup from "./pages/registers/newaccountsetup/NewAccountSetup";
+ HEAD
+
+
 import FormPage from "./pages/registers/pharmacistsRegister/FormPage";
 import CareProviderRegister from "./pages/registers/careProviderRegister/CareProviderRegister";
 import AdminLogin from './pages/login/adminLogin/AdminLogin'
@@ -14,6 +17,9 @@ import AdminLogin from './pages/login/adminLogin/AdminLogin'
 export default function App() {
   return (
     <>
+ HEAD
+    <UserLogin/>
+
     <BrowserRouter>
     <Routes>
     <Route path="/" element={<LandingPage />} />
@@ -29,6 +35,7 @@ export default function App() {
     </BrowserRouter>
 
   
+ 8b063adc1f54a7c8b890b4b9dc99157a631949f3
     </>
   );
 }
