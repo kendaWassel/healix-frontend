@@ -12,32 +12,36 @@ const CareProviderRegister = () => {
     role: "care_provider",
     full_name: "",
     email: "",
+    doctor_image_id: null,
     phone: "",
-    care_provider_image_id: null,
     password: "",
     type: "",
     gender: "",
-    license_file_id: null,
-    session_fee: null,
+    from: "",
+    to: "",
+    consultation_fee: null,
+    certificate_file_id: null,
   });
   const [photoFile, setPhotoFile] = useState(null);
-  const [certificateFile, setCertificateFile] = useState(null);
-  const [certificateFileName, setCertificateFileName] = useState("");
+  const [licenseFile, setLicenseFile] = useState(null);
+  const [LicenseFileName, setLicenseFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
+
 
   const uploadImage = async (photoFile) => {
     console.log("uploading image: ", photoFile);
 
-    const response = await fetch("/api/uploads/image", {
+    const formData = new FormData();
+    formData.append('image', photoFile);
+    formData.append('category', 'profile');
+
+    const response = await fetch("https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/uploads/image", {
       method: "POST",
       headers: {
-        "Content-Type": "multipart/form-data",
+        "ngrok-skip-browser-warning": "true",
       },
-      body: {
-        image: photoFile,
-        category: "profile",
-      },
+      body: formData,
     });
 
     if (!response.ok) {
@@ -48,18 +52,19 @@ const CareProviderRegister = () => {
     console.log("image uploaded: ", data);
     return data.image_id;
   };
-  const uploadFile = async (license_file) => {
-    console.log("uploading file: ", license_file);
+  const uploadFile = async (licenseFile) => {
+    console.log("uploading file: ", licenseFile);
 
-    const response = await fetch("/api/uploads", {
+    const formData = new FormData();
+    formData.append('file', licenseFile);
+    formData.append('category', 'certificate');
+
+    const response = await fetch("https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/uploads", {
       method: "POST",
       headers: {
-        "Content-Type": "multipart/form-data",
+        "ngrok-skip-browser-warning": "true",
       },
-      body: {
-        file: license_file,
-        category: "certificate",
-      },
+      body: formData,
     });
 
     if (!response.ok) {
@@ -70,41 +75,38 @@ const CareProviderRegister = () => {
     console.log("file uploaded: ", data);
     return data.file_id;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccessMsg(null);
-    setIsLoading(true);
 
-    // const imageId = await uploadImage(photoFile);
 
-    // setNewUser({ ...newUser, care_provider_image_id: imageId });
-
-    // const fileId = await uploadFile(certificateFile);
-
-    // setNewUser({ ...newUser, license_file_id: fileId });
+    const imageId = await uploadImage(photoFile);
+    const fileId = await uploadFile(licenseFile);
 
     const user = {
       role: newUser.role,
       full_name: newUser.full_name,
       email: newUser.email,
+      care_provider_image_id: imageId,
       phone: newUser.phone,
-      care_provider_image_id: newUser.care_provider_image_id,
       password: newUser.password,
       type: newUser.type,
       gender: newUser.gender,
-      session_fee: newUser.session_fee,
-      license_file_id: null,
+      session_fee: parseInt(newUser.session_fee) || 0,
+      license_file_id: fileId,
     };
 
     console.log("user's data: ", user);
 
-    fetch(`/api/auth/register`, {
+    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
       },
-      body: JSON.stringify(user),
+      body: JSON.stringify(user), 
     })
       .then((response) => {
         if (!response.ok) {
@@ -112,7 +114,7 @@ const CareProviderRegister = () => {
             throw new Error(serverError.message || "Registration failed");
           });
         }
-        console.log("success sending user's data ");
+        console.log("success sending user's data");
         return response.json();
       })
       .then((data) => {
@@ -122,20 +124,21 @@ const CareProviderRegister = () => {
           role: "care_provider",
           full_name: "",
           email: "",
-          phone: "",
           care_provider_image_id: null,
+          phone: "",
           password: "",
           type: "",
           gender: "",
+          sessiom_fee: null,
           license_file_id: null,
-          session_fee: null,
         });
       })
       .catch((error) => {
+        console.error("Registration error:", error);
         setError(error.message || "Failed to create user. Please try again.");
       })
       .finally(() => {
-        setIsLoading(false);
+        // setIsLoading(false);
       });
   };
 
@@ -149,6 +152,7 @@ const CareProviderRegister = () => {
   //       navigate('/logged');
   //     }
   //   },[navigate]);
+
   return (
     <div className="relative flex">
       <div className={`contentCol h-[100%]`}>
@@ -495,7 +499,7 @@ const CareProviderRegister = () => {
                     </svg>
                   </label>
                   <div className={styles.fileDisplay}>
-                    {certificateFileName || "Upload Lisence File"}
+                    {LicenseFileName || "Upload Lisence File"}
                   </div>
                   <input
                     type="file"
@@ -503,8 +507,8 @@ const CareProviderRegister = () => {
                     id="certificate"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      setCertificateFileName(file ? file.name : "");
-                      setCertificateFile(file);
+                      setLicenseFileName(file ? file.name : "");
+                      setLicenseFile(file);
                     }}
                     required
                     disabled={isLoading}
@@ -558,18 +562,18 @@ const CareProviderRegister = () => {
               <button
                 type="submit"
                 className="rounded-[8px] p-[2rem] bg-[var(--dark-blue)] text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed shadow-[0px_3px_8px_#2d2d2de3] duration-200 hover:bg-[#0a3460]"
-                disabled={
-                  // newUser.full_name.length < 4 ||
-                  // newUser.email.length < 10 ||
-                  // newUser.phone.length < 10 ||
-                  // newUser.password.length < 10 ||
-                  // newUser.type === "" ||
-                  // newUser.gender === "" ||
-                  // newUser.care_provider_image_id === null||
-                  // newUser.session_fee === null ||
-                  // newUser.license_file_id === null ||
-                  isLoading
-                }
+                // disabled={
+                //   // newUser.full_name.length < 4 ||
+                //   // newUser.email.length < 10 ||
+                //   // newUser.phone.length < 10 ||
+                //   // newUser.password.length < 10 ||
+                //   // newUser.type === "" ||
+                //   // newUser.gender === "" ||
+                //   // newUser.care_provider_image_id === null||
+                //   // newUser.session_fee === null ||
+                //   // newUser.license_file_id === null ||
+                //   isLoading
+                // }
               >
                 Register
               </button>
