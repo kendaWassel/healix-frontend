@@ -1,30 +1,33 @@
 const Footer = () => {
   return (
     <div className="bg-[var(--dark-blue)] md:pt-[4rem] pt-[2rem]">
-      <div className="footer-content text-white md:px-[3rem] px-[2rem] md:pb-[4rem] pb-[2rem] flex items-start border-b-[1px] border-[var(--white)]">
-        <div className="flex gap-[5rem] items-start flex-grow-[5]">
-        <div className="flex flex-col items-start gap-[1.5rem]">
-          <div className="w-[125px]">
-            <img src="./Logo-light.png" alt="logo" />
+      <div className="text-white md:px-[3rem] px-[2rem] md:pb-[4rem] pb-[2rem] flex flex-col md:flex-row items-start gap-[2rem] md:gap-0 border-b-[1px] border-[var(--white)]">
+        <div className="flex gap-[5rem] items-start flex-grow-[5] flex-col md:flex-row">
+            {/* logo section  */}
+          <div className="flex flex-col items-start gap-[1.5rem]">
+            <div className="w-[125px]">
+              <img src="./Logo-light.png" alt="logo" />
+            </div>
+            <h3 className="text-[var(--white)] text-[18px] md:text-[25px]">
+              Your Health, Just One Click Away
+            </h3>
           </div>
-          <h3 className="text-[var(--white)] md:text-[25px]">
-            Your Health, Just One Click Away
-          </h3>
-        </div>
-        <div>
-          <h3 className="md:text-[20px] font-medium mb-[0.5rem]">Contact us:</h3>
-          <div className="phone">
-            <span className="md:text-[20px]">Phone: </span>
-            <span className="md:text-[20px]">0943779128</span>
-          </div>
-          <div className="email">
-            <span className="md:text-[20px]">Email: </span>
-            <span className="md:text-[20px]">kendawassel14@gmail.com</span>
+          {/* contact section  */}
+          <div className="md:mt-0 mt-[1rem]">
+            <h3 className="text-[16px] md:text-[20px] font-medium mb-[0.5rem]">Contact us:</h3>
+            <div className="phone">
+              <span className="text-[14px] md:text-[20px]">Phone: </span>
+              <span className="text-[14px] md:text-[20px]">0943779128</span>
+            </div>
+            <div className="email">
+              <span className="text-[14px] md:text-[20px]">Email: </span>
+              <span className="text-[14px] md:text-[20px] break-all">kendawassel14@gmail.com</span>
+            </div>
           </div>
         </div>
-        </div>
-        <div className="flex-grow-[2]">
-          <h3 className="md:text-[20px] font-medium mb-[0.5rem]">Social Media:</h3>
+        {/* social media section  */}
+        <div className="flex-grow-[2] md:mt-0 mt-[1rem] w-full md:w-auto">
+          <h3 className="text-[16px] md:text-[20px] font-medium mb-[0.5rem]">Social Media:</h3>
           <div className="icons flex gap-[1rem] items-center">
             <div className="insta">
               <svg
@@ -109,8 +112,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="text-center text-white py-[0.5rem] font-medium">
-        <span>© 2025 Healix. All Rights Reserved.</span>
+      <div className="text-center text-white py-[0.5rem] md:px-[3rem] px-[2rem]">
+        <span className="text-[12px] md:text-[14px] font-medium">© 2025 Healix. All Rights Reserved.</span>
       </div>
     </div>
   );
