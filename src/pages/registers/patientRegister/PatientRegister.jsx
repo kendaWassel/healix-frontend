@@ -92,7 +92,7 @@ export default function PatientRegister() {
          <title>Patient Account Setup</title>
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
-          <Link to="/">
+          <Link to="/register">
           <FontAwesomeIcon icon={faArrowLeft}  />
           </Link>
         </span>

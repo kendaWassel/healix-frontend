@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import "./login.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-
-
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -115,7 +114,7 @@ function Login() {
       </form>
 
       <p className="register-text">
-        Don’t have an account yet? <a href="#">Register</a>
+        Don’t have an account yet? <Link to="/register">Register</Link>
       </p>
     </div>
   );
