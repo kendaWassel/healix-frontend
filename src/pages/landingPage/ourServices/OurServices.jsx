@@ -149,7 +149,7 @@ const OurServices = () => {
   return (
     <div className="md:px-[3rem] px-[1.5rem] md:py-[1.5rem] py-[0.5rem] text-center">
       <h2 className="md:pb-[1.5rem] pb-[0.5rem] md:text-[25px] text-[20px] font-medium">Our services</h2>
-      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 md:gap-[3rem]">
+      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 md:gap-[3rem] gap-[1.5rem]">
       {services.map((service,index)=>(
         <ServicesCard key={index} service={service}/>
       ))}

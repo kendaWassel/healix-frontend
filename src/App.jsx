@@ -1,17 +1,41 @@
 import LandingPage from "./pages/landingPage/LandingPage";
-import { Routes } from "react-router";
+import { BrowserRouter } from "react-router-dom";
+import { Routes,Route } from "react-router-dom";
 import DoctorRegister from "./pages/registers/doctorRegister/DoctorRegister";
 import "./App.css";
 import PatientRegister from "./pages/registers/patientRegister/PatientRegister";
 import DeliveryRegister from "./pages/registers/dileveryRegister/DileveryRegister";
 import UserLogin from "./pages/login/UserLogin/UserLogin";
 import NewAccountSetup from "./pages/registers/newaccountsetup/NewAccountSetup";
+ HEAD
 
+
+import FormPage from "./pages/registers/pharmacistsRegister/FormPage";
+import CareProviderRegister from "./pages/registers/careProviderRegister/CareProviderRegister";
+import AdminLogin from './pages/login/adminLogin/AdminLogin'
 // import Login from "./login";
 export default function App() {
   return (
     <>
+ HEAD
     <UserLogin/>
+
+    <BrowserRouter>
+    <Routes>
+    <Route path="/" element={<LandingPage />} />
+    <Route path="/login" element={<Login/>}/>
+    <Route path="/register" element={<NewAccountSetup/>}/>
+      <Route path="/patient-register" element={<PatientRegister/>}/>
+      <Route path="/doctor-register" element={<DoctorRegister/>}/> {/*done*/} 
+      <Route path="/pharmacist-register" element={<FormPage/>}/>
+      <Route path="/care-provider-register" element={<CareProviderRegister/>}/> {/*done*/}
+      <Route path="/delivery-register" element={<DeliveryRegister/>}/> {/*done*/}
+      <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
+    </Routes>
+    </BrowserRouter>
+
+  
+ 8b063adc1f54a7c8b890b4b9dc99157a631949f3
     </>
   );
 }

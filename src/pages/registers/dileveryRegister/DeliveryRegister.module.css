@@ -1,22 +1,65 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
+  
+  .hiddenFileInput {
+    position: relative;
+    overflow: hidden;
+  }
+  .hiddenFileInput input[type="file"] {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
   }
   
+  .hiddenFileInput input[type="file"]::-webkit-file-upload-button {
+    display: none;
+  }
+  
+  .hiddenFileInput input[type="file"]::file-selector-button {
+    display: none;
+  }
+  
+  .customFileInput {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .customFileInput input[type="file"] {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .customFileInput input[type="file"]::-webkit-file-upload-button {
+    display: none;
+  }
+  
+  .customFileInput input[type="file"]::file-selector-button {
+    display: none;
+  }
+  
+  .fileDisplay {
+    flex: 1;
+    color: var(--text-color);
+    font-size: 14px;
+    padding: 0.5rem;
+    min-height: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
   .formContainer {
     background-color: #fff;
-    padding: 55px;
+    padding: 110px 100px;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     width: 100%;
-    max-width: 500px;
+    max-width: 850px;
     box-sizing: border-box;
- 
+    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
   }
   
   .formHeader {
@@ -29,23 +72,23 @@ body {
   
   .backArrow {
     position: absolute;
-    left: -20px;
-    top: -40px;
-    font-size: 24px;
+    left: -10px;
+    top: -60px;
+    font-size: 30px;
     color: #000000;
     cursor: pointer;
   }
   
   .formHeader h1 {
-    font-size: 24px;
+    font-size: 30px;
     color: #003366;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
   
   .formHeader p {
-    font-size: 16px;
+    font-size: 20px;
     color: #666;
-    margin-top: 0;
+    margin-bottom: 5px;
   }
   
   .deliveryForm {
@@ -80,6 +123,8 @@ body {
     border-radius: 10px;
     padding: 10px 15px;
     background-color: #fdfdfd;
+    width: 50px;
+    height: 50px;
   }
   
   
@@ -111,6 +156,7 @@ body {
   .uploadGroup {
     justify-content: center;
     cursor: pointer;
+    font-size: large;
   }
   
   .uploadLabel {
@@ -146,13 +192,13 @@ body {
     outline: none;
     flex: 1;
     width: 100%;
-    font-size: 14px;
+    font-size: 18px;
     
   }
   
   .error {
     color: red;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 0;
   }
   
@@ -161,7 +207,7 @@ body {
   }
   .icon{
     color: #39CCCC;
-    font-size: 18px;
+    font-size: 20px;
     margin-right: 10px;
   }
   .photoContainer{
@@ -204,7 +250,7 @@ body {
   }
   .errorMsg {
     color: #d32f2f;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 5px;
   }
   
