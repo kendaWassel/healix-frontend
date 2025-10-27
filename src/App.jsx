@@ -22,7 +22,7 @@ export default function App() {
       <Route path="/patient-register" element={<PatientRegister/>}/>
       <Route path="/doctor-register" element={<DoctorRegister/>}/> {/*done*/} 
       <Route path="/pharmacist-register" element={<FormPage/>}/>
-      <Route path="/care-provider" element={<CareProviderRegister/>}/> {/*done*/}
+      <Route path="/care-provider-register" element={<CareProviderRegister/>}/> {/*done*/}
       <Route path="/delivery-register" element={<DeliveryRegister/>}/> {/*done*/}
       <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
     </Routes>

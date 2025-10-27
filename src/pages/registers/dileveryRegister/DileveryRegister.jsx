@@ -163,7 +163,7 @@ export default function DeliveryRegister() {
          <title>Delivery Account Setup</title>
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
-        <Link to="/">
+        <Link to="/register">
           <FontAwesomeIcon icon={faArrowLeft}  />
           </Link>
         </span>

@@ -51,14 +51,14 @@ const accountTypes = [
     title: "For Nurses",
     desc: "Provide at-home medical care",
     icon: faUserNurse,
-    dest: "/nurse-register"
+    dest: "/care-provider-register"
   },
   {
     key: "physiotherapist",
     title: "For Physiotherapists",
     desc: "Provide at-home physical care",
     icon: faPersonWalking,
-    dest:"/physiotherapist-register"
+    dest:"/care-provider-register"
   },
 ];
 
