@@ -8,8 +8,6 @@ import {
   faPhone,
   faEnvelope,
   faLock,
-  faArrowUpFromBracket,
-  faCamera ,
   faCar,
   faHashtag,
 } from "@fortawesome/free-solid-svg-icons";
