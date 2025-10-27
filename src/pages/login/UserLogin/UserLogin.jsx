@@ -192,7 +192,7 @@ import LogoImage from "../../../components/logoImage/LogoImage";
               </button>
             </form>
               <p className="font-medium sm:text-[18px] text-[var(--text-color)] my-[1rem]">
-               don’t have an account yet? <a href="#">Register </a> 
+        Don’t have an account yet? <Link to="/register">Register</Link>
       </p>
           </div>
         </div>
