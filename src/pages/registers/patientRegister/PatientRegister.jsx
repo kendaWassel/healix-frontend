@@ -24,7 +24,9 @@ export default function PatientRegister() {
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
   const inputRef = useRef(null);
-
+  useEffect(() => {
+    document.title = "Patient Account Setup";
+  }, []);
   const [newUser, setNewUser] = useState({
     role: "patient",
     full_name: "",
@@ -89,7 +91,7 @@ export default function PatientRegister() {
   return (
     
     <div className={styles.formContainer}>
-         <title>Patient Account Setup</title>
+  
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
           <Link to="/register">
@@ -98,8 +100,8 @@ export default function PatientRegister() {
         </span>
         <h1>Patients Account Setup</h1>
         <p>Fill your information to register</p>
-        {error && <div className="alert alert-danger">{error}</div>}
-        {successMsg && <div className="alert alert-success">{successMsg}</div>}
+        {error && <div className={styles.errorMsg}>{error}</div>}
+          {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
       </header>
 
       <form className={styles.patientForm} onSubmit={handleSubmit}>
