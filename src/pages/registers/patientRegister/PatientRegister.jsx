@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./PatientRegister.module.css";
 import LogoImage from "../../../components/logoImage/LogoImage";
+import MapPicker from "../../../components/map/MapPicker";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,15 +17,12 @@ import {
   faArrowLeft,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-
-
 export default function PatientRegister() {
   const [passwordShown, setPasswordShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [successMsg, setSuccessMsg] = useState(null);
-  const inputRef = useRef(null);
-
+  const [error, setError] = useState();
+  const [successMsg, setSuccessMsg] = useState();
+  const [isMapOpen, setIsMapOpen] = useState(false);
   const [newUser, setNewUser] = useState({
     role: "patient",
     full_name: "",
@@ -37,54 +35,82 @@ export default function PatientRegister() {
     latitude: null, 
     longitude: null ,
   });
+  const inputRef = useRef(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('users data to sent: ',newUser);
+    // setIsLoading(true);
+    // setError(null);
+    // setSuccessMsg(null);
+
+    // const user = {
+    //   role: newUser.role,
+    //   full_name: newUser.full_name,
+    //   email: newUser.email,
+    //   phone: newUser.phone,
+    //   password: newUser.password,
+    //   birth_date: newUser.birth_date,
+    //   gender: newUser.gender,
+    //   address: newUser.address,
+    //   latitude: newUser.latitude,
+    //   longitude:newUser.longitude
+    // };
+
+    // console.log("user's data: ", user);
+
+    // fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "ngrok-skip-browser-warning": "true",
+    //   },
+    //   body: JSON.stringify(user), 
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       return response.json().then((serverError) => {
+    //         throw new Error(serverError.message || "Registration failed");
+    //       });
+    //     }
+    //     console.log("success sending user's data");
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     console.log("message from api: ", data.message);
+    //     setSuccessMsg("Check your email for Activation link");
+    //     setNewUser({
+    //       role: "patient",
+    //       full_name: "",
+    //       email: "",
+    //       phone: "",
+    //       password: "",
+    //       birth_date:"",
+    //       gender: "",
+    //       address: "",
+    //       latitude: null, 
+    //       longitude: null ,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     console.error("Registration error:", error);
+    //     setError(error.message || "Failed to create user. Please try again.");
+    //   })
+    //   .finally(() => {
+    //     setIsLoading(false);
+    //   });
+  };
 
   useEffect(() => {
-    inputRef.current?.focus();
+    if (inputRef.current) inputRef.current.focus();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError(null);
-    setSuccessMsg(null);
-    setIsLoading(true);
-
-
-    if (newUser.password !== newUser.password_confirmation) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
-
-
-    fetch("https://api.example.com/user/register?_format=json", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newUser),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Registration failed");
-        return response.json();
-      })
-      .then(() => {
-        setSuccessMsg("Check your email for Activation link");
-        setNewUser({
-          role: "patient",
-          full_name: "",
-          email: "",
-          phone: "",
-          password: "",
-          birth_date:"",
-          gender: "",
-          address: "",
-          latitude: null, 
-          longitude: null ,
-        });
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => setIsLoading(false));
-  };
+  //     useEffect(()=>{
+  //     inputRef.current.focus();
+  //     if(userData.isAuthorized) {
+  //       navigate('/logged');
+  //     }
+  //   },[navigate]);
 
   return (
     
@@ -200,14 +226,14 @@ export default function PatientRegister() {
      
           <FontAwesomeIcon icon={faChevronDown} className={`${styles.selectArrow} ${styles.icon}`} />
         </div>
-
-        <div className={styles.inputRow}>
-          <div className={styles.inputGroup}>
-            <FontAwesomeIcon icon={faLocationDot} className={styles.icon} />
+        <div
+          className={`${styles.inputGroup} ${styles.fullWidth}`}
+        >
+<FontAwesomeIcon icon={faLocationDot} className={styles.icon} />
             <input
               id="address"
               type="text"
-              placeholder="Type location..."
+              placeholder="area-street-building-floor-home no"
               value={newUser.address}
               onChange={(e) =>
                 setNewUser({ ...newUser, address: e.target.value })
@@ -215,8 +241,14 @@ export default function PatientRegister() {
               required
               disabled={isLoading}
             />
-          </div>
-          <button type="button" className={styles.locationMapButton}>
+        </div>
+
+        <div className={styles.inputRow}>
+          <button
+            type="button"
+            className={styles.locationMapButton}
+            onClick={() => setIsMapOpen(true)}
+          >
             <FontAwesomeIcon icon={faMap} className={styles.icon} /> Location in
             map
           </button>
@@ -248,6 +280,24 @@ export default function PatientRegister() {
           {isLoading ? "Registering..." : "Register"}
         </button>
       </form>
+      {isMapOpen && (
+        <MapPicker
+          initialPosition={
+            newUser.latitude != null && newUser.longitude != null
+              ? [newUser.latitude, newUser.longitude]
+              : null
+          }
+          onConfirm={(lat, lng) => {
+            console.log("Storing selected location in form state:", {
+              latitude: lat,
+              longitude: lng,
+            });
+            setNewUser({ ...newUser, latitude: lat, longitude: lng });
+            setIsMapOpen(false);
+          }}
+          onClose={() => setIsMapOpen(false)}
+        />
+      )}
         <LogoImage/>
     </div>
  

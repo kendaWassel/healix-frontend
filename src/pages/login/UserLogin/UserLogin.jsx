@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faEnvelope, faLock,faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
 import LogoImage from "../../../components/logoImage/LogoImage";
+import { Link } from "react-router-dom";
  import styles from "../adminLogin/AdminLogin.module.css";
  const UserLogin = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -14,19 +15,11 @@ import LogoImage from "../../../components/logoImage/LogoImage";
   });
   const inputRef = useRef(null);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccessMsg(null);
     setIsLoading(true);
-
-    // const imageId = await uploadImage(photoFile);
-
-    // setNewUser({ ...newUser, doctor_image_id: imageId });
 
     const user = {
       email: newUser.email,
@@ -35,10 +28,11 @@ import LogoImage from "../../../components/logoImage/LogoImage";
 
     console.log("user's data: ", user);
 
-    fetch(`http://127.0.0.1:8000/api/auth/register`, {
+    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
       },
       body: JSON.stringify(user),
     })
@@ -53,14 +47,14 @@ import LogoImage from "../../../components/logoImage/LogoImage";
       })
       .then((data) => {
         console.log("message from api: ", data.message);
-        setSuccessMsg("Check your email for Activation link");
+        setSuccessMsg("Logged in successeully!!");
         setNewUser({
           email: "",
           password: "",
         });
       })
       .catch((error) => {
-        setError(error.message || "Failed to create user. Please try again.");
+        setError(error.message || "Failed to login. Please try again.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -78,8 +72,9 @@ import LogoImage from "../../../components/logoImage/LogoImage";
   //     }
   //   },[navigate]);
 
+
   return (
-    <div className="relative flex">
+    <div className="relative flex min-h-screen items-center">
       <div className={`contentCol h-[100%]`}>
         <div className="flex items-start md:py-[2rem] py-[1rem] md:ps-[2rem] ps-[1rem]">
           {/* form  */}
@@ -182,17 +177,17 @@ import LogoImage from "../../../components/logoImage/LogoImage";
               <button
                 type="submit"
                 className="rounded-[8px] p-[2rem] bg-[var(--dark-blue)] text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed shadow-[0px_3px_8px_#2d2d2de3] duration-200 hover:bg-[#0a3460]"
-                // disabled={
-                //   newUser.email.length < 10 ||
-                //   newUser.password.length < 6 ||
-                //   isLoading
-                // }
+                disabled={
+                  newUser.email.length < 10 ||
+                  newUser.password.length < 6 ||
+                  isLoading
+                }
               >
                 Sign in
               </button>
             </form>
               <p className="font-medium sm:text-[18px] text-[var(--text-color)] my-[1rem]">
-        Don’t have an account yet? <Link to="/register">Register</Link>
+        Don’t have an account yet? <Link to="/register" className="text-[var(--cyan)]">Register</Link>
       </p>
           </div>
         </div>
