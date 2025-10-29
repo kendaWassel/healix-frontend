@@ -1,0 +1,160 @@
+.form-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6f7fb;
+  padding: 20px;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 600px;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.back-arrow {
+  cursor: pointer;
+  margin-bottom: -60px;
+  margin-left: -700px;
+}
+
+.form-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 14px;
+}
+
+.input-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-field input {
+  width: 100%;
+  padding-right: 40px; /* مساحة للأيقونة */
+}
+
+.extra-icon {
+  position: absolute;
+  right: 10px; /* لصقها يمين */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.input-field svg {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.input-field input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 16px;
+}
+
+.extra-icon {
+  cursor: pointer;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #0a3460;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  height: 4.2rem;
+  box-shadow: 0px 3px 8px#2d2d2de3
+}
+
+.submit-btn:hover {
+  opacity: 0.85;
+}
+/* input feild */
+
+
+.input-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff;
+  border: 1.5px solid rgb(254, 244, 224);
+  border-radius: 12px;
+  padding: 10px 14px;
+  width: 95%;
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); */
+  transition: border-color 0.3s ease;
+  height: 2.4rem;
+}
+
+.input-field:focus-within {
+  border-color: rgb(254, 244, 224);
+}
+
+.file-placeholder {
+  color: #828181;
+  font-size: 15px;
+}
+
+.file-placeholder.has-file {
+  color: #333;
+}
+
+
+.icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  color: #39CCCC; 
+
+}
+
+.eye-icon {
+  color: #545454;
+  cursor: pointer;
+}
+
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #333;
+  background-color: transparent;
+}
+
+.extra-icon {
+    width: 34px;
+  height: 34px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.extra-icon:hover {
+  opacity: 0.7;
+}
