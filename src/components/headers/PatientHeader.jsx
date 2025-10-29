@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 const PatientHeader = () => {
@@ -7,39 +7,50 @@ const PatientHeader = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const activeStyle = "text-[var(--cyan)] font-semibold";
+  const normalStyle = "text-[var(--text-color)] hover:text-[var(--cyan)] font-medium duration-300";
+
 
   return (
     <nav className="md:px-[3rem] px-[2rem] md:py-[1.5rem] py-[1rem] flex items-center justify-between border-b-[1px] border-[var(--card-border)] relative">
       {/* Logo */}
-      <Link to='/' className="logo w-[125px]">
+      <NavLink to="/" className="logo w-[125px]">
         <img src="./Logo-dark.png" alt="logo" />
-      </Link> 
-      {/* desktop nav */}
+      </NavLink>
+
+      {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-[3rem]">
-        <Link 
-          to='/consultation' 
-          className="text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[10px] px-[0.8rem] py-[0.5rem] font-medium"
+        <NavLink
+          to="/consultation"
+          className={({ isActive }) =>
+            isActive
+              ? `${activeStyle} bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] rounded-[10px] px-[0.8rem] py-[0.5rem]`
+              : `text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[10px] px-[0.8rem] py-[0.5rem] font-medium`
+          }
         >
           Doctor Consultation
-        </Link>
-        <Link 
-          to='/' 
-          className="text-[var(--text-color)] hover:text-[var(--cyan)] duration-400 font-medium"
+        </NavLink>
+
+        <NavLink
+          to="/"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
-        </Link>
-        <Link 
-          to='/' 
-          className="text-[var(--text-color)] hover:text-[var(--cyan)] duration-400 font-medium"
+        </NavLink>
+
+        <NavLink
+          to="/schedules"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-            My Schedules 
-        </Link>
-        <Link 
-          to='/' 
-          className="text-[var(--text-color)] hover:text-[var(--cyan)] duration-400 font-medium"
+          My Schedules
+        </NavLink>
+
+        <NavLink
+          to="/receipts"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My receipts
-        </Link>
+          My Receipts
+        </NavLink>
       </div>
 
       {/* mobile menu */}
@@ -58,34 +69,38 @@ const PatientHeader = () => {
         }`}
       >
         <div className="flex flex-col p-4 gap-3">
-          <Link
+          <NavLink
             onClick={() => setIsMenuOpen(false)}
             to='/consultation' 
-            className="w-[fit-content] text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[10px] px-[0.8rem] py-[0.5rem] font-medium"
+            className={({ isActive }) =>
+            isActive
+              ? `${activeStyle} bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] rounded-[10px] px-[0.8rem] py-[0.5rem]`
+              : `text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[10px] px-[0.8rem] py-[0.5rem] font-medium`
+          }
           >
             Doctor Consultation
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             onClick={() => setIsMenuOpen(false)}
             to='/' 
-          className="text-[var(--text-color)] hover:text-[var(--cyan)] duration-400 font-medium"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             onClick={() => setIsMenuOpen(false)}
             to='/' 
-          className="text-[var(--text-color)] hover:text-[var(--cyan)] duration-400 font-medium"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules 
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             onClick={() => setIsMenuOpen(false)}
             to='/' 
-          className="text-[var(--text-color)] hover:text-[var(--cyan)] duration-400 font-medium"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My receipts
-          </Link>
+          </NavLink>
         </div>
       </div>
     </nav>
