@@ -36,7 +36,9 @@ export default function DeliveryRegister() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
 
-
+  useEffect(() => {
+    document.title = "Dilevery Account Setup";
+  }, []);
   const uploadImage = async (photoFile) => {
     console.log("uploading image: ", photoFile);
 
@@ -160,7 +162,7 @@ export default function DeliveryRegister() {
 
   return (
     <div className={styles.formContainer}>
-         <title>Delivery Account Setup</title>
+       
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
         <Link to="/register">
@@ -169,10 +171,8 @@ export default function DeliveryRegister() {
         </span>
         <h1>Delivery Agents Account Setup</h1>
         <p>Fill your information to register</p>
-        {error && <div className="alert alert-danger">{error}</div>}
-        {successMsg && (
-          <div className="alert alert-success">{successMsg}</div>
-        )}
+        {error && <div className={styles.errorMsg}>{error}</div>}
+          {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
       </header>
 
       <form className={styles.deliveryForm} onSubmit={handleSubmit}>

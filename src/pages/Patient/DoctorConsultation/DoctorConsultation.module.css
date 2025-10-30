@@ -1,0 +1,109 @@
+.CardContainer{
+    background-color: #fff;
+    padding: 100px 130px 40px 130px;
+    margin: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+.CardHeader{
+    margin-bottom: 30px;
+    position: relative;
+}
+.backArrow {
+    position: absolute;
+    left: -10px;
+    top: -60px;
+    font-size: 30px;
+    color: #000000;
+    cursor: pointer;
+  }
+.CardHeader h1{
+    color: #052443;
+    font-weight: bold;
+    font-size: xx-large;
+}
+.CardHeader p{
+    display: flex;
+    font-size: large;
+    
+}
+
+  .CardHeader button{
+    color: #FFFFFF;
+    background: #052443;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100px;
+    height: 60px;
+   margin-left: 80rem;
+   
+ 
+  }
+  .ConsaltationForm{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 60px;
+    width: auto;
+  }
+  .SpecialityButton{
+width: 250px;
+height: 70px;
+border: 1px solid #ddd;
+border-radius: 10px;
+background-color: #FFFFFF;
+cursor: pointer;
+transition: all 0.3s ease;
+text-align: center;
+padding: 15px;
+color: #333;
+margin: 15px;
+font-size: large;
+  }
+  .SpecialityButton:hover{
+    background-color: white;
+    border-color: #39CCCC;
+  }
+  .selected{
+    border-color: #39CCCC;
+    background-color: white;
+    color: #39CCCC;
+    box-shadow: 0 4px 8px rgba(57, 204, 204, 0.25);
+  }
+  .paginationControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    font-family: 'Poppins', sans-serif;
+   margin-top: 5rem;
+  }
+  .pageButton {
+    background-color: white;
+     color : black;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+    
+  }
+  .pageButton:hover{
+    background-color: white;
+    border-color: #39CCCC;
+    color: #39CCCC;
+  }
+.errorMsg{
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.successMsg {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
+}

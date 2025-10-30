@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faL } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import styles from "./DoctorRegister.module.css";
 const DoctorRegister = () => {
@@ -202,6 +203,7 @@ const DoctorRegister = () => {
       <div className={`contentCol h-[100%]`}>
         <div className="flex items-start md:py-[2rem] py-[1rem] md:ps-[2rem] ps-[1rem]">
           <button>
+            <Link to="/register">
             <svg
               width="44"
               height="36"
@@ -214,6 +216,7 @@ const DoctorRegister = () => {
                 fill="black"
               />
             </svg>
+            </Link>
           </button>
           {isLoading ? 
           <>

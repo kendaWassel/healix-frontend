@@ -1,6 +1,6 @@
 import styles from "./NewAccountSetup.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import { Link } from "react-router-dom";
@@ -67,7 +67,9 @@ export default function NewAccountSetup() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
-
+  useEffect(() => {
+    document.title = "New Account Setup";
+  }, []);
 
   const navigate=useNavigate();
 
@@ -100,7 +102,7 @@ export default function NewAccountSetup() {
 
   return (
     <div className={styles.formContainer}>
-      <title>Account Setup</title>
+   
       <header className={styles.formHeader}>
         <span className={styles.backArrow}>
         <Link to='/'>
@@ -110,8 +112,8 @@ export default function NewAccountSetup() {
         <h1>New Account Setup</h1>
         <p>Choose your account type</p>
 
-        {error && <div className="alert alert-danger">{error}</div>}
-        {successMsg && <div className="alert alert-success">{successMsg}</div>}
+        {error && <div className={styles.errorMsg}>{error}</div>}
+          {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
       </header>
 
       <form className={styles.setupForm} onSubmit={handleSubmit}>

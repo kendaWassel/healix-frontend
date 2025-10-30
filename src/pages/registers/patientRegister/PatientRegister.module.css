@@ -1,11 +1,9 @@
 .formContainer {
   background-color: #fff;
-  padding: 110px 100px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  max-width: 850px;
+  padding: 100px 130px 40px 130px;
+  max-width: 55rem;
   box-sizing: border-box;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   font-family: Arial, sans-serif;
   justify-content: center;
@@ -181,12 +179,6 @@
   font-size: 18px;
 }
 
-.error {
-  color: red;
-  font-size: 16px;
-  margin-top: 0;
-}
-
 .fullWidth {
   width: 100%;
 }
@@ -194,4 +186,14 @@
   color: #39CCCC;
   font-size: 20px;
   margin-right: 10px;
+}
+.errorMsg{
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.successMsg {
+  color: green;
+  font-weight: bold;
+  margin-top: 10px;
 }
