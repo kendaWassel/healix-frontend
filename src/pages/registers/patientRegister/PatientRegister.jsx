@@ -22,12 +22,9 @@ export default function PatientRegister() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
-  const inputRef = useRef(null);
   useEffect(() => {
     document.title = "Patient Account Setup";
   }, []);
-  const [error, setError] = useState();
-  const [successMsg, setSuccessMsg] = useState();
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [newUser, setNewUser] = useState({
     role: "patient",
