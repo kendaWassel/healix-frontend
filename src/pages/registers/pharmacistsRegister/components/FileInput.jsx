@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import "./FormPage.css";
+import "../FormPage.css";
 
 const FileInput = ({ placeholder }) => {
   const inputRef = useRef();

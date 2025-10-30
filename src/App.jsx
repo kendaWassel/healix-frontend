@@ -13,7 +13,6 @@ import AdminLogin from './pages/login/adminLogin/AdminLogin'
 import DoctorConsultation from "./pages/Patient/DoctorConsultation/DoctorConsultation";
 import Patient from "./pages/patient/Patient";
 import "./App.css";
-// import Login from "./login";
 export default function App() {
   return (
     <>
@@ -25,7 +24,7 @@ export default function App() {
     <Route path="/register" element={<NewAccountSetup/>}/>
       <Route path="/patient-register" element={<PatientRegister/>}/>
       <Route path="/doctor-register" element={<DoctorRegister/>}/> {/*done*/} 
-      <Route path="/FormPage" element={<FormPage/>}/>
+      <Route path="/pharmacist-register" element={<FormPage/>}/>
       <Route path="/care-provider-register" element={<CareProviderRegister/>}/> {/*done*/}
       <Route path="/delivery-register" element={<DeliveryRegister/>}/> {/*done*/}
       <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
