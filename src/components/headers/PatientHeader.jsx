@@ -21,7 +21,7 @@ const PatientHeader = () => {
       {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
-          to="/consultation"
+          to="/patient/consultation"
           className={({ isActive }) =>
             isActive
               ? `${activeStyle} bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] rounded-[10px] px-[0.8rem] py-[0.5rem]`
@@ -32,21 +32,21 @@ const PatientHeader = () => {
         </NavLink>
 
         <NavLink
-          to="/"
+          to="/patient"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
         </NavLink>
 
         <NavLink
-          to="/schedules"
+          to="/patient/schedules"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules
         </NavLink>
 
         <NavLink
-          to="/receipts"
+          to="/patient/receipts"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Receipts
@@ -71,7 +71,7 @@ const PatientHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/consultation' 
+            to="/patient/consultation" 
             className={({ isActive }) =>
             isActive
               ? `${activeStyle} bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] rounded-[10px] px-[0.8rem] py-[0.5rem]`
@@ -89,14 +89,14 @@ const PatientHeader = () => {
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/patient/schedules"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules 
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/patient/receipts" 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My receipts

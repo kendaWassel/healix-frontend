@@ -153,20 +153,22 @@ export default function DoctorConsultation() {
   return (
     <>
       <div className={styles.CardContainer}>
-        <header className={styles.CardHeader}>
           <span className={styles.backArrow}>
-            <Link to="/Home-Page">
+            <Link to="/patient">
             <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
           </span>
+        <header className={`flex items-end justify-between ${styles.CardHeader}`}>
+          <div>
           <h1>Pick a Speciality</h1>
+          <p className="mt-[1rem]">Click one of the specialities to choose and then click next</p>
+          </div>
           <button
            className={styles.nextButton} 
            onClick={(e) => handleSubmit(e)}
            >
              Next
          </button>
-          <p>Click one of the specialities to choose and then click next</p>
           {isLoading && <p>Loading specialities...</p>}
      {/*      {!isLoading && specsLoaded && currentSpecs.length === 0 && <p>No specialities found.</p>} */}
           {error && <div className={styles.errorMsg}>{error}</div>}
