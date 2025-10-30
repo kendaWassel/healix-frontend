@@ -11,10 +11,13 @@ import FormPage from "./pages/registers/pharmacistsRegister/FormPage";
 import CareProviderRegister from "./pages/registers/careProviderRegister/CareProviderRegister";
 import AdminLogin from './pages/login/adminLogin/AdminLogin'
 import Patient from "./pages/patient/Patient";
+import Doctor from "./pages/doctor/Doctor";
 import "./App.css";
+
 export default function App() {
   return (
     <>
+
 
     <BrowserRouter>
     <Routes>
@@ -28,8 +31,10 @@ export default function App() {
       <Route path="/delivery-register" element={<DeliveryRegister/>}/> {/*done*/}
       <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
     <Route path="/patient/*" element={<Patient />}/>
+    <Route path="/Doctor/*" element={<Doctor/>}/>
     </Routes>
     </BrowserRouter>
+  
     </>
   );
 }

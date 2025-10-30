@@ -1,0 +1,209 @@
+.CardContainer {
+    background-color: #fff;
+    padding: 100px 130px 40px 130px;
+    margin: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  
+  .CardHeader {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .CardHeader h1 {
+    color: #052443;
+    font-weight: bold;
+    font-size: 50px;
+  }
+  
+  .headerTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .filterButton {
+    background-color: #ebfafa;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    color: #009999;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .filterButton:hover {
+    background-color: #d6f3f3;
+    transform: translateY(-1px);
+  }
+  
+  .filterContainer {
+    position: relative;
+  }
+  
+  .filterMenu {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    width: 150px;
+    z-index: 10;
+  }
+  
+  .filterMenu p {
+    padding: 10px 15px;
+    margin: 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .filterMenu p:hover {
+    background-color: #f3fafa;
+  }
+  
+  .CardHeader p {
+    display: flex;
+    font-size: 20px;
+    margin-top: 10px;
+    color: #767676;
+  }
+  
+  .CardForm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 60px;
+    width: 100%;
+  }
+  
+  .CardItem {
+    background-color: #fff;
+    border: 1.5px solid #ddd;
+    border-radius: 12px;
+    padding: 20px 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .CardTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .CardItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+  
+  .PatientText h3 {
+    color: #052443;
+    font-weight: bold;
+    margin: 0;
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  
+  .callButton {
+    display: flex;
+    align-items: center;
+    background-color: #EBFAFA;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    color: #009999;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 15px;
+    float: right;
+    margin-bottom: 2rem;
+    transition: background-color 0.3s ease;
+    
+  }
+  
+  .callButton:hover {
+    background-color: #d6f3f3;
+  }
+  
+  .divider {
+    height: 1px;
+    background-color: #eaeaea;
+    margin-top: 4rem;
+  }
+  
+  .CardBottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #052443;
+    font-weight: 500;
+    font-size: 15px;
+    margin-top: 1rem;
+  }
+  
+  .detailsButton {
+    padding: 12px 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #009999;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  
+  .detailsButton:hover {
+    color: #39CCCC;
+    transition: color 0.3s ease;
+  }
+  .paginationControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    font-family: 'Poppins', sans-serif;
+   margin-top: 5rem;
+  }
+  .pageButton {
+    background-color: white;
+     color : black;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+    
+  }
+  .pageButton:hover{
+    background-color: white;
+    border-color: #39CCCC;
+    color: #39CCCC;
+  }
+  .clock{
+    color: #39CCCC;
+    margin-right: 5px;
+  }
+  .errorMsg{
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  .successMsg {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+  }
