@@ -11,13 +11,14 @@ import {
 import DoctorHeader from "../../../components/headers/DoctorHeader";
 import Footer from "../../../components/footer/Footer";
 const Schedules = [ 
-  { key: "mhd", title: " Patient Mohammed", time: "At 9 Am", call: "Call", period: "Morning" },
-  { key: "ali", title: " Patient Ali", time: "At 10 Am", call: "Call", period: "Morning"},
-  { key: "mustafa", title: " Patient Mustafa", time: "At 11 Am", call: "Call", period: "Morning" }, 
-  { key: "leen", title: " Patient Leen", time: "At 12 Pm", call: "Call", period: "Afternoon" }, 
-  { key: "hadeel", title: " Patient Hadeel", time: "At 1 Pm", call: "Call", period: "Afternoon" },
-  { key: "sara", title: " Patient Sara", time: "At 2 Pm", call: "Call", period: "Afternoon" },
- ];
+  { key: "mhd", title: " Patient Mohammed", time: "At 9 Am", call: "Call", period: "bending" },
+  { key: "ali", title: " Patient Ali", time: "At 10 Am", call: "Call", period: "bending"},
+  { key: "mustafa", title: " Patient Mustafa", time: "At 11 Am", call: "Call", period: "bending" }, 
+  { key: "leen", title: " Patient Leen", time: "At 12 Pm", call: "Call", period: "completed" }, 
+  { key: "hadeel", title: " Patient Hadeel", time: "At 1 Pm", call: "Call", period: "completed" },
+  { key: "sara", title: " Patient Sara", time: "At 2 Pm", call: "Call", period: "completed" },
+];
+
 export default function DoctorSchedules() {
   const [schedules, setSchedules] = useState(Schedules);  
   const [filterOpen, setFilterOpen] = useState(false);
@@ -68,17 +69,20 @@ export default function DoctorSchedules() {
     fetchSchedules();
   }, []);
 */
-  const handleFilterClick = () => setFilterOpen(!filterOpen);
+const handleFilterClick = () => setFilterOpen(!filterOpen);
 
-  const handleSelectFilter = (filter) => {
+const handleSelectFilter = (filter) => {
+  if (filter === "bending" || filter === "completed" || filter==="All") {
     setSelectedFilter(filter);
-    setFilterOpen(false);
-  };
+  }
+  setFilterOpen(false);
+};
 
-  const filteredSchedules =
-    selectedFilter === "All"
-      ? schedules
-      : schedules.filter((s) => s.period === selectedFilter);
+
+const filteredSchedules =
+  selectedFilter === "All"
+    ? schedules
+    : schedules.filter((s) => s.period === selectedFilter);
 
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -88,14 +92,18 @@ export default function DoctorSchedules() {
   });
 
   useEffect(() => {
-    setPagination((prev) => ({
-      ...prev,
-      totalItems: filteredSchedules.length,
-      totalPages: Math.ceil(filteredSchedules.length / prev.itemsPerPage),
-      currentPage: 1,
-    }));
-  }, [filteredSchedules]);
-
+    const totalPages = Math.ceil(filteredSchedules.length / pagination.itemsPerPage);
+    if (
+      pagination.totalItems !== filteredSchedules.length ||
+      pagination.totalPages !== totalPages
+    ) {
+      setPagination((prev) => ({
+        ...prev,
+        totalItems: filteredSchedules.length,
+        totalPages: totalPages,
+      }));
+    }
+  }, [filteredSchedules, pagination.itemsPerPage, pagination.totalItems, pagination.totalPages]);
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPages) {
       setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
@@ -165,14 +173,13 @@ export default function DoctorSchedules() {
                 Filter
               </button>
               {filterOpen && (
-                <div className={styles.filterMenu}>
-                  <p onClick={() => handleSelectFilter("All")}>All</p>
-                  <p onClick={() => handleSelectFilter("Morning")}>Morning</p>
-                  <p onClick={() => handleSelectFilter("Afternoon")}>
-                    Afternoon
-                  </p>
-                </div>
-              )}
+  <div className={styles.filterMenu}>
+         <p onClick={() => handleSelectFilter("All")}>All</p>
+    <p onClick={() => handleSelectFilter("bending")}>Bending</p>
+    <p onClick={() => handleSelectFilter("completed")}>Completed</p>
+  </div>
+)}
+
             </div>
           </div>
           <p>Check your schedules here</p>
@@ -198,17 +205,20 @@ export default function DoctorSchedules() {
               <div className={styles.divider}></div>
 
               <div className={styles.CardBottom}>
-                <span>
-                <FontAwesomeIcon icon={faClock} className={styles.clock} />
-                  {type.time || type.appointment_time}
-                  </span>
-                <button
-                  type="button"
-                  onClick={(e) => handleViewDetails(e, type.key || type.id)}
-                  className={styles.detailsButton}
-                >
-                  View Details
-                </button>
+  <span>
+    <FontAwesomeIcon icon={faClock} className={styles.clock} />
+    {type.time}
+    <span className={styles.period}> {type.period}</span>
+
+  </span>
+  <button
+    type="button"
+    onClick={(e) => handleViewDetails(e, type.key)}
+    className={styles.detailsButton}
+  >
+    View Details
+  </button>
+
                 {isLoading && <p>Loading Details ...</p>}
     
           {error && <div className={styles.errorMsg}>{error}</div>}
