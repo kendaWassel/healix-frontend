@@ -69,7 +69,11 @@ export default function MapPicker({
         <div style={styles.footer}>
           <div style={{ fontSize: 12, color: "#555" }}>
             {position
-              ? `Selected: ${position[0].toFixed(6)}, ${position[1].toFixed(6)}`
+              ? `Selected: ${
+                  Number.isFinite(position[0]) ? position[0].toFixed(6) : ""
+                }, ${
+                  Number.isFinite(position[1]) ? position[1].toFixed(6) : ""
+                }`
               : "Click on the map to choose a point"}
           </div>
           <div style={{ display: "flex", gap: 8 }}>
