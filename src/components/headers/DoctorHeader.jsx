@@ -15,7 +15,7 @@ const DoctorHeader = () => {
     <nav className="md:px-[3rem] px-[2rem] md:py-[1.5rem] py-[1rem] flex items-center justify-between border-b-[1px] border-[var(--card-border)] relative">
       {/* Logo */}
       <NavLink to="/" className="logo w-[125px]">
-        <img src="./Logo-dark.png" alt="logo" />
+        <img src="/Logo-dark.png" alt="logo" />
       </NavLink>
 
       {/* Desktop nav */}
@@ -28,7 +28,7 @@ const DoctorHeader = () => {
         </NavLink>
 
         <NavLink
-          to="/schedules"
+          to="DoctorSchedules" 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules
@@ -67,7 +67,7 @@ const DoctorHeader = () => {
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="DoctorSchedules" 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules 
