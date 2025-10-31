@@ -149,7 +149,7 @@ export default function PatientRegister() {
     
     <div className={styles.formContainer}>
   
-      <header className={styles.formHeader}>
+      <div className={styles.formHeader}>
         <span className={styles.backArrow}>
           <Link to="/register">
           <FontAwesomeIcon icon={faArrowLeft}  />
@@ -159,7 +159,7 @@ export default function PatientRegister() {
         <p>Fill your information to register</p>
         {error && <div className={styles.errorMsg}>{error}</div>}
           {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
-      </header>
+      </div>
 
       <form className={styles.patientForm} onSubmit={handleSubmit}>
         <div className={styles.inputRow}>
