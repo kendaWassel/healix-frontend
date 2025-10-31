@@ -17,6 +17,9 @@ import {
   faArrowLeft,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
+import MedicalReportModal from "./MedicalReportModal";
+import { uploadImage, uploadFile } from './MedicalReportModal';
+
 export default function PatientRegister() {
   const [passwordShown, setPasswordShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,81 +30,108 @@ export default function PatientRegister() {
   }, []);
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [newUser, setNewUser] = useState({
-    role: "patient",
     full_name: "",
     email: "",
     phone: "",
     password: "",
-    birth_date:"",
+    birth_date:null,
     gender: "",
     address: "",
     latitude: null, 
     longitude: null ,
   });
   const inputRef = useRef(null);
+  const [isMedicalModalOpen, setIsMedicalModalOpen] = useState(false);
+  const [medicalReport, setMedicalReport] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleSaveMedicalReport = (report) => {
+    setMedicalReport(report);
+    setIsMedicalModalOpen(false);
+  };
+
+  const handleSubmit = function (e) {
     e.preventDefault();
-    console.log('users data to sent: ',newUser);
-    // setIsLoading(true);
-    // setError(null);
-    // setSuccessMsg(null);
+    setIsLoading(true);
+    setError(null);
+    setSuccessMsg(null);
 
-    // const user = {
-    //   role: newUser.role,
-    //   full_name: newUser.full_name,
-    //   email: newUser.email,
-    //   phone: newUser.phone,
-    //   password: newUser.password,
-    //   birth_date: newUser.birth_date,
-    //   gender: newUser.gender,
-    //   address: newUser.address,
-    //   latitude: newUser.latitude,
-    //   longitude:newUser.longitude
-    // };
+    if (!medicalReport) {
+      setIsLoading(false);
+      setError('Please fill the Medical Report section');
+      return;
+    }
 
-    // console.log("user's data: ", user);
+    let photoPromise = Promise.resolve(null);
+    let filePromise = Promise.resolve(null);
 
-    // fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "ngrok-skip-browser-warning": "true",
-    //   },
-    //   body: JSON.stringify(user), 
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       return response.json().then((serverError) => {
-    //         throw new Error(serverError.message || "Registration failed");
-    //       });
-    //     }
-    //     console.log("success sending user's data");
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     console.log("message from api: ", data.message);
-    //     setSuccessMsg("Check your email for Activation link");
-    //     setNewUser({
-    //       role: "patient",
-    //       full_name: "",
-    //       email: "",
-    //       phone: "",
-    //       password: "",
-    //       birth_date:"",
-    //       gender: "",
-    //       address: "",
-    //       latitude: null, 
-    //       longitude: null ,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Registration error:", error);
-    //     setError(error.message || "Failed to create user. Please try again.");
-    //   })
-    //   .finally(() => {
-    //     setIsLoading(false);
-    //   });
+    if (medicalReport.photoFile) {
+      photoPromise = uploadImage(medicalReport.photoFile);
+    }
+    if (medicalReport.medicalFile) {
+      filePromise = uploadFile(medicalReport.medicalFile);
+    }
+
+    Promise.all([photoPromise, filePromise])
+      .then(([imageId, fileId]) => {
+        const user = {
+          role: "patient",
+          full_name: newUser.full_name || "",
+          email: newUser.email || "",
+          phone: newUser.phone || "",
+          password: newUser.password || "",
+          birth_date: newUser.birth_date || null,
+          gender: newUser.gender || "",
+          address: newUser.address || "",
+          latitude: newUser.latitude || null, 
+          longitude: newUser.longitude || null ,
+          medical_record: {
+            diagnosis: medicalReport.diagnosis || "",
+            chronic_diseases: medicalReport.chronic_diseases || "",
+            previous_surgeries: medicalReport.previous_surgeries || "",
+            allergies: medicalReport.allergies || "",
+            current_medications: medicalReport.current_medications || "",
+            attachments: [imageId, fileId],
+            // attachments: [imageId, fileId].filter(Boolean),
+          },
+        };
+        console.log('users data: ',user);
+        return fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/auth/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+          body: JSON.stringify(user),
+        });
+      })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((serverError) => {
+            throw new Error(serverError.message || "Registration failed");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setSuccessMsg("Check your email for Activation link");
+        setNewUser({
+          full_name: "",
+          email: "",
+          phone: "",
+          password: "",
+          birth_date: null,
+          gender: "",
+          address: "",
+          latitude: null,
+          longitude: null,
+        });
+        setMedicalReport(null);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message || "Failed to create user. Please try again.");
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -257,24 +287,18 @@ export default function PatientRegister() {
           </button>
         </div>
 
-        <div
-          className={`${styles.inputGroup} ${styles.fullWidth} ${styles.uploadGroup}`}
-        >
-          <label htmlFor="file-upload" className={styles.uploadLabel}>
-            <FontAwesomeIcon
-              icon={faArrowUpFromBracket}
-              className={styles.icon}
-            />
-            Upload Patient File (Optional)
-          </label>
-          <input
-            id="file-upload"
-            type="file"
-            className={styles.fileInput}
-            accept=".pdf,.jpg,.jpeg,.png"
-          />
+        {/* Medical Report Upload (button for modal) */}
+        <div className={`${styles.inputGroup} ${styles.fullWidth} ${styles.uploadGroup}`}>
+          <button
+            type="button"
+            className={styles.locationMapButton}
+            style={{ width: "100%", margin: "0.5rem 0" }}
+            onClick={() => setIsMedicalModalOpen(true)}
+          >
+            <FontAwesomeIcon icon={faArrowUpFromBracket} className={styles.icon} />
+            {medicalReport ? 'Edit Medical Report' : 'Add Medical Report'}
+          </button>
         </div>
-
         <button
           type="submit"
           className={styles.registerButton}
@@ -283,6 +307,13 @@ export default function PatientRegister() {
           {isLoading ? "Registering..." : "Register"}
         </button>
       </form>
+      {/* -- MODAL RENDERED HERE, OUTSIDE FORM! -- */}
+      <MedicalReportModal
+        open={isMedicalModalOpen}
+        onClose={() => setIsMedicalModalOpen(false)}
+        onSubmit={handleSaveMedicalReport}
+        initialValues={medicalReport} // if editing, prefill fields
+      />
       {isMapOpen && (
         <MapPicker
           initialPosition={

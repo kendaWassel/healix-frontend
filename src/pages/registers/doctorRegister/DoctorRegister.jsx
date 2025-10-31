@@ -10,7 +10,6 @@ const DoctorRegister = () => {
   const [error, setError] = useState();
   const [successMsg, setSuccessMsg] = useState();
   const [newUser, setNewUser] = useState({
-    role: "doctor",
     full_name: "",
     email: "",
     doctor_image_id: null,
@@ -126,7 +125,7 @@ const DoctorRegister = () => {
     const fileId = await uploadFile(certificateFile);
 
     const user = {
-      role: newUser.role,
+      role: "doctor",
       full_name: newUser.full_name,
       email: newUser.email,
       doctor_image_id: imageId,
@@ -163,7 +162,6 @@ const DoctorRegister = () => {
         console.log("message from api: ", data.message);
         setSuccessMsg("Check your email for Activation link");
         setNewUser({
-          role: "doctor",
           full_name: "",
           email: "",
           doctor_image_id: null,
@@ -176,6 +174,9 @@ const DoctorRegister = () => {
           consultation_fee: null,
           certificate_file_id: null,
         });
+        setPhotoFile(null);
+        setCertificateFile(null);
+        setCertificateFileName("");
       })
       .catch((error) => {
         console.error("Registration error:", error);
