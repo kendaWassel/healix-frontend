@@ -103,7 +103,7 @@ export default function NewAccountSetup() {
   return (
     <div className={styles.formContainer}>
    
-      <header className={styles.formHeader}>
+      <div className={styles.formHeader}>
         <span className={styles.backArrow}>
         <Link to='/'>
           <FontAwesomeIcon icon={faArrowLeft} />
@@ -114,9 +114,9 @@ export default function NewAccountSetup() {
 
         {error && <div className={styles.errorMsg}>{error}</div>}
           {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
-      </header>
+      </div>
 
-      <form className={styles.setupForm} onSubmit={handleSubmit}>
+      <div className={styles.setupForm} onSubmit={handleSubmit}>
         {accountTypes.map((type) => (
           <button
             key={type.key}
@@ -152,7 +152,7 @@ export default function NewAccountSetup() {
         >
           {isLoading ? "Loading..." : "Continue"}
         </button>
-      </form>
+      </div>
       <LogoImage/>
     </div>
   );

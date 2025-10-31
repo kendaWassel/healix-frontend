@@ -161,7 +161,7 @@ const filteredSchedules =
     <>
       <DoctorHeader />
       <div className={styles.CardContainer}>
-        <header className={styles.CardHeader}>
+        <div className={styles.CardHeader}>
           <div className={styles.headerTop}>
             <h1>My Schedules</h1>
             <div className={styles.filterContainer}>
@@ -183,7 +183,7 @@ const filteredSchedules =
             </div>
           </div>
           <p>Check your schedules here</p>
-        </header>
+        </div>
 
         {isLoading && <p className={styles.loading}>Loading schedules...</p>}
         {error && <p className={styles.error}>{error}</p>}
