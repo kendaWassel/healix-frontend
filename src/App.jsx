@@ -11,10 +11,7 @@ import FormPage from "./pages/registers/pharmacistsRegister/FormPage";
 import CareProviderRegister from "./pages/registers/careProviderRegister/CareProviderRegister";
 import AdminLogin from './pages/login/adminLogin/AdminLogin'
 import Patient from "./pages/patient/Patient";
-import ModalDone from "./pages/Patient/DoctorConsultation/PickAdoctor/ModalDone";
-import PickAdoctor from "./pages/Patient/DoctorConsultation/PickAdoctor/PickOption";
 import Doctor from "./pages/doctor/Doctor";
-import MySchedules from './pages/patient/MySchedules/MySchedules';
 
 import "./App.css";
 
@@ -36,7 +33,6 @@ export default function App() {
       <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
     <Route path="/patient/*" element={<Patient />}/>
     <Route path="/Doctor/*" element={<Doctor/>}/>
-    <Route path="/MySchedules" element={<MySchedules/>}/>
     </Routes>
     </BrowserRouter>
   
