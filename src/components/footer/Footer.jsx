@@ -6,7 +6,7 @@ const Footer = () => {
             {/* logo section  */}
           <div className="flex flex-col items-start gap-[1.5rem]">
             <div className="w-[125px]">
-              <img src="./Logo-light.png" alt="logo" />
+              <img src="/Logo-light.png" alt="logo" />
             </div>
             <h3 className="text-[var(--white)] text-[18px] md:text-[25px]">
               Your Health, Just One Click Away

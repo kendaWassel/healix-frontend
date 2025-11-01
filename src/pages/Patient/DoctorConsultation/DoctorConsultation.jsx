@@ -158,7 +158,7 @@ export default function DoctorConsultation() {
             <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
           </span>
-        <header className={`flex items-end justify-between ${styles.CardHeader}`}>
+        <div className={`flex items-end justify-between ${styles.CardHeader}`}>
           <div>
           <h1>Pick a Speciality</h1>
           <p className="mt-[1rem]">Click one of the specialities to choose and then click next</p>
@@ -173,9 +173,9 @@ export default function DoctorConsultation() {
      {/*      {!isLoading && specsLoaded && currentSpecs.length === 0 && <p>No specialities found.</p>} */}
           {error && <div className={styles.errorMsg}>{error}</div>}
           {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
-        </header>
+        </div>
 
-        <form className={styles.ConsultationForm} onSubmit={handleSubmit}>
+        <div className={styles.ConsultationForm} onSubmit={handleSubmit}>
           {currentSpecs.map((type) => (
             <button
               key={type.key}
@@ -215,7 +215,7 @@ export default function DoctorConsultation() {
             
           </div>
           
-        </form>
+        </div>
       </div>
 
       <Footer />

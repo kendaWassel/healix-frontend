@@ -1,11 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import FileInput from "./components/FileInput";
 import "./FormPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
   faEye,
   faEyeSlash,
-  faLocationDot,
   faMap,
 } from "@fortawesome/free-solid-svg-icons";
 import MapPicker from "../../../components/map/MapPicker";
@@ -16,6 +14,8 @@ const FormPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [successMsg, setSuccessMsg] = useState();
+  const [certificateFile, setCertificateFile] = useState(null);
+  const [certificateFileName, setCertificateFileName] = useState("");
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [newUser, setNewUser] = useState({
     full_name: "",
@@ -28,12 +28,36 @@ const FormPage = () => {
     from: null,
     to: null,
     address: "",
-    location: "",
-    mapLocation: "",
+    latitude: "",
+    longitude: "",
   });
   const inputRef = useRef(null);
   
   const handleBack = () => window.history.back();
+
+  const uploadFile = async (certificateFile) => {
+    console.log("uploading file: ", certificateFile);
+
+    const formData = new FormData();
+    formData.append('file', certificateFile);
+    formData.append('category', 'certificate');
+
+    const response = await fetch("https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/uploads", {
+      method: "POST",
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || "File upload failed");
+    }
+    const data = await response.json();
+    console.log("file uploaded: ", data);
+    return data.file_id;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +65,8 @@ const FormPage = () => {
     setIsLoading(true);
     setError(null);
     setSuccessMsg(null);
+
+    const fileId = await uploadFile(certificateFile);
 
     const user = {
       role: "pharmacist",
@@ -50,7 +76,7 @@ const FormPage = () => {
       password: newUser.password,
       pharmacy_name: newUser.pharmacy_name,
       cr_number: newUser.cr_number,
-      license_file_id: 100,
+      license_file_id: fileId,
       from: newUser.from,
       to: newUser.to,
       address: newUser.address,
@@ -91,9 +117,11 @@ const FormPage = () => {
           from: null,
           to: null,
           address: "",
-          location: "",
-          mapLocation: "",
+          latitude: "",
+          longitude: "",
         });
+        setCertificateFile(null);
+        setCertificateFileName("");
       })
       .catch((error) => {
         console.error("Registration error:", error);
@@ -274,57 +302,67 @@ const FormPage = () => {
           {/* Row 4: Dates */}
           <div className="row">
             <div className="input-field">
-              <label htmlFor="from">
-                <svg
-                  width="37"
-                  height="36"
-                  viewBox="0 0 37 36"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M18.5 3C26.7845 3 33.5 9.7155 33.5 18C33.5 26.2845 26.7845 33 18.5 33C10.2155 33 3.5 26.2845 3.5 18C3.5 9.7155 10.2155 3 18.5 3ZM18.5 6C15.3174 6 12.2652 7.26428 10.0147 9.51472C7.76428 11.7652 6.5 14.8174 6.5 18C6.5 21.1826 7.76428 24.2348 10.0147 26.4853C12.2652 28.7357 15.3174 30 18.5 30C21.6826 30 24.7348 28.7357 26.9853 26.4853C29.2357 24.2348 30.5 21.1826 30.5 18C30.5 14.8174 29.2357 11.7652 26.9853 9.51472C24.7348 7.26428 21.6826 6 18.5 6ZM18.5 9C18.8674 9.00005 19.222 9.13493 19.4966 9.37907C19.7711 9.62321 19.9465 9.95962 19.9895 10.3245L20 10.5V17.379L24.0605 21.4395C24.3295 21.7094 24.4857 22.0717 24.4973 22.4526C24.509 22.8335 24.3752 23.2046 24.1231 23.4904C23.8711 23.7763 23.5197 23.9555 23.1403 23.9916C22.7609 24.0277 22.382 23.9181 22.0805 23.685L21.9395 23.5605L17.4395 19.0605C17.2064 18.8272 17.0566 18.5235 17.0135 18.1965L17 18V10.5C17 10.1022 17.158 9.72064 17.4393 9.43934C17.7206 9.15804 18.1022 9 18.5 9Z"
-                    fill="#39CCCC"
+            <label htmlFor="from">
+                    <svg
+                      width="37"
+                      height="36"
+                      viewBox="0 0 37 36"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18.5 3C26.7845 3 33.5 9.7155 33.5 18C33.5 26.2845 26.7845 33 18.5 33C10.2155 33 3.5 26.2845 3.5 18C3.5 9.7155 10.2155 3 18.5 3ZM18.5 6C15.3174 6 12.2652 7.26428 10.0147 9.51472C7.76428 11.7652 6.5 14.8174 6.5 18C6.5 21.1826 7.76428 24.2348 10.0147 26.4853C12.2652 28.7357 15.3174 30 18.5 30C21.6826 30 24.7348 28.7357 26.9853 26.4853C29.2357 24.2348 30.5 21.1826 30.5 18C30.5 14.8174 29.2357 11.7652 26.9853 9.51472C24.7348 7.26428 21.6826 6 18.5 6ZM18.5 9C18.8674 9.00005 19.222 9.13493 19.4966 9.37907C19.7711 9.62321 19.9465 9.95962 19.9895 10.3245L20 10.5V17.379L24.0605 21.4395C24.3295 21.7094 24.4857 22.0717 24.4973 22.4526C24.509 22.8335 24.3752 23.2046 24.1231 23.4904C23.8711 23.7763 23.5197 23.9555 23.1403 23.9916C22.7609 24.0277 22.382 23.9181 22.0805 23.685L21.9395 23.5605L17.4395 19.0605C17.2064 18.8272 17.0566 18.5235 17.0135 18.1965L17 18V10.5C17 10.1022 17.158 9.72064 17.4393 9.43934C17.7206 9.15804 18.1022 9 18.5 9Z"
+                        fill="#39CCCC"
+                      />
+                    </svg>
+                  </label>
+                  <input
+                    type="time"
+                    name="from"
+                    id="from"
+                    value={newUser.from}
+                    onChange={(e) =>
+                      setNewUser({
+                        ...newUser,
+                        from: e.target.value,
+                      })
+                    }
+                    required
+                    disabled={isLoading}
+                    className="!pr-0 text-[var(--text-color)]"
                   />
-                </svg>
-              </label>
-              <input
-                type="text"
-                name="from"
-                id="from"
-                value={newUser.fromDate}
-                placeholder="From:..."
-                onChange={(e) =>
-                  setNewUser({ ...newUser, fromDate: e.target.value })
-                }
-              />
             </div>
 
             <div className="input-field">
-              <label htmlFor="to">
-                <svg
-                  width="37"
-                  height="36"
-                  viewBox="0 0 37 36"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M18.5 3C26.7845 3 33.5 9.7155 33.5 18C33.5 26.2845 26.7845 33 18.5 33C10.2155 33 3.5 26.2845 3.5 18C3.5 9.7155 10.2155 3 18.5 3ZM18.5 6C15.3174 6 12.2652 7.26428 10.0147 9.51472C7.76428 11.7652 6.5 14.8174 6.5 18C6.5 21.1826 7.76428 24.2348 10.0147 26.4853C12.2652 28.7357 15.3174 30 18.5 30C21.6826 30 24.7348 28.7357 26.9853 26.4853C29.2357 24.2348 30.5 21.1826 30.5 18C30.5 14.8174 29.2357 11.7652 26.9853 9.51472C24.7348 7.26428 21.6826 6 18.5 6ZM18.5 9C18.8674 9.00005 19.222 9.13493 19.4966 9.37907C19.7711 9.62321 19.9465 9.95962 19.9895 10.3245L20 10.5V17.379L24.0605 21.4395C24.3295 21.7094 24.4857 22.0717 24.4973 22.4526C24.509 22.8335 24.3752 23.2046 24.1231 23.4904C23.8711 23.7763 23.5197 23.9555 23.1403 23.9916C22.7609 24.0277 22.382 23.9181 22.0805 23.685L21.9395 23.5605L17.4395 19.0605C17.2064 18.8272 17.0566 18.5235 17.0135 18.1965L17 18V10.5C17 10.1022 17.158 9.72064 17.4393 9.43934C17.7206 9.15804 18.1022 9 18.5 9Z"
-                    fill="#39CCCC"
+            <label htmlFor="to">
+                    <svg
+                      width="37"
+                      height="36"
+                      viewBox="0 0 37 36"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18.5 3C26.7845 3 33.5 9.7155 33.5 18C33.5 26.2845 26.7845 33 18.5 33C10.2155 33 3.5 26.2845 3.5 18C3.5 9.7155 10.2155 3 18.5 3ZM18.5 6C15.3174 6 12.2652 7.26428 10.0147 9.51472C7.76428 11.7652 6.5 14.8174 6.5 18C6.5 21.1826 7.76428 24.2348 10.0147 26.4853C12.2652 28.7357 15.3174 30 18.5 30C21.6826 30 24.7348 28.7357 26.9853 26.4853C29.2357 24.2348 30.5 21.1826 30.5 18C30.5 14.8174 29.2357 11.7652 26.9853 9.51472C24.7348 7.26428 21.6826 6 18.5 6ZM18.5 9C18.8674 9.00005 19.222 9.13493 19.4966 9.37907C19.7711 9.62321 19.9465 9.95962 19.9895 10.3245L20 10.5V17.379L24.0605 21.4395C24.3295 21.7094 24.4857 22.0717 24.4973 22.4526C24.509 22.8335 24.3752 23.2046 24.1231 23.4904C23.8711 23.7763 23.5197 23.9555 23.1403 23.9916C22.7609 24.0277 22.382 23.9181 22.0805 23.685L21.9395 23.5605L17.4395 19.0605C17.2064 18.8272 17.0566 18.5235 17.0135 18.1965L17 18V10.5C17 10.1022 17.158 9.72064 17.4393 9.43934C17.7206 9.15804 18.1022 9 18.5 9Z"
+                        fill="#39CCCC"
+                      />
+                    </svg>
+                  </label>
+                  <input
+                    type="time"
+                    name="to"
+                    id="to"
+                    value={newUser.to}
+                    onChange={(e) =>
+                      setNewUser({
+                        ...newUser,
+                        to: e.target.value,
+                      })
+                    }
+                    required
+                    disabled={isLoading}
+                    className="!pr-0 text-[var(--text-color)]"
                   />
-                </svg>
-              </label>
-              <input
-                type="text"
-                name="to"
-                id="to"
-                value={newUser.toDate}
-                placeholder="To:..."
-                onChange={(e) =>
-                  setNewUser({ ...newUser, toDate: e.target.value })
-                }
-              />
             </div>
           </div>
           {/* Row 5: Location + Map */}
@@ -344,7 +382,7 @@ const FormPage = () => {
                 value={newUser.address}
                 placeholder="Type Location.."
                 onChange={(e) =>
-                  setNewUser({ ...newUser, location: e.target.value })
+                  setNewUser({ ...newUser, address: e.target.value })
                 }
               />
             </div>
@@ -361,10 +399,46 @@ const FormPage = () => {
         </div>
           </div>
           {/* Row 6: Upload Certificate */}
-          <FileInput
-            placeholder="Upload Certificate File"
-            icon={faCertificate}
-          />{" "}
+          <div
+                  className={`custom-file-input md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-1/2 grow-0 border-1 border-[var(--card-border)] rounded-[8px] cursor-pointer`}
+                  onClick={() => document.getElementById("certificate").click()}
+                >
+                  <label htmlFor="certificate">
+                    <svg
+                      width="36"
+                      height="37"
+                      viewBox="0 0 36 37"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        opacity="0.5"
+                        d="M33 24.5V23C33 18.7565 33 16.637 31.6815 15.3185C30.363 14 28.242 14 24 14H12C7.755 14 5.6355 14 4.317 15.32C3 16.6355 3 18.755 3 22.997V24.5C3 28.742 3 30.863 4.3185 32.1815C5.6355 33.5 7.758 33.5 12 33.5H24C28.242 33.5 30.3645 33.5 31.6815 32.1815C32.9985 30.863 33 28.742 33 24.5Z"
+                        fill="#39CCCC"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M17.9996 24.1251C18.2979 24.1251 18.5841 24.0066 18.7951 23.7956C19.006 23.5846 19.1246 23.2985 19.1246 23.0001V6.5406L21.6446 9.4821C21.8387 9.70886 22.115 9.84922 22.4126 9.87228C22.7102 9.89535 23.0048 9.79924 23.2316 9.6051C23.4583 9.41097 23.5987 9.1347 23.6217 8.83708C23.6448 8.53946 23.5487 8.24486 23.3546 8.0181L18.8546 2.7681C18.749 2.6446 18.6178 2.54545 18.4702 2.47746C18.3226 2.40947 18.1621 2.37427 17.9996 2.37427C17.8371 2.37427 17.6765 2.40947 17.5289 2.47746C17.3813 2.54545 17.2502 2.6446 17.1446 2.7681L12.6446 8.0181C12.5484 8.13038 12.4754 8.2605 12.4295 8.40102C12.3837 8.54154 12.366 8.68971 12.3774 8.83708C12.3888 8.98444 12.4291 9.12812 12.4961 9.2599C12.563 9.39168 12.6553 9.50898 12.7676 9.6051C12.8798 9.70123 13.01 9.7743 13.1505 9.82015C13.291 9.86599 13.4392 9.8837 13.5865 9.87228C13.7339 9.86086 13.8776 9.82053 14.0094 9.75358C14.1411 9.68663 14.2584 9.59438 14.3546 9.4821L16.8746 6.5421V23.0001C16.8746 23.6211 17.3786 24.1251 17.9996 24.1251Z"
+                        fill="#39CCCC"
+                      />
+                    </svg>
+                  </label>
+                  <div className="file-display">
+                    {certificateFileName || "Medical Certificate"}
+                  </div>
+                  <input
+                    type="file"
+                    name="certificate"
+                    id="certificate"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      setCertificateFileName(file ? file.name : "");
+                      setCertificateFile(file);
+                    }}
+                    disabled={isLoading}
+                  />
+                </div>
           {/* Row 7: Pharmacy Name + CR Number */}
           <div className="row">
             <div className="input-field">
@@ -386,16 +460,16 @@ const FormPage = () => {
                 type="text"
                 name="pharmacy_name"
                 id="pharmacyName"
-                value={newUser.pharmacyName}
+                value={newUser.pharmacy_name}
                 placeholder="Pharmacy Name"
                 onChange={(e) =>
-                  setNewUser({ ...newUser, pharmacyName: e.target.value })
+                  setNewUser({ ...newUser, pharmacy_name: e.target.value })
                 }
               />
             </div>
 
             <div className="input-field">
-              <label htmlFor="crNumber">
+              <label htmlFor="cr_number">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="34"
@@ -418,13 +492,13 @@ const FormPage = () => {
               </label>
 
               <input
-                type="text"
+                type="number"
                 name="cr_number"
-                id="crNumber"
-                value={newUser.crNumber}
+                id="cr_number"
+                value={newUser.cr_number}
                 placeholder="CR Number"
                 onChange={(e) =>
-                  setNewUser({ ...newUser, crNumber: e.target.value })
+                  setNewUser({ ...newUser, cr_number: e.target.value })
                 }
               />
             </div>
@@ -438,8 +512,11 @@ const FormPage = () => {
       {isMapOpen && (
         <MapPicker
           initialPosition={
-            newUser.latitude != null && newUser.longitude != null
-              ? [newUser.latitude, newUser.longitude]
+            Number.isFinite(Number(newUser.latitude)) &&
+            Number.isFinite(Number(newUser.longitude)) &&
+            Number(newUser.latitude) !== 0 &&
+            Number(newUser.longitude) !== 0
+              ? [Number(newUser.latitude), Number(newUser.longitude)]
               : null
           }
           onConfirm={(lat, lng) => {

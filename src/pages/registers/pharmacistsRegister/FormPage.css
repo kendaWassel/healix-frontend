@@ -1,3 +1,32 @@
+.custom-file-input {
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-file-input input[type="file"] {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.custom-file-input input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}
+
+.custom-file-input input[type="file"]::file-selector-button {
+  display: none;
+}
+.file-display{
+  flex: 1;
+  color: var(--text-color);
+  font-size: 14px;
+  padding: 0.5rem;
+  min-height: 1.5rem;
+  display: flex;
+  align-items: center;
+}
 .form-page {
   min-height: 100vh;
   display: flex;

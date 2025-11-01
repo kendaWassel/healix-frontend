@@ -34,6 +34,8 @@ const FileInput = ({ placeholder }) => {
       </span>
 
       <input
+        name="certificate"
+        id="certificate"
         type="file"
         ref={inputRef}
         style={{ display: "none" }}
