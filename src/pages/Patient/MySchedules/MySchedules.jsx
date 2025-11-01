@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Phone, Clock, DollarSign } from "lucide-react";
 import doctor1 from "../../../assets/doctoricon.png";
 import Footer from "../../../components/footer/Footer";
+import PatientHeader from "../../../components/headers/PatientHeader";
 
 const MySchedules = () => {
     const [schedules, setSchedules] = useState([]);
@@ -16,7 +17,7 @@ const MySchedules = () => {
                 name: "Dr. Ahmad Youssef",
                 desc: "Cardiologist - Al Amin Clinic",
                 time: "10:30 AM - 11:00 AM",
-                price: "$40",
+                price: "40",
                 image: doctor1,
                 phone: "+963999999111",
             },
@@ -25,7 +26,7 @@ const MySchedules = () => {
                 name: "Dr. Lina H.",
                 desc: "Dermatologist - SkinCare Center",
                 time: "11:00 AM - 11:30 AM",
-                price: "$55",
+                price: "55",
                 image: doctor1,
                 phone: "+963999999222",
             },
@@ -34,7 +35,7 @@ const MySchedules = () => {
                 name: "Dr. Rami S.",
                 desc: "Dentist - Smile Dental Clinic",
                 time: "1:00 PM - 1:30 PM",
-                price: "$60",
+                price: "60",
                 image: doctor1,
                 phone: "+963999999333",
             },
@@ -43,7 +44,7 @@ const MySchedules = () => {
                 name: "Dr. Sara Khaled",
                 desc: "Neurologist - City Hospital",
                 time: "9:00 AM - 9:30 AM",
-                price: "$50",
+                price: "50",
                 image: doctor1,
                 phone: "+963999999444",
             },
@@ -52,7 +53,7 @@ const MySchedules = () => {
                 name: "Dr. Omar Ali",
                 desc: "Pediatrician - Kids Care Center",
                 time: "10:00 AM - 10:30 AM",
-                price: "$45",
+                price: "45",
                 image: doctor1,
                 phone: "+963999999555",
             },
@@ -61,7 +62,7 @@ const MySchedules = () => {
                 name: "Dr. Hiba N.",
                 desc: "Orthopedic - City Orthopedic Clinic",
                 time: "2:00 PM - 2:30 PM",
-                price: "$70",
+                price: "70",
                 image: doctor1,
                 phone: "+963999999666",
             },
@@ -72,7 +73,7 @@ const MySchedules = () => {
                 name: "Dr. Maher K.",
                 desc: "ENT Specialist - Al Salam Clinic",
                 time: "3:00 PM - 3:30 PM",
-                price: "$55",
+                price: "55",
                 image: doctor1,
                 phone: "+963999999777",
             },
@@ -81,7 +82,7 @@ const MySchedules = () => {
                 name: "Dr. Noor A.",
                 desc: "Psychiatrist - MindCare Center",
                 time: "12:00 PM - 12:30 PM",
-                price: "$65",
+                price: "65",
                 image: doctor1,
                 phone: "+963999999888",
             },
@@ -90,7 +91,7 @@ const MySchedules = () => {
                 name: "Dr. Basel T.",
                 desc: "Surgeon - Damascus Hospital",
                 time: "5:00 PM - 5:30 PM",
-                price: "$90",
+                price: "90",
                 image: doctor1,
                 phone: "+963999999999",
             },
@@ -99,7 +100,7 @@ const MySchedules = () => {
                 name: "Dr. Dima R.",
                 desc: "Oncologist - Hope Clinic",
                 time: "4:00 PM - 4:30 PM",
-                price: "$80",
+                price: "80",
                 image: doctor1,
                 phone: "+963999999100",
             },
@@ -108,7 +109,7 @@ const MySchedules = () => {
                 name: "Dr. Tarek M.",
                 desc: "Gastroenterologist - Stomach Health",
                 time: "6:00 PM - 6:30 PM",
-                price: "$50",
+                price: "50",
                 image: doctor1,
                 phone: "+963999999101",
             },
@@ -117,7 +118,7 @@ const MySchedules = () => {
                 name: "Dr. Yara S.",
                 desc: "Endocrinologist - City Care",
                 time: "7:00 PM - 7:30 PM",
-                price: "$60",
+                price: "60",
                 image: doctor1,
                 phone: "+963999999102",
             },
@@ -156,6 +157,7 @@ const MySchedules = () => {
 
     return (
          <>
+         <PatientHeader />
         <div className="p-10 bg-gray-50 min-h-screen">
             <div className="mb-10 text-left">
                 <h1 className="text-[#0a3460] text-3xl font-bold">My Schedules</h1>
@@ -166,18 +168,18 @@ const MySchedules = () => {
                 {schedules.slice(0, 6).map((item) => (
                     <div
                         key={item.id}
-                        className="bg-white shadow-md rounded-2xl p-5 hover:shadow-xl transition-all duration-300"
+                        className="bg-white shadow-md rounded-[10px] p-5 hover:shadow-xl transition-all duration-300 border-[1px] border-[var(--card-border)]"
                     >
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-between pb-[1rem] mb-[1rem] border-b-[2px] border-[var(--card-border)]">
+                            <div className="flex items-start gap-4">
                                 <img
                                     src={item.image}
                                     alt={item.name}
-                                    className="w-16 h-16 rounded-full object-cover border border-blue-400"
+                                    className="w-[40px] h-[40px] rounded-full object-cover border border-blue-400"
                                 />
                                 <div>
                                     <h2 className="text-lg font-semibold text-gray-800">{item.name}</h2>
-                                    <p className="text-sm text-gray-500">{item.desc}</p>
+                                    <p className="text-sm text-gray-500 font-medium">{item.desc}</p>
                                 </div>
                             </div>
 
@@ -190,16 +192,14 @@ const MySchedules = () => {
                             </button>
                         </div>
 
-                        <hr className="my-4 border-gray-200" />
-
-                        <div className="flex items-center gap-4 text-gray-700">
+                        <div className="flex items-center gap-4 text-gray-700 mb-[1rem]">
                             <div className="flex items-center gap-2">
                                 <Clock size={18} className="text-[#39CCCC]" />
-                                <span className="text-sm">{item.time}</span>
+                                <span className="text-sm font-medium">{item.time}</span>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-end">
                                 <DollarSign size={18} className="text-[#39CCCC]" />
-                                <span className="text-sm">{item.price}</span>
+                                <span className="text-sm font-medium">{item.price}</span>
                             </div>
                         </div>
 
