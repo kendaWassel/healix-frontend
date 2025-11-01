@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import style from "./PickOption.module.css";
-import style from "./ModalDone.module.css";
 
 export default function PickOption({ isOpen, onClose, onConfirm }) {
   const [selectedOption, setSelectedOption] = useState("Call Now");
@@ -76,11 +74,11 @@ export default function PickOption({ isOpen, onClose, onConfirm }) {
           >
             Confirm
           </button>
-          <PickOption
+          {/* <PickOption
         isOpen={openConsultation}
         onClose={() => setOpenConsultation(false)}
         onConfirm={handleConfirm}
-      />
+      /> */}
         </div>
       </div>
     </div>

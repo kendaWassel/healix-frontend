@@ -22,7 +22,7 @@ const DoctorCard = ({
 }) => {
   return (
     <div
-      className={`py-[2rem] px-[1rem] border-[2px] rounded-[8px] cursor-pointer duration-200 ${
+      className={`bg-[var(--white)] py-[2rem] px-[1rem] border-[2px] rounded-[8px] cursor-pointer duration-200 ${
         isActive
           ? "border-[var(--cyan)] border-[2px]"
           : "border-[var(--card-border)]"

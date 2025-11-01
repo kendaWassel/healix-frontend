@@ -2,7 +2,6 @@ import React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import style from "./ModalDone.module.css";
 /*import styles from "./DoctorConsultation.module.css";*/
 
 export default function ModalDone({ isOpen, onClose, onHome }) {
@@ -46,7 +45,7 @@ export default function ModalDone({ isOpen, onClose, onHome }) {
         >
           Go to Home Screen
         </button>
-         <ModalDone isOpen={open} onClose={() => setOpen(false)} />
+         {/* <ModalDone isOpen={open} onClose={() => setOpen(false)} /> */}
       </div>
     </div>
   );
