@@ -14,6 +14,8 @@ import Patient from "./pages/patient/Patient";
 import Doctor from "./pages/doctor/Doctor";
 
 import "./App.css";
+import Nurse from "./pages/nurse/Nurse";
+import Physio from "./pages/physio/Physio";
 
 export default function App() {
   return (
@@ -33,6 +35,8 @@ export default function App() {
       <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
     <Route path="/patient/*" element={<Patient />}/>
     <Route path="/Doctor/*" element={<Doctor/>}/>
+    <Route path="/nurse/*" element={<Nurse/>}/>
+    <Route path="/physio/*" element={<Physio/>}/>
     </Routes>
     </BrowserRouter>
   
