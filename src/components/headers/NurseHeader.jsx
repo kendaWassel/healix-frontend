@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-const DoctorHeader = () => {
+const NurseHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -14,32 +14,32 @@ const DoctorHeader = () => {
   return (
     <nav className="md:px-[3rem] px-[2rem] md:py-[1.5rem] py-[1rem] flex items-center justify-between border-b-[1px] border-[var(--card-border)] relative">
       {/* Logo */}
-      <NavLink to="/Doctor" className="logo w-[125px]">
-        <img src="/Logo-dark.png" alt="logo" />
+      <NavLink to="/nurse" className="logo w-[125px]">
+        <img src="./Logo-dark.png" alt="logo" />
       </NavLink>
 
       {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
-          to="/Doctor"
+          to="/nurse"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
         </NavLink>
 
         <NavLink
-          to="/Doctor/DoctorSchedules" 
+          to="/nurse/new-orders"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My Schedules
+          New Orders
+        </NavLink>
+        <NavLink
+          to="/nurse/my-schedules "
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
+        >
+            My Schedules 
         </NavLink>
 
-        <NavLink
-          to="/Doctor/receipts"
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          My Receipts
-        </NavLink>
       </div>
 
       {/* mobile menu */}
@@ -60,24 +60,24 @@ const DoctorHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/Doctor' 
+            to='/nurse/' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to="/Doctor/DoctorSchedules" 
+            to='/nurse/new-orders/' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My Schedules 
+          New Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/Doctor/receipts' 
+            to='/nurse/my-schedules/' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My receipts
+          My Schedules
           </NavLink>
         </div>
       </div>
@@ -85,4 +85,4 @@ const DoctorHeader = () => {
   );
 };
 
-export default DoctorHeader;
+export default NurseHeader;

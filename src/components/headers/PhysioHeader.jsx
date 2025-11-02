@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-const CPHeader = () => {
+const PhysioHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -14,38 +14,32 @@ const CPHeader = () => {
   return (
     <nav className="md:px-[3rem] px-[2rem] md:py-[1.5rem] py-[1rem] flex items-center justify-between border-b-[1px] border-[var(--card-border)] relative">
       {/* Logo */}
-      <NavLink to="/" className="logo w-[125px]">
+      <NavLink to="/physio" className="logo w-[125px]">
         <img src="./Logo-dark.png" alt="logo" />
       </NavLink>
 
       {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
-          to="/"
+          to="/physio"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
         </NavLink>
 
         <NavLink
-          to="/my-schedules "
+          to="/physio/new-orders"
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
+        >
+          New Orders
+        </NavLink>
+        <NavLink
+          to="/physio/my-schedules "
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
             My Schedules 
         </NavLink>
 
-        <NavLink
-          to="/my-receipts"
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          My Receipts
-        </NavLink>
-        <NavLink
-          to="/receipts"
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          Receipts
-        </NavLink>
       </div>
 
       {/* mobile menu */}
@@ -66,31 +60,24 @@ const CPHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to='/physio/' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to='/physio/new-orders' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My Past Orders
+          New Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to='/physio/my-schedules' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My New Orders
-          </NavLink>
-          <NavLink
-            onClick={() => setIsMenuOpen(false)}
-            to='/' 
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          Receipts
+          My Schedules
           </NavLink>
         </div>
       </div>
@@ -98,4 +85,4 @@ const CPHeader = () => {
   );
 };
 
-export default CPHeader;
+export default PhysioHeader;

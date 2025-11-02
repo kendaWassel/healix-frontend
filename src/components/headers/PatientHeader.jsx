@@ -14,7 +14,7 @@ const PatientHeader = () => {
   return (
     <nav className="md:px-[3rem] px-[2rem] md:py-[1.5rem] py-[1rem] flex items-center justify-between border-b-[1px] border-[var(--card-border)] relative">
       {/* Logo */}
-      <NavLink to="/" className="logo w-[125px]">
+      <NavLink to="/patient" className="logo w-[125px]">
         <img src="../Logo-dark.png" alt="logo" />
       </NavLink>
 
