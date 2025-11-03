@@ -25,9 +25,14 @@ input:focus,select:focus{
     z-index: -1;
   }
   .contentCol{
-    flex: 0 0 auto;
-    width: 50%;
-    margin-right: auto !important;
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+    .contentCol{
+      flex: 0 0 auto;
+      width: 50%;
+      margin-right: auto !important;
+    }
   }
 
   @keyframes fadeIn {

@@ -76,7 +76,7 @@ import { Link } from "react-router-dom";
   return (
     <div className="relative flex min-h-screen items-center">
       <div className={`contentCol h-[100%]`}>
-        <div className="flex items-start md:py-[2rem] py-[1rem] md:ps-[2rem] ps-[1rem]">
+        <div className="flex items-start md:py-[2rem] py-[1rem] sm:px-[2rem] px-[1rem]">
           {/* form  */}
           <div className="flex-grow-1 flex flex-col items-center">
             <div className={`${styles.formHeading} text-center `}>
@@ -94,13 +94,13 @@ import { Link } from "react-router-dom";
               ""
             )}
             <form
-              className={`${styles.form} flex flex-col gap-[1.5rem] w-[80%]`}
+              className={`${styles.form} flex flex-col gap-[1.5rem] lg:w-[80%] w-[100%]`}
               onSubmit={handleSubmit}
             >
               {/* email  */}
               <div className="md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center gap-[0.5rem] basis-0 grow border-1 border-[var(--card-border)] rounded-[8px]">
                
-                <label htmlFor="d-email">
+                <label htmlFor="email">
                   <svg
                     width="37"
                     height="37"
@@ -115,10 +115,11 @@ import { Link } from "react-router-dom";
                   </svg>
                 </label>
                 <input
-                  type="d-email"
-                  name="d-email"
+                  type="email"
+                  name="email"
                   id="email"
                   placeholder="Type email"
+                  className="flex-grow-1"
                   value={newUser.email}
                   ref={inputRef}
                   onChange={(e) =>
@@ -131,7 +132,7 @@ import { Link } from "react-router-dom";
               {/* password  */}
               <div className="basis-0 grow md:px-[2rem] px-[1rem] md:py-[1rem] py-[0.5rem] flex items-center border-1 border-[var(--card-border)] rounded-[8px]">
                 <div className="flex items-center gap-[1rem] basis-0 grow">
-                  <label htmlFor="d-pass">
+                  <label htmlFor="pass">
                     <svg
                       width="30"
                       height="31"
@@ -148,10 +149,11 @@ import { Link } from "react-router-dom";
                     </svg>
                   </label>
                   <input
-                    name="d-pass"
-                    id="d-pass"
+                    name="pass"
+                    id="pass"
                     type={passwordShown ? "text" : "password"}
                     placeholder="Type Password..."
+                    className="flex-grow-1"
                     value={newUser.password}
                     autoComplete="off"
                     onInput={(e) =>
@@ -164,7 +166,7 @@ import { Link } from "react-router-dom";
                     disabled={isLoading}
                   />
                 </div>
-                <div className="pass-icon">
+                <div className="pass-icon ps-[0.5rem]">
                   <FontAwesomeIcon
                     icon={faEye}
                     className="cursor-pointer text-[var(--text-color)] md:text-[20px] text-[18px]"
@@ -176,7 +178,7 @@ import { Link } from "react-router-dom";
               {/* Sign In button  */}
               <button
                 type="submit"
-                className="rounded-[8px] p-[2rem] bg-[var(--dark-blue)] text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed shadow-[0px_3px_8px_#2d2d2de3] duration-200 hover:bg-[#0a3460]"
+                className="rounded-[8px] md:p-[1.5rem] p-[1rem] bg-[var(--dark-blue)] text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed shadow-[0px_3px_8px_#2d2d2de3] duration-200 hover:bg-[#0a3460]"
                 disabled={
                   newUser.email.length < 10 ||
                   newUser.password.length < 6 ||

@@ -148,13 +148,13 @@ const PickDoctor = () => {
         <Link to="/patient/consultation" className="text-[30px]">
         <FontAwesomeIcon icon={faArrowLeft} />
         </Link>
-        <div className="flex justify-between items-center pt-[2rem]">
-            <div className="px-[1rem]">
-                <h1 className="text-[var(--dark-blue)] md:text-[30px] font-medium">Pick A Doctor For Consultation</h1>
-                <p className="text-[var(--text-color)] mt-[1rem]">Click one of the Doctors to choose and then click next</p>
+        <div className="flex md:flex-row flex-col md:items-center justify-between pt-[2rem]">
+            <div className="md:order-1 order-2 px-[1rem]">
+                <h1 className="text-[var(--dark-blue)] md:text-[30px] text-[24px] font-medium">Pick A Doctor For Consultation</h1>
+                <p className="text-[var(--text-color)] mt-[1rem] font-medium">Click one of the Doctors to choose and then click next</p>
             </div>
             <button 
-            className="text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[10px] px-[2rem] py-[0.8rem] font-medium"
+            className="md:order-2 order-1 self-end text-white bg-[var(--dark-blue)] border-[2px] border-[var(--dark-blue)] hover:border-[var(--card-border)] hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)] duration-400 rounded-[10px] px-[2rem] py-[0.8rem] font-medium md:m-0 my-[1rem]"
             onClick={(e) => {
               if(selected !== null){
                 setError(null);
@@ -176,7 +176,7 @@ const PickDoctor = () => {
         : 
         <></>
         }
-        <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-[2rem] pt-[2rem] md:px-[5rem] px-[3rem]">
+        <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-[2rem] pt-[2rem] md:px-[5rem] px-[2rem]">
             {currentDoctors.map((doctor,index) => {
                 const isActive = selected === index;
                 const isDimmed = selected !== index;
