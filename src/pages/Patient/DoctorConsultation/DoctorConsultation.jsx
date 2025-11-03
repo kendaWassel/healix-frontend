@@ -152,19 +152,19 @@ export default function DoctorConsultation() {
 
   return (
     <>
-      <div className={styles.CardContainer}>
+      <div className={`md:p-[5rem] p-[2.5rem_2rem] ${styles.CardContainer}`}>
           <span className={styles.backArrow}>
             <Link to="/patient">
             <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
           </span>
-        <div className={`flex items-end justify-between ${styles.CardHeader}`}>
-          <div>
+        <div className={`flex md:flex-row flex-col md:items-end justify-between ${styles.CardHeader}`}>
+          <div className="md:order-1 order-2">
           <h1>Pick a Speciality</h1>
           <p className="mt-[1rem]">Click one of the specialities to choose and then click next</p>
           </div>
           <button
-           className={styles.nextButton} 
+           className={`md:order-2 order-1 ${styles.nextButton} md:m-0 mt-[2rem] mb-[1rem] self-end`} 
            onClick={(e) => handleSubmit(e)}
            >
              Next
