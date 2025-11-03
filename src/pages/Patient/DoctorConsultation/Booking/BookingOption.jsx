@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function PickOption({ isOpen, onClose, onConfirm }) {
+export default function BookingOption({ isOpen, onClose, onConfirm }) {
   const [selectedOption, setSelectedOption] = useState("Call Now");
 
   if (!isOpen) return null;
@@ -74,7 +74,7 @@ export default function PickOption({ isOpen, onClose, onConfirm }) {
           >
             Confirm
           </button>
-          {/* <PickOption
+          {/* <BookingOption
         isOpen={openConsultation}
         onClose={() => setOpenConsultation(false)}
         onConfirm={handleConfirm}

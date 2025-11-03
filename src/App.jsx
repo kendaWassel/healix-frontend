@@ -12,7 +12,6 @@ import CareProviderRegister from "./pages/registers/careProviderRegister/CarePro
 import AdminLogin from './pages/login/adminLogin/AdminLogin'
 import Patient from "./pages/patient/Patient";
 import Doctor from "./pages/doctor/Doctor";
-
 import "./App.css";
 import Nurse from "./pages/nurse/Nurse";
 import Physio from "./pages/physio/Physio";
