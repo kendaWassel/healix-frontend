@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 /*import styles from "./DoctorConsultation.module.css";*/
 
-export default function ModalDone({ isOpen, onClose, onHome }) {
+export default function BookingDone({ isOpen, onClose, onHome }) {
   if (!isOpen) return null;
 
 
@@ -45,7 +45,7 @@ export default function ModalDone({ isOpen, onClose, onHome }) {
         >
           Go to Home Screen
         </button>
-         {/* <ModalDone isOpen={open} onClose={() => setOpen(false)} /> */}
+         {/* <BookingDone isOpen={open} onClose={() => setOpen(false)} /> */}
       </div>
     </div>
   );
