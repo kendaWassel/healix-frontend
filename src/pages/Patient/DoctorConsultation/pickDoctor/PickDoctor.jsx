@@ -8,7 +8,7 @@ import {
     faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link,useParams } from "react-router-dom";
-import BookingOption from "../Booking/BookingOption";
+import BookingOption from "../pages/Patient/DoctorConsultation/Booking/BookingOption";
 import BookingDone from "../Booking/BookingDone";
 import ScheduleLaterModal from "../Booking/ScheduleLaterModal";
 const PickDoctor = () => {
