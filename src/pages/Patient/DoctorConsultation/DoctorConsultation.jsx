@@ -9,90 +9,75 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
-const Specialitytypes = [
-  { key: "Cardiology", title: "Cardiology" },
-  { key: "Dermatology", title: "Dermatology" },
-  { key: "General Surgery", title: "General Surgery" },
-  { key: "Gynecology", title: "Gynecology" },
-  { key: "Neurology", title: "Neurology" },
-  { key: "Oncology", title: "Oncology" },
-  { key: "Ophthalomology", title: "Ophthalomology" },
-  { key: "Orthopedics", title: "Orthopedics" },
-  { key: "Pediatrics", title: "Pediatrics" },
-  { key: "Psychiatry", title: "Psychiatry" },
-];
+// const Specialitytypes = [
+//   { key: "Cardiology", title: "Cardiology" },
+//   { key: "Dermatology", title: "Dermatology" },
+//   { key: "General Surgery", title: "General Surgery" },
+//   { key: "Gynecology", title: "Gynecology" },
+//   { key: "Neurology", title: "Neurology" },
+//   { key: "Oncology", title: "Oncology" },
+//   { key: "Ophthalomology", title: "Ophthalomology" },
+//   { key: "Orthopedics", title: "Orthopedics" },
+//   { key: "Pediatrics", title: "Pediatrics" },
+//   { key: "Psychiatry", title: "Psychiatry" },
+// ];
 
 export default function DoctorConsultation() {
   const [selected, setSelected] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState(null);
-  /*const [ Specialitytypes ,  setSpecialitytypes ] = useState([]);
+  const [ Specialitytypes ,  setSpecialitytypes ] = useState([]);
   const [specsLoaded, setSpecsLoaded] = useState(false);
-
-  const fetchSpecializations = async () => {
-    setIsLoading(true);
-    setError(null);
-  
-    try {
-      const response = await fetch(
-        "https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/specializations",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-          },
-        }
-      );
-  
-      if (!response.ok) {
-        const serverError = await response.json().catch(() => ({}));
-        throw new Error(serverError.message || "Specializations request failed");
-      }
-  
-      const data = await response.json();
-      console.log("success getting specs: ", data);
-  
-      if (data.status === "success" && data.data) {
-        setSpecialitytypes (data.data);
-        setSpecsLoaded(true);
-      } else {
-        throw new Error("Invalid response format");
-      }
-    } catch (error) {
-      console.error("failed getting specs:", error);
-      setError(error.message || "Failed to get specializations. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  */
-  // pagination state
   const [pagination, setPagination] = useState({
     currentPage: 1,
-    itemsPerPage: 5,
-    totalItems:  Specialitytypes.length,
-    totalPages: Math.ceil( Specialitytypes.length / 5),
+    itemsPerPage: 6,
+    totalItems: 0,
+    totalPages: 1,
   });
 
-  const handleItemsPerPageChange = (e) => {
-    const items = Number(e.target.value);
-    setPagination((prev) => ({
-      ...prev,
-      itemsPerPage: items,
-      totalPages: Math.ceil(prev.totalItems / items),
-      currentPage: 1,
-    }));
+  const fetchSpecializations = (page, perPage) => {
+    setIsLoading(true);
+    setError(null);
+
+    const token = localStorage.getItem("token");
+    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/specializations?page=${page}&per_page=${perPage}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+        "Authorization": `Bearer ${token}`
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((serverError) => {
+            throw new Error(serverError.message || "Specializations request failed");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("success getting specs: ", data);
+        
+        setSpecialitytypes(data.data);
+        setSpecsLoaded(true);
+
+        const totalItems = data.meta.total;
+        const totalPages = Math.ceil(totalItems / (perPage || 6));
+        setPagination((prev) => ({
+          ...prev,
+          totalItems: totalItems,
+          totalPages: totalPages,
+        }));
+      })
+      .catch((error) => {
+        setError(error.message || 'failed to get specs');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
-  useEffect(() => {
-    setPagination((prev) => ({
-      ...prev,
-      totalItems: Specialitytypes.length,
-      totalPages: Math.ceil(Specialitytypes.length / prev.itemsPerPage),
-      currentPage: 1, 
-    }));
-  }, [Specialitytypes]);
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPages) {
       setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
@@ -105,49 +90,45 @@ export default function DoctorConsultation() {
     }
   };
 
-
-  const startIndex = (pagination.currentPage - 1) * pagination.itemsPerPage;
-  const currentSpecs = Specialitytypes.slice(
-    startIndex,
-    startIndex + pagination.itemsPerPage
-  );
-
   useEffect(() => {
-    document.title = "Doctor Consultation";
-  /*  fetchSpecializations() */
+    fetchSpecializations(1, pagination.itemsPerPage);
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selected) {
-      setError("Please select a speciality before proceeding.");
-      return;
-    }
-    setError(null);
-    setSuccessMsg(null);
-    setIsLoading(true);
-    try {
-      const response = await fetch("https://example.com/api/fake-endpoint", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ speciality: selected }),
-      });
+  useEffect(() => {
+    fetchSpecializations(pagination.currentPage, pagination.itemsPerPage);
+  }, [pagination.currentPage, pagination.itemsPerPage]);
 
-      if (!response.ok) throw new Error("Can't continue. Please try again.");
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!selected) {
+  //     setError("Please select a speciality before proceeding.");
+  //     return;
+  //   }
+  //   setError(null);
+  //   setSuccessMsg(null);
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch("https://example.com/api/fake-endpoint", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ speciality: selected }),
+  //     });
 
-      await response.json();
-      setSuccessMsg("Speciality type selected successfully!");
-    } catch (err) {
+  //     if (!response.ok) throw new Error("Can't continue. Please try again.");
+
+  //     await response.json();
+  //     setSuccessMsg("Speciality type selected successfully!");
+  //   } catch (err) {
         
-        if (err.message === "Failed to fetch") {
-          setError("Failed please try again");
-        } else {
-          setError(err.message);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       if (err.message === "Failed to fetch") {
+  //         setError("Failed please try again");
+  //       } else {
+  //         setError(err.message);
+  //       }
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
   
 
   return (
@@ -163,29 +144,32 @@ export default function DoctorConsultation() {
           <h1>Pick a Speciality</h1>
           <p className="mt-[1rem]">Click one of the specialities to choose and then click next</p>
           </div>
-          <button
+          <Link
            className={`md:order-2 order-1 ${styles.nextButton} md:m-0 mt-[2rem] mb-[1rem] self-end`} 
-           onClick={(e) => handleSubmit(e)}
+           to={`doctor-specialization/${selected}`}
            >
              Next
-         </button>
+         </Link>
           {isLoading && <p>Loading specialities...</p>}
      {/*      {!isLoading && specsLoaded && currentSpecs.length === 0 && <p>No specialities found.</p>} */}
           {error && <div className={styles.errorMsg}>{error}</div>}
           {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
         </div>
 
-        <div className={styles.ConsultationForm} onSubmit={handleSubmit}>
-          {currentSpecs.map((type) => (
+        <div className={styles.ConsultationForm}>
+          {Specialitytypes.map((type,index) => (
             <button
-              key={type.key}
+              key={type.id}
               type="button"
               className={`${styles.SpecialityButton} ${
-                selected === type.key ? styles.selected : ""
+                selected === type.id ? styles.selected : ""
               }`}
-              onClick={() => setSelected(type.key)}
+              onClick={() => {
+                console.log('selected: ',type.id)
+                setSelected(type.id)
+              }}
             >
-              <h3>{type.title}</h3>
+              <h3>{type.name}</h3>
             </button>
           ))}
 
@@ -201,7 +185,7 @@ export default function DoctorConsultation() {
             </button>
 
             <span className={styles.pageInfo}>
-              {pagination.currentPage} / {pagination.totalPages}
+              {pagination.currentPage} of {pagination.totalPages}
             </span>
 
             <button

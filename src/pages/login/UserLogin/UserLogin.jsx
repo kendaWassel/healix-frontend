@@ -48,10 +48,12 @@ import { Link } from "react-router-dom";
       .then((data) => {
         console.log("message from api: ", data.message);
         setSuccessMsg("Logged in successeully!!");
+        localStorage.setItem('token',data.token)
         setNewUser({
           email: "",
           password: "",
         });
+        navigate('/patient');
       })
       .catch((error) => {
         setError(error.message || "Failed to login. Please try again.");
