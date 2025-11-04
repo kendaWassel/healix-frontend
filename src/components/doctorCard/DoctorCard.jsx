@@ -9,12 +9,12 @@ import {
   faStar
 } from "@fortawesome/free-solid-svg-icons";
 const DoctorCard = ({
-  url,
+  doctor_image,
   name,
   specialization,
   rating,
-  from,
-  to,
+  available_from,
+  available_to,
   consultation_fee,
   onSelect,
   isActive,
@@ -39,7 +39,7 @@ const DoctorCard = ({
       <div className="flex items-start gap-[0.5rem]">
         {/* doctor's image  */}
         <div className="w-[50px] h-[50px] overflow-hidden rounded-[50%] flex-shrink-0">
-          <img src={url} className="w-full h-full object-cover" alt="doctor's image" />
+          <img src={doctor_image || '../no-photo.png'} className="w-full h-full object-cover" alt="doctor's image" />
         </div>
         {/* name and spec  */}
         <div>
@@ -57,8 +57,8 @@ const DoctorCard = ({
         {/* working hours  */}
         <div className="flex items-center gap-[0.2rem]">
         <FontAwesomeIcon icon={faClock} className="text-[var(--cyan)]"/>
-        <span>from {from} </span>
-        <span>to {to} </span>
+        <span>from {available_from} </span>
+        <span>to {available_to} </span>
         </div>
         {/* consultation fee */}
         <div className="flex items-center gap-[0.2rem]">

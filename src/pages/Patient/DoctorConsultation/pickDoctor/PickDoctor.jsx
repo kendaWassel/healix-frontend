@@ -7,130 +7,106 @@ import {
     faChevronLeft,
     faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import PickOption from "../PickAdoctor/PickOption";
-import ModalDone from "../PickAdoctor/ModalDone";
+import { Link,useParams } from "react-router-dom";
+import BookingOption from "../Booking/BookingOption";
+import BookingDone from "../Booking/BookingDone";
+import ScheduleLaterModal from "../Booking/ScheduleLaterModal";
 const PickDoctor = () => {
+  const { id } = useParams();
   const [openPickOption, setOpenPickOption] = useState(false);
   const [openModalDone, setOpenModalDone] = useState(false);
-    const doctors = [
-        { url:'../hero.jpg',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-    },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-     },
-        { url:'../no-photo.png',
-         specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
-         rating: '4.0',
-         from: '8 Am',
-         to: '9 Pm',
-         consultation_fee: '12',
-        name: "mohammad"
-    },
-      ];
+      const [openScheduleLater, setOpenScheduleLater] = useState(false);
       const [selected, setSelected] = useState(null);
       const [isLoading, setIsLoading] = useState(false);
       const [error, setError] = useState(null);
       const [successMsg, setSuccessMsg] = useState(null);
-    //   const [doctors, setDoctors] = useState(null);
-      const [pagination, setPagination] = useState({
-        currentPage: 1,
-        itemsPerPage: 6,
-        totalItems:  doctors.length,
-        totalPages: Math.ceil( doctors.length / 6),
-      });
-    
-      const indexOfLastDoctor = pagination.currentPage * pagination.itemsPerPage;
-      const indexOfFirstDoctor = indexOfLastDoctor - pagination.itemsPerPage;
-      const currentDoctors = doctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
-      
-      const handleNextPage = () => {
-          if (pagination.currentPage < pagination.totalPages) {
-              setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
-              setSelected(null);
-            }
-        };
+      const [doctors, setDoctors] = useState([]);
+   const [pagination, setPagination] = useState({
+    currentPage: 1,
+    itemsPerPage: 6,
+    totalItems: 0,
+    totalPages: 1,
+  });
+
+  const fetchDoctors = (page, perPage) => {
+    setIsLoading(true);
+    setError(null);
+
+    const token = localStorage.getItem("token");
+    fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/doctors/by-specialization?specialization_id=${id}&page=${page}&per_page=${perPage}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+        "Authorization": `Bearer ${token}`
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((serverError) => {
+            throw new Error(serverError.message || "Doctors request failed");
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("success getting doctors: ", data);
         
-        const handlePrevPage = () => {
-            if (pagination.currentPage > 1) {
-                setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
-                setSelected(null);
-            }
-        };
+        setDoctors(data.data);
+
+        const totalItems = data.meta.total;
+        const totalPages = Math.ceil(totalItems / (perPage || 6));
+        setPagination((prev) => ({
+          ...prev,
+          totalItems: totalItems,
+          totalPages: totalPages,
+        }));
+      })
+      .catch((error) => {
+        setError(error.message || 'failed to get doctors');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const handleNextPage = () => {
+    if (pagination.currentPage < pagination.totalPages) {
+      setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (pagination.currentPage > 1) {
+      setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      // Reset to page 1 when specialization id changes
+      setPagination((prev) => ({ ...prev, currentPage: 1 }));
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchDoctors(pagination.currentPage, pagination.itemsPerPage);
+    }
+  }, [id, pagination.currentPage, pagination.itemsPerPage]);
 
         const handleConfirm = (option) => {
           console.log("Selected option:", option);
           setOpenPickOption(false);
-          setTimeout(() => {
-            setOpenModalDone(true);
-          }, 400);
+          // If Schedule later, open date/time picker, else show done
+          if(option === "Schedule For later"){
+            setTimeout(() => {
+              setOpenScheduleLater(true);
+            }, 200);
+          } else {
+            setTimeout(() => {
+              setOpenModalDone(true);
+            }, 400);
+          }
         };
       
         const handleGoHome = () => {
@@ -177,7 +153,7 @@ const PickDoctor = () => {
         <></>
         }
         <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-[2rem] pt-[2rem] md:px-[5rem] px-[2rem]">
-            {currentDoctors.map((doctor,index) => {
+            {doctors && doctors.length > 0 ? doctors.map((doctor,index) => {
                 const isActive = selected === index;
                 const isDimmed = selected !== index;
                 return (
@@ -186,13 +162,15 @@ const PickDoctor = () => {
                     {...doctor}
                     isActive={isActive}
                     isDimmed={isDimmed}
-                    onSelect={() => setSelected(index)}
+                    onSelect={() => {
+                      console.log('doctor selected: ',doctor.id)
+                      setSelected(index)
+                    }}
                   />
                 );
-            })}
+            }) : isLoading ? <p>Loading doctors...</p> : <p>No doctors found.</p>}
         </div>
         {/* Pagination Controls */}
-        {doctors.length > 0 && (
         <div className="flex justify-center items-center gap-3 my-[2rem]">
           <button
             className={`bg-[var(--white)] border-[2px] p-[0.5rem_1.5rem] rounded-[10px] ${pagination.currentPage === 1 ? "border-[var(--card-border)] text-[var(--text-color)] opacity-50" : "border-[var(--cyan)] text-[var(--cyan)]"}`}
@@ -210,22 +188,30 @@ const PickDoctor = () => {
             className={`bg-[var(--white)] border-[2px] p-[0.5rem_1.5rem] rounded-[10px] ${pagination.currentPage === pagination.totalPages || pagination.totalPages === 0 ? "border-[var(--card-border)] text-[var(--text-color)] opacity-50" : "border-[var(--cyan)] text-[var(--cyan)]"}`}
             onClick={handleNextPage}
             disabled={
-              pagination.currentPage === pagination.totalPages ||
-              pagination.totalPages === 0
+              pagination.currentPage === pagination.totalPages
             }
           >
             Next <FontAwesomeIcon className={`${pagination.currentPage === pagination.totalPages || pagination.totalPages === 0  ? "text-[var(--text-color)]" : "text-[var(--cyan)]"}`} icon={faChevronRight} />
           </button>
         </div>
-      )}
 
       {/* Modals */}
-      <PickOption
+      <BookingOption
         isOpen={openPickOption}
         onClose={() => setOpenPickOption(false)}
         onConfirm={handleConfirm}
       />
-      <ModalDone
+      <ScheduleLaterModal
+        isOpen={openScheduleLater}
+        onClose={() => setOpenScheduleLater(false)}
+        doctorId={selected !== null && doctors[selected] ? doctors[selected].id : null}
+        onConfirm={({ date, time }) => {
+          console.log("Scheduled later:", { date, time });
+          setOpenScheduleLater(false);
+          setTimeout(() => setOpenModalDone(true), 300);
+        }}
+      />
+      <BookingDone
         isOpen={openModalDone}
         onHome={handleGoHome}
       />

@@ -10,7 +10,7 @@ const Patient = () => {
     <Routes>
           <Route index element={<PatientHomePage />} />
           <Route path="consultation" element={<DoctorConsultation />} /> 
-          <Route path="doctor-specialization" element={<PickDoctor />} /> 
+          <Route path="consultation/doctor-specialization/:id" element={<PickDoctor />} /> 
           <Route path="my-schedules" element={<MySchedules />} /> 
       </Routes>
     </>
