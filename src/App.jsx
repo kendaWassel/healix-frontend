@@ -15,18 +15,7 @@ import Doctor from "./pages/doctor/Doctor";
 import "./App.css";
 import Nurse from "./pages/nurse/Nurse";
 import Physio from "./pages/physio/Physio";
-import BookingDone from "./pages/patient/DoctorConsultation/Booking/BookingDone";
-import BookingOption from "./pages/Patient/DoctorConsultation/Booking/BookingOption";
-import Appointments from "./pages/Patient/DoctorConsultation/Appointments/Appointments";
-/*import PatientDetails from "./pages/patient/appointments/PatientDetails"*/
-import MySchedules from "./pages/patient/MySchedules/MySchedules";
-import { Import } from "lucide-react";
-import { Clock, MapPin } from "lucide-react";
-import Footer from "./components/footer/Footer";
-import PatientHeader from "../../../components/headers/PatientHeader";
-
-
-
+import Appointments from"./pages/Patient/DoctorConsultation/Appointments/Appointments";
 export default function App() {
   return (
     <>
@@ -44,13 +33,6 @@ export default function App() {
       <Route path="/delivery-register" element={<DeliveryRegister/>}/> {/*done*/}
       <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
     <Route path="/patient/*" element={<Patient />}/>
-           <Route path="/doctor-consultation/*" element={<DoctorConsultation/>}/>
-           <Route path="/pick-doctor/*" element={<PickDoctor/>}/>
-           <Route path="/booking-option/*" element={<BookingOption/>}/>
-           <Route path="/booking-done/*" element={<BookingDone/>}/>
-           <Route path="/appointments/*" element={<Appointmentsr/>}/>
-           <Route path="/my-schedules/*" element={<MySchedules/>}/>
-
     <Route path="/Doctor/*" element={<Doctor/>}/>
     <Route path="/nurse/*" element={<Nurse/>}/>
     <Route path="/physio/*" element={<Physio/>}/>
