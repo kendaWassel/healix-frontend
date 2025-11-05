@@ -8,14 +8,16 @@ import {
     faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link,useParams } from "react-router-dom";
-import BookingOption from "../pages/Patient/DoctorConsultation/Booking/BookingOption";
+import BookingOption from "../Booking/BookingOption";
 import BookingDone from "../Booking/BookingDone";
 import ScheduleLaterModal from "../Booking/ScheduleLaterModal";
+import CallNowModal from "../Booking/CallNowModal";
 const PickDoctor = () => {
   const { id } = useParams();
   const [openPickOption, setOpenPickOption] = useState(false);
   const [openModalDone, setOpenModalDone] = useState(false);
       const [openScheduleLater, setOpenScheduleLater] = useState(false);
+      const [openCallNow, setOpenCallNow] = useState(false);
       const [selected, setSelected] = useState(null);
       const [isLoading, setIsLoading] = useState(false);
       const [error, setError] = useState(null);
@@ -27,7 +29,88 @@ const PickDoctor = () => {
     totalItems: 0,
     totalPages: 1,
   });
-
+//   const doctors = [
+//     { url:'../hero.jpg',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+// },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+//  },
+//     { url:'../no-photo.png',
+//      specialization:'specializes in diagnosing and treating heart and blood vessel diseases',
+//      rating: '4.0',
+//      from: '8 Am',
+//      to: '9 Pm',
+//      consultation_fee: '12',
+//     name: "mohammad"
+// },
+//   ];
   const fetchDoctors = (page, perPage) => {
     setIsLoading(true);
     setError(null);
@@ -83,7 +166,6 @@ const PickDoctor = () => {
 
   useEffect(() => {
     if (id) {
-      // Reset to page 1 when specialization id changes
       setPagination((prev) => ({ ...prev, currentPage: 1 }));
     }
   }, [id]);
@@ -97,12 +179,17 @@ const PickDoctor = () => {
         const handleConfirm = (option) => {
           console.log("Selected option:", option);
           setOpenPickOption(false);
-          // If Schedule later, open date/time picker, else show done
           if(option === "Schedule For later"){
             setTimeout(() => {
               setOpenScheduleLater(true);
             }, 200);
-          } else {
+          } 
+          else if(option === "Call Now"){
+            setTimeout(() => {
+              setOpenCallNow(true);
+            }, 200);
+          }
+          else {
             setTimeout(() => {
               setOpenModalDone(true);
             }, 400);
@@ -214,6 +301,10 @@ const PickDoctor = () => {
       <BookingDone
         isOpen={openModalDone}
         onHome={handleGoHome}
+      />
+      <CallNowModal
+      onClose={() => setOpenCallNow(false)}
+        isOpen={openCallNow}
       />
       <Footer />
     </div>

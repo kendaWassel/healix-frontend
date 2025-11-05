@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Clock, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Footer from "./components/footer/Footer";
-import PatientHeader from "../../../components/headers/PatientHeader";
+import Footer from "../../../../components/footer/Footer";
+import PatientHeader from "../../../../components/headers/PatientHeader";
 
 const Appointments = () => {
     const [appointments, setAppointments] = useState([]);

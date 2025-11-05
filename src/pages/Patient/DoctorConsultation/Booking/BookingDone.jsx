@@ -27,7 +27,7 @@ export default function BookingDone({ isOpen, onClose, onHome }) {
   };*/
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white/70 backdrop-blur-sm z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] backdrop-blur-sm z-50">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-[90%] max-w-md text-center animate-fadeIn border border-gray-100">
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">
           {"You Are Done"}
