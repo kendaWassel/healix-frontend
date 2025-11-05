@@ -1,12 +1,14 @@
 import { Routes,Route } from "react-router-dom";
 import NurseHomePage from "./nurseHomePage/NurseHomePage";
 import NewOrders from "./newOrders/NewOrders";
+import Appointments from "../Patient/DoctorConsultation/Appointments/Appointments";
 const Nurse =()=>{
     return (
         <>
         <Routes>
         <Route index element={<NurseHomePage />} />
-            <Route path='/new-orders'  element={<NewOrders/>}/>
+            <Route path='new-orders'  element={<NewOrders/>}/>
+            <Route path="appointment" element={<Appointments />} /> 
         </Routes>
         
         </>

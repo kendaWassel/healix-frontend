@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
+import NurseHeader from "../../../components/headers/NurseHeader";
+import Footer from "../../../components/footer/Footer";
 
 const NewOrders = () => {
   const [schedules, setSchedules] = useState([]);
@@ -151,10 +153,12 @@ const NewOrders = () => {
     }
   };
   return (
+    <>
+    <NurseHeader/>
     <div className="p-10 bg-gray-50 min-h-screen">
       <div className="mb-10 text-left">
-        {/* <h1 className="text-[#0a3460] text-3xl font-bold">My </h1>
-        <p className="text-gray-600 text-lg mt-2">Check your Schedules here</p> */}
+        <h1 className="text-[#0a3460] text-3xl font-bold">My Schedules</h1>
+        <p className="text-gray-600 text-lg mt-2">Check your Schedules here</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
@@ -169,7 +173,7 @@ const NewOrders = () => {
                   {item.name}
                 </h2>
                 <p className="text-sm text-gray-500">{item.desc}</p>
-                <p className="text-sm text-gray-500">{item.address}</p>
+                <p className="text-sm text-gray-500 font-medium mt-[1rem]">{item.address}</p>
               </div>
               <button
                 onClick={() => handleAccept(item.id)}
@@ -226,6 +230,8 @@ const NewOrders = () => {
         </button>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

@@ -27,7 +27,7 @@ export default function BookingOption({ isOpen, onClose, onConfirm }) {
   };*/
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white/80 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] z-50">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-[90%] max-w-md animate-fadeIn">
         <h2 className="text-xl font-semibold text-gray-900 mb-6 text-center">
           Pick one
