@@ -13,36 +13,42 @@ const NewOrders = () => {
         id: 1,
         name: "Dr. Ahmad Youssef",
         desc: "Cardiologist - Al Amin Clinic",
+        address:"Damascus,AL Mazzeh",
         time: "10:30 AM - 11:00 AM",
       },
       {
         id: 2,
         name: "Dr. Lina H.",
         desc: "Dermatologist - SkinCare Center",
+        address:"Homs, AL Khaldieh",
         time: "11:00 AM - 11:30 AM",
       },
       {
         id: 3,
         name: "Dr. Rami S.",
         desc: "Dentist - Smile Dental Clinic",
+        address:"Damascus,Kudsaya",
         time: "1:00 PM - 1:30 PM",
       },
       {
         id: 4,
         name: "Dr. Sara Khaled",
         desc: "Neurologist - City Hospital",
+        address:"Daraa,Izraa",
         time: "9:00 AM - 9:30 AM",
       },
       {
         id: 5,
         name: "Dr. Omar Ali",
         desc: "Pediatrician - Kids Care Center",
+        address:"Tartous,AL Sheikh Bader",
         time: "10:00 AM - 10:30 AM",
       },
       {
         id: 6,
         name: "Dr. Hiba N.",
         desc: "Orthopedic - City Orthopedic Clinic",
+        address:"Lattakia,AL Sleiba",
         time: "2:00 PM - 2:30 PM",
       },
     ],
@@ -51,36 +57,42 @@ const NewOrders = () => {
         id: 7,
         name: "Dr. Maher K.",
         desc: "ENT Specialist - Al Salam Clinic",
+        address:"Hama, AL Ashrafiah",
         time: "3:00 PM - 3:30 PM",
       },
       {
         id: 8,
         name: "Dr. Noor A.",
         desc: "Psychiatrist - MindCare Center",
+        address:"Homs,Bab Sabaa",
         time: "12:00 PM - 12:30 PM",
       },
       {
         id: 9,
         name: "Dr. Basel T.",
         desc: "Surgeon - Damascus Hospital",
+        address:"Lattakia,AL Sheikh Bader",
         time: "5:00 PM - 5:30 PM",
       },
       {
         id: 10,
         name: "Dr. Dima R.",
         desc: "Oncologist - Hope Clinic",
+        address:"Aleppo,New Aleppo",
         time: "4:00 PM - 4:30 PM",
       },
       {
         id: 11,
         name: "Dr. Tarek M.",
         desc: "Gastroenterologist - Stomach Health",
+        address:"Idlib,Sarmada",
         time: "6:00 PM - 6:30 PM",
       },
       {
         id: 12,
         name: "Dr. Yara S.",
         desc: "Endocrinologist - City Care",
+        address:"Tartous,Arwad",
         time: "7:00 PM - 7:30 PM",
       },
     ],
@@ -115,7 +127,29 @@ const NewOrders = () => {
   const handlePrevious = () => {
     if (page > 1) fetchSchedules(page - 1);
   };
+  const handleAccept = async (id) => {
+    try {
+      const response = await fetch(`https://your-api.com/api/accept/${id}`, {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ accepted: true }),
+      });
 
+      if (response.ok) {
+        setSchedules((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, status: "accepted" } : item
+          )
+        );
+      } else {
+        console.error(" Failed to accept the schedule");
+      }
+    } catch (error) {
+      console.error(" Error accepting schedule:", error);
+    }
+  };
   return (
     <div className="p-10 bg-gray-50 min-h-screen">
       <div className="mb-10 text-left">
@@ -135,9 +169,19 @@ const NewOrders = () => {
                   {item.name}
                 </h2>
                 <p className="text-sm text-gray-500">{item.desc}</p>
+                <p className="text-sm text-gray-500">{item.address}</p>
               </div>
-
-              <span className="text-[#0a3460] font-semibold">Accept</span>
+              <button
+                onClick={() => handleAccept(item.id)}
+                disabled={item.status === "accepted"}
+                className={`font-semibold transition duration-300 ease-in-out ${
+                  item.status === "accepted"
+                    ? "text-green-600 cursor-default"
+                    : "text-[#0a3460] hover:text-[#39CCCC]"
+                }`}
+              >
+                {item.status === "accepted" ? "Accepted" : "Accept"}
+              </button>
             </div>
 
             <hr className="my-4 border-gray-200" />
