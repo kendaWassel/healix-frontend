@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Clock } from "lucide-react";
 
-const MyOrder = () => {
+const NewOrders = () => {
   const [schedules, setSchedules] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
@@ -185,4 +185,4 @@ const MyOrder = () => {
   );
 };
 
-export default MyOrder;
+export default NewOrders;
