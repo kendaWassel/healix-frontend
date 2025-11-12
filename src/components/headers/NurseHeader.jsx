@@ -33,11 +33,12 @@ const NurseHeader = () => {
         >
           New Orders
         </NavLink>
-        <NavLink
-          to="/nurse/my-schedules "
+        <NavLink 
+           
+          to="/nurse/appointment "
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-            My Schedules 
+            My Appointments
         </NavLink>
 
       </div>
