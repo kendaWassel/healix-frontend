@@ -1,6 +1,7 @@
 import styles from "./Receipts.module.css";
 import PatientHeader from "../../../components/headers/PatientHeader";
 import { Send, Maximize2 } from "lucide-react";
+import SendToPharmacy from "./SendtoPharmacy";
 import Footer from "../../../components/footer/Footer";
 import receipts1 from "../../../assets/receipts1.png";
 import receipts2 from "../../../assets/receipts2.png";
@@ -24,6 +25,8 @@ export default function Receipts() {
 const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const [pagination, setPagination] = useState({
     currentPage: 1,
     itemsPerPage: 6,
@@ -115,10 +118,15 @@ const response = await fetch("API_URL_HERE", {
           <Maximize2 size={23} />
         </button>
 
-        <button className={styles.sendBtn}>
+        <button className={styles.sendBtn}  onClick={() => setOpen(true)}
+>
           <Send size={16} />
            Send to Pharmacy 
+          
+
         </button>
+        <SendToPharmacy open={open} onClose={() => setOpen(false)} />
+
       </div>
     </div>
   ))}
