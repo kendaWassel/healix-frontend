@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Clock, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../../../components/footer/Footer";
-import PatientHeader from "../../../../components/headers/PatientHeader";
+import Footer from "../../../components/footer/Footer";
+import NurseHeader from "../../../components/headers/NurseHeader";
 
 const Appointments = () => {
     const [appointments, setAppointments] = useState([]);
@@ -136,7 +136,7 @@ const Appointments = () => {
 
     return (
        <>
-            <PatientHeader />
+            <NurseHeader />
             <div className="p-10 bg-gray-50 min-h-screen">
                 <div className="mb-10 text-left">
                     <h1 className="text-[#0a3460] text-3xl font-bold">My Appointments</h1>

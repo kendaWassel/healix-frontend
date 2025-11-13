@@ -10,35 +10,42 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import DoctorHeader from "../../../components/headers/DoctorHeader";
 import Footer from "../../../components/footer/Footer";
+/*
 const Schedules = [ 
-  { key: "mhd", title: " Patient Mohammed", time: "At 9 Am", call: "Call", period: "bending" },
-  { key: "ali", title: " Patient Ali", time: "At 10 Am", call: "Call", period: "bending"},
-  { key: "mustafa", title: " Patient Mustafa", time: "At 11 Am", call: "Call", period: "bending" }, 
+  { key: "mhd", title: " Patient Mohammed", time: "At 9 Am", call: "Call", period: "pending" },
+  { key: "ali", title: " Patient Ali", time: "At 10 Am", call: "Call", period: "pending"},
+  { key: "mustafa", title: " Patient Mustafa", time: "At 11 Am", call: "Call", period: "pending" }, 
   { key: "leen", title: " Patient Leen", time: "At 12 Pm", call: "Call", period: "completed" }, 
   { key: "hadeel", title: " Patient Hadeel", time: "At 1 Pm", call: "Call", period: "completed" },
   { key: "sara", title: " Patient Sara", time: "At 2 Pm", call: "Call", period: "completed" },
 ];
-
+*/
 export default function DoctorSchedules() {
-  const [schedules, setSchedules] = useState(Schedules);  
+  const [schedules, setSchedules] = useState([]); 
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [details, setDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [error, setError] = useState(null);
-  const [successMsg, setSuccessMsg] = useState(null) 
+  const [successMsg, setSuccessMsg] = useState(null);
 
- /*const fetchSchedules = async () => {
+  
+  const token = localStorage.getItem("token");
+
+ const fetchSchedules = async (page=1,perPage=10) => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await fetch(
-        "https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/schedules",
+        "https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/my-schedules?page=1&per_page=10",
+      
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`,
           },
         }
       );
@@ -68,13 +75,11 @@ export default function DoctorSchedules() {
   useEffect(() => {
     fetchSchedules();
   }, []);
-*/
+
 const handleFilterClick = () => setFilterOpen(!filterOpen);
 
 const handleSelectFilter = (filter) => {
-  if (filter === "bending" || filter === "completed" || filter==="All") {
-    setSelectedFilter(filter);
-  }
+  setSelectedFilter(filter);
   setFilterOpen(false);
 };
 
@@ -82,7 +87,7 @@ const handleSelectFilter = (filter) => {
 const filteredSchedules =
   selectedFilter === "All"
     ? schedules
-    : schedules.filter((s) => s.period === selectedFilter);
+    : schedules.filter((s) => s.status === selectedFilter);
 
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -122,20 +127,21 @@ const filteredSchedules =
     startIndex + pagination.itemsPerPage
   );
 
-  const handleViewDetails = async (e, scheduleKey) => {
+  const handleViewDetails = async (e, consultationId) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsLoadingDetails(true);
     setError(null);
     setDetails(null);
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/schedule/test`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/schedules/${consultationId}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`,
           },
         }
       );
@@ -145,14 +151,13 @@ const filteredSchedules =
       const data = await response.json();
       console.log("Details:", data);
       setDetails(data);
+      setSuccessMsg("Details loaded successfully.");
     } catch (err) {
-      if (err.message === "Failed to fetch") {
-        setError("Failed please try again");
-      } else {
-        setError(err.message);
+      
+        setError(err.message||"Failed to load Details");
       }
-    } finally {
-      setIsLoading(false);
+     finally {
+      setIsLoadingDetails(false);
     }
   };
 
@@ -175,7 +180,8 @@ const filteredSchedules =
               {filterOpen && (
   <div className={styles.filterMenu}>
          <p onClick={() => handleSelectFilter("All")}>All</p>
-    <p onClick={() => handleSelectFilter("bending")}>Bending</p>
+    <p onClick={() => handleSelectFilter("pending")}>Pending</p>
+    <p onClick={() => handleSelectFilter("in_progress")}>In Progress</p>
     <p onClick={() => handleSelectFilter("completed")}>Completed</p>
   </div>
 )}
@@ -189,37 +195,48 @@ const filteredSchedules =
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.CardForm}>
-          {currentSchedules.map((type) => (
-            <div key={type.key || type.id} className={styles.CardItem}>
+          {currentSchedules.map((item) => (
+            <div key={item.consultation_id} className={styles.CardItem}>
               <div className={styles.CardTop}>
                 <div className={styles.PatientText}>
-                  <h3>{type.title || type.patient_name}</h3>
+                  <h3>{item.patient_name}</h3>
+                  <p>{item.patient_phone}</p>
                 </div>
               </div>
 
               <button className={styles.callButton}>
                 <FontAwesomeIcon icon={faPhone} />
-                {type.call || "Call"}
+                {item.call_type === "schedule_later" ? "Schedule Later" : "Call Now"}
               </button>
 
               <div className={styles.divider}></div>
 
               <div className={styles.CardBottom}>
-  <span>
-    <FontAwesomeIcon icon={faClock} className={styles.clock} />
-    {type.time}
-    <span className={styles.period}> {type.period}</span>
-
-  </span>
+              <span>
+                  <FontAwesomeIcon icon={faClock} className={styles.clock} />
+                  {new Date(item.scheduled_at).toLocaleString()}
+                  <span
+                    className={`${styles.period} ${
+                      item.status === "completed"
+                        ? styles.completed
+                        : item.status === "pending"
+                        ? styles.pending
+                        : styles.inProgress
+                    }`}
+                  >
+                    {" "}
+                    {item.status}
+                  </span>
+                </span>
   <button
     type="button"
-    onClick={(e) => handleViewDetails(e, type.key)}
+    onClick={(e) => handleViewDetails(e, item.consultation_id)}
     className={styles.detailsButton}
   >
     View Details
   </button>
 
-                {isLoading && <p>Loading Details ...</p>}
+  {isLoadingDetails && <p>Loading Details ...</p>}
     
           {error && <div className={styles.errorMsg}>{error}</div>}
           {successMsg && <div className={styles.successMsg}>{successMsg}</div>}

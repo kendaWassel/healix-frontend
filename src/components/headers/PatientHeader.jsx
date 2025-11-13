@@ -46,7 +46,7 @@ const PatientHeader = () => {
         </NavLink>
 
         <NavLink
-          to="/patient/receipts"
+          to="/patient/Receipts"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Receipts
