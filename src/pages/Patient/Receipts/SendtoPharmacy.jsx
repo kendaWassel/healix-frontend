@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Search, ChevronDown, Star, Clock, MapPin } from "lucide-react";
 import { Modal, Box } from "@mui/material";
 
-const SendToPharmacy = ({ open, onClose }) => {
+const SendToPharmacy = ({ open, onClose,onDone }) => {
   const pharmacies = [
     {
       name: "Ahmad Pharmacy",
@@ -19,6 +19,9 @@ const SendToPharmacy = ({ open, onClose }) => {
       address: "Damascus/maza/45street",
     },
   ];
+
+
+  const [selectedPharmacy, setSelectedPharmacy] = useState(null);
 
   return (
     
@@ -59,12 +62,18 @@ const SendToPharmacy = ({ open, onClose }) => {
         </button>
       </div>
   
-      <div className="overflow-y-auto max-h-[55vh] pr-2 space-y-4">
-        {pharmacies.map((p, idx) => (
-          <div
-            key={idx}
-            className="border rounded-xl p-4 shadow-sm hover:shadow-md transition cursor-pointer"
-          >
+      <div className="overflow-y-auto max-h-[55vh] pr-2 space-y-4" >
+        {pharmacies.map((p, index) => (
+    <div
+    key={index}
+    onClick={() => setSelectedPharmacy(index)}
+    className={`
+      border p-4 rounded-lg cursor-pointer transition
+      ${selectedPharmacy === index ? "border-[#39CCCC] text-[#39CCCC]" : "border-gray-300"}
+      hover:border-[#39CCCC] hover:text-[#39CCCC]
+    `}
+  >
+     
             <div className="flex justify-between items-center">
               <div>
                 <h2 className="font-semibold text-[#0A2A4A]">{p.name}</h2>
@@ -90,15 +99,26 @@ const SendToPharmacy = ({ open, onClose }) => {
   
       <div className="flex justify-between mt-6">
         <button
-          onClick={onClose}
+          onClick={()=>{
+            
+            setSelectedPharmacy(null);
+            onClose() }}
           className="border border-[#0A2A4A] text-[#0A2A4A] px-6 py-2 rounded-xl hover:bg-gray-100"
         >
           Cancel
         </button>
   
-        <button className="bg-[#0A2A4A] text-white px-10 py-2 rounded-xl hover:bg-[#082a3d]">
-          Send
-        </button>
+        <button
+  onClick={() => {
+    if (!selectedPharmacy===null) return;
+            onClose();
+            onDone();
+  }}
+  className="bg-[#0A2A4A] text-white px-10 py-2 rounded-xl hover:bg-[#082a3d]"
+>
+  Send
+</button>
+
       </div>
     </Box>
   </Modal>

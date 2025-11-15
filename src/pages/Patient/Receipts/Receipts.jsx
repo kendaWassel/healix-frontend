@@ -3,11 +3,12 @@ import PatientHeader from "../../../components/headers/PatientHeader";
 import { Send } from "lucide-react";
 import SendToPharmacy from "./SendtoPharmacy";
 import ReceiptDetails from "./ReceiptsDetails";
+import YouAreDone from "./YouAreDone";
 import Footer from "../../../components/footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { useState,useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 const ReceiptsData = [
   { 
     id: 1,
@@ -73,6 +74,7 @@ export default function Receipts() {
   const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [error, setError] = useState(null);
   const [sendPharmacy, setSendPharmacy] = useState(false);
+  const [done, setDone] = useState(false);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     itemsPerPage: 6,
@@ -141,7 +143,7 @@ useEffect(() => {
       setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
     }
   };
-
+  const navigate = useNavigate();
   return (
     <>
       <PatientHeader />
@@ -175,6 +177,7 @@ useEffect(() => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setSendPharmacy(true);
+                  
                 }}
               >
                 <Send size={16} />
@@ -185,7 +188,23 @@ useEffect(() => {
         </div>
 
       
-        <SendToPharmacy open={sendPharmacy} onClose={() => setSendPharmacy(false)} />
+        <SendToPharmacy 
+  open={sendPharmacy}
+  onClose={() => setSendPharmacy(false)}
+  onDone={() => {
+    setSendPharmacy(false); 
+    setDone(true);          
+  }}
+/>
+
+
+<YouAreDone
+  isOpen={done}
+  onHome={() => {
+    setDone(false);
+    navigate("/home"); 
+  }}
+/>
 
        
         {selectedReceipt && (
