@@ -1,28 +1,23 @@
-.Conatiner{
-    background-color: #fff;
-    margin: 0;
-    min-height: 100vh;
-    box-sizing: border-box;   
+.CardContainer {
+  background-color: #fff;
+  padding: 60px;
+  min-height: auto;
 }
-.Header{
-    margin-bottom: 30px;
-    position: relative;
+
+.CardHeader {
+  margin:0;
+  padding: 0;
 }
-.Header h1{
-    color: #052443;
-    font-weight: bold;
-    font-size: xx-large;
-    margin-top: 30px;
-    margin-left: 60px;
+
+.CardHeader h1 {
+  color: #052443;
+  font-weight: bold;
+  font-size: 50px;
+
+  
 }
-.Header p{
-    display: flex;
-    font-size: 20px;
-    margin-top: 40px;
-    margin-left: 60px;
-    color: #767676;
-}
-.Header button{
+
+.CardHeader button{
     color: #FFFFFF;
     background: #052443;
     padding: 14px;
@@ -34,31 +29,69 @@
    margin-right: 50px;
    transition: 0.3s ease;
   }
-  .Header button:hover{
+  .CardHeader button:hover{
  background-color:lightgray;
  color:#052443;
   }
-  .imageWrapper{
-position: relative;
-width: fit-content;
-  }
-  .ReceiptImage {
-    width: 100%;
-    border-radius: 10px;
-  }
-  .ReceiptsImage{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    width: 1500px;
-    margin-left: 70px;
+
+  .CardHeader p {
+ 
+    font-size: 20px;
+    margin-top: 3rem;
     
+    color: #767676;
   }
+.CardsWrapper{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: 25px;
+  margin-top: 60px;
+  width: 100%;
+}
+  
+
+  .Cardbtn {
+    background-color: #fff;
+    border: 1.5px solid #ddd;
+    border-radius: 12px;
+    padding: 20px 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+  }
+  
+  .CardTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .Cardbtn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+    
+  .DoctorText h3 {
+    color: #052443;
+    font-weight: bold;
+    
+    font-size: 20px;
+    margin-top: 10px;
+  }
+
+  .CardBottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #052443;
+    font-weight: 500;
+    font-size: 15px;
+    margin-top: 1rem;
+  }
+
+
   .sendBtn {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;     
-    z-index: 10;
+
     background: rgba(0,0,0,0.6);
     color: #052443;
     background-color: #EBFAFA;
@@ -69,7 +102,8 @@ width: fit-content;
     align-items: center;
     gap: 6px;
     cursor: pointer;
-    margin-bottom: 1rem;
+   margin-top: 1rem;
+   float: right;
     transition:  0.3s ease;
   }
   .sendBtn:hover {
@@ -77,22 +111,8 @@ width: fit-content;
     border-color: #39CCCC;
     color: #39CCCC;
   }
-  .zoomBtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    opacity: 0.9;
-    border: none;
-    border-radius: 8px;
-    padding: 6px;
-    cursor: pointer;
-    color:#A4E8E8;
-    transition: 0.3s ease;
-    margin-right: 26rem;
-  }
-  .zoomBtn:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
+
+  
     .modal{
         
             position: fixed;
@@ -107,18 +127,13 @@ width: fit-content;
             z-index: 1000;
           
     }
-    .closeBtn{
-        color:crimson;
-        font-size: 30px;
-        margin-left: 67rem;
-        margin-bottom: 12px;
-    }
+
   .paginationControls {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 4rem;
     font-family: 'Poppins', sans-serif;
    margin-bottom: 6rem;
   }

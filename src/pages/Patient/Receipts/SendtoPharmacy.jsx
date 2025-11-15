@@ -27,7 +27,8 @@ const SendToPharmacy = ({ open, onClose }) => {
     onClose={onClose}
     slotProps={{
       backdrop: {
-        style: { backgroundColor: "transparent" }
+        style: { backgroundColor: "rgba(0,0,0,0.5)" }
+     
       }
     }}
   >
