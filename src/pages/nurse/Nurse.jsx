@@ -1,7 +1,7 @@
 import { Routes,Route } from "react-router-dom";
 import NurseHomePage from "./nurseHomePage/NurseHomePage";
 import NewOrders from "./newOrders/NewOrders";
-import Appointments from "../Patient/DoctorConsultation/Appointments/Appointments";
+import Appointments from "./Appointments/Appointments";
 const Nurse =()=>{
     return (
         <>
