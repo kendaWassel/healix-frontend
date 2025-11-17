@@ -1,5 +1,8 @@
 import { useState,useEffect } from "react";
-import { Search, ChevronDown, Star, Clock, MapPin } from "lucide-react";
+import { Search, ChevronDown, Star, Clock, MapPin, Hospital} from "lucide-react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {  faClinicMedical } from '@fortawesome/free-solid-svg-icons'
+
 import Modal from "./Modal";
 
 const SendToPharmacy = ({ open, onClose, onDone, receiptId }) => {
@@ -79,7 +82,7 @@ const SendToPharmacy = ({ open, onClose, onDone, receiptId }) => {
       
       <h1 className="text-xl font-semibold text-[#0A2A4A] mb-4">Send to pharmacy</h1>
 
-      {/* Search Bar */}
+
       <div className="flex items-center gap-3 w-full mb-4">
         <div className="border rounded-xl px-3 py-2 flex items-center gap-2 flex-1">
           <Search size={18} className="text-gray-500" />
@@ -97,7 +100,7 @@ const SendToPharmacy = ({ open, onClose, onDone, receiptId }) => {
         </button>
       </div>
 
-      {/* List */}
+
       <div className="overflow-y-auto max-h-[55vh] pr-2 space-y-4">
         {filtered.map((p, index) => (
           <div
@@ -114,7 +117,13 @@ const SendToPharmacy = ({ open, onClose, onDone, receiptId }) => {
           >
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="font-semibold text-[#0A2A4A]">{p.name}</h2>
+              <h2 className="font-semibold text-[#0A2A4A] flex items-center gap-2">
+             <div className="bg-[#39CCCC] w-8 h-8 rounded-xl flex items-center justify-center">
+               <Hospital size={20} className="text-white" />
+               </div>
+                {p.name}
+               </h2>
+
                 <p className="text-gray-600 text-sm">{p.desc}</p>
               </div>
 
