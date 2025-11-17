@@ -1,11 +1,10 @@
-import { useState,useEffect} from "react";
+import { useState,useEffect } from "react";
 import { Search, ChevronDown, Star, Clock, MapPin } from "lucide-react";
 import Modal from "./Modal";
 
-const SendToPharmacy = ({ open, onClose, onDone }) => {
+const SendToPharmacy = ({ open, onClose, onDone, receiptId }) => {
   
-
-  const pharmacies = [
+  const pharmaciesData = [
     {
       name: "Ahmad Pharmacy",
       desc: "specializes in diagnosing and treating heart and blood vessel diseases",
@@ -14,7 +13,7 @@ const SendToPharmacy = ({ open, onClose, onDone }) => {
       address: "Damascus/maza/45street",
     },
     {
-      name: "Ahmad Pharmacy",
+      name: "Leen Pharmacy",
       desc: "specializes in diagnosing and treating heart and blood vessel diseases",
       rating: "4.0 (34)",
       time: "from 8 Am to 9 Pm",
@@ -22,35 +21,34 @@ const SendToPharmacy = ({ open, onClose, onDone }) => {
     },
   ];
 
-  const [selectedPharmacy, setSelectedPharmacy] = useState(null);
- // const [pharmacies, setPharmacies] = useState([]);
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [selectedPharmacy, setSelectedPharmacy] = useState(null);
   const [loadingSend, setLoadingSend] = useState(false);
 /*
-  useEffect(() => {
-    if (!open) return; 
+ useEffect(() => {
+ if (!open) return; 
+  const fetchPharmacies = async () => 
+  { 
+    try
 
-    const fetchPharmacies = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/pharmacies");
-        const data = await response.json();
-        setPharmacies(data);
-      } catch (error) {
-        console.error("Error fetching pharmacies:", error);
-      }
-    };
+     { const response = await fetch("http://localhost:8000/api/pharmacies");
+      const data = await response.json(); setPharmacies(data); } catch (error) 
+      { console.error("Error fetching pharmacies:", error); } 
+    }
+      ; fetchPharmacies(); 
+    }, [open]); 
+      
+      */
 
-    fetchPharmacies();
-  }, [open]);
 
-  const filtered = pharmacies.filter((p) =>
+  const filtered = pharmaciesData.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
 
 
   const handleSend = async () => {
-    if (!selected) return;
+    if (selectedPharmacy === null) return;
+
     setLoadingSend(true);
 
     try {
@@ -60,13 +58,14 @@ const SendToPharmacy = ({ open, onClose, onDone }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          pharmacyId: selected,
+          pharmacyId: selectedPharmacy,
           receiptId: receiptId,
         }),
       });
 
       onClose();
-      onDone(); 
+      onDone();
+      
     } catch (error) {
       alert("Something went wrong!");
       console.error(error);
@@ -74,18 +73,21 @@ const SendToPharmacy = ({ open, onClose, onDone }) => {
 
     setLoadingSend(false);
   };
-*/
+
   return (
     <Modal open={open} onClose={onClose}>
       
       <h1 className="text-xl font-semibold text-[#0A2A4A] mb-4">Send to pharmacy</h1>
 
+      {/* Search Bar */}
       <div className="flex items-center gap-3 w-full mb-4">
         <div className="border rounded-xl px-3 py-2 flex items-center gap-2 flex-1">
           <Search size={18} className="text-gray-500" />
           <input
             type="text"
             placeholder="Search pharmacy..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="w-full outline-none"
           />
         </div>
@@ -95,8 +97,9 @@ const SendToPharmacy = ({ open, onClose, onDone }) => {
         </button>
       </div>
 
+      {/* List */}
       <div className="overflow-y-auto max-h-[55vh] pr-2 space-y-4">
-        {pharmacies.map((p, index) => (
+        {filtered.map((p, index) => (
           <div
             key={index}
             onClick={() => setSelectedPharmacy(index)}
@@ -132,6 +135,7 @@ const SendToPharmacy = ({ open, onClose, onDone }) => {
         ))}
       </div>
 
+      {/* Buttons */}
       <div className="flex justify-between mt-6">
         <button
           onClick={() => {
@@ -144,16 +148,13 @@ const SendToPharmacy = ({ open, onClose, onDone }) => {
         </button>
 
         <button
-          onClick={() => {
-            if (selectedPharmacy === null) return;
-            onClose();
-            onDone();
-          }}
+          onClick={handleSend}
           className="bg-[#0A2A4A] text-white px-10 py-2 rounded-xl hover:bg-[#082a3d]"
         >
-          Send
+          {loadingSend ? "Sending..." : "Send"}
         </button>
       </div>
+
     </Modal>
   );
 };
