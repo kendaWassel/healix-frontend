@@ -1,4 +1,4 @@
-import { Modal, Box } from "@mui/material";
+import Modal from "./Modal";
 
 
 const ReceiptDetails = ({ open, onClose, receipt }) => {
@@ -12,16 +12,7 @@ const ReceiptDetails = ({ open, onClose, receipt }) => {
         }
       }}
     >
-      <Box
-        sx={{
-          width: "90%",
-          maxWidth: 500,
-          margin: "120px auto",
-          bgcolor: "#f8f8f8",
-          p: 3,
-          borderRadius: "12px"
-        }}
-      >
+
         <h1 className="text-xl font-semibold text-[#0A2A4A] mb-4">
           Receipt Details
         </h1>
@@ -56,7 +47,7 @@ const ReceiptDetails = ({ open, onClose, receipt }) => {
             </button>
           </div>
         </div>
-      </Box>
+   
     </Modal>
   );
 };
