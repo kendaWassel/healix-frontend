@@ -49,7 +49,7 @@ export const uploadFile = async (medicalFile) => {
   console.log("file uploaded: ", data);
   return data.file_id;
 };
-export default function MedicalReportModal({ open, onClose, onSubmit, initialValues,isEdit }) {
+export default function MedicalReportModal({ open, onClose, onSubmit, initialValues,isEdit,children }) {
   const modalRef = useRef();
   const [fields, setFields] = useState({
     diagnosis: '',
@@ -127,7 +127,11 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
               disabled={isEdit}
               type="file"
               accept=".jpg,.jpeg,.png"
-              className="block w-full text-gray-600 text-base file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100"
+              className="
+              w-full border border-gray-300 rounded px-3 py-2 
+              outline-blue-400 focus:border-blue-500 placeholder:text-gray-400
+              disabled:bg-gray-100 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed
+            "
               onChange={e => setPhotoFile(e.target.files[0] || null)}
             />
           </div>
@@ -140,7 +144,11 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
               type="file"
               disabled={isEdit}
               accept=".pdf,.jpg,.jpeg,.png"
-              className="block w-full text-gray-600 text-base file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100"
+              className="
+              w-full border border-gray-300 rounded px-3 py-2 
+              outline-blue-400 focus:border-blue-500 placeholder:text-gray-400
+              disabled:bg-gray-100 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed
+            "
               onChange={e => setMedicalFile(e.target.files[0] || null)}
             />
           </div>
@@ -150,7 +158,11 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
               name="chronic_diseases"
               disabled={isEdit}
               type="text"
-              className="w-full border border-gray-300 rounded px-3 py-2 outline-blue-400 focus:border-blue-500 placeholder:text-gray-400"
+              className="
+    w-full border border-gray-300 rounded px-3 py-2 
+    outline-blue-400 focus:border-blue-500 placeholder:text-gray-400
+    disabled:bg-gray-100 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed
+  "
               placeholder="Enter any chronic diseases..."
               value={fields.chronic_diseases}
               onChange={e => setFields({ ...fields, chronic_diseases: e.target.value })}
@@ -162,7 +174,11 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
               name="previous_surgeries"
               disabled={isEdit}
               type="text"
-              className="w-full border border-gray-300 rounded px-3 py-2 outline-blue-400 focus:border-blue-500 placeholder:text-gray-400"
+              className="
+              w-full border border-gray-300 rounded px-3 py-2 
+              outline-blue-400 focus:border-blue-500 placeholder:text-gray-400
+              disabled:bg-gray-100 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed
+            "
               placeholder="Previous surgeries..."
               value={fields.previous_surgeries}
               onChange={e => setFields({ ...fields, previous_surgeries: e.target.value })}
@@ -174,7 +190,11 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
               name="allergies"
               disabled={isEdit}
               type="text"
-              className="w-full border border-gray-300 rounded px-3 py-2 outline-blue-400 focus:border-blue-500 placeholder:text-gray-400"
+              className="
+              w-full border border-gray-300 rounded px-3 py-2 
+              outline-blue-400 focus:border-blue-500 placeholder:text-gray-400
+              disabled:bg-gray-100 disabled:text-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed
+            "
               placeholder="Known allergies..."
               value={fields.allergies}
               onChange={e => setFields({ ...fields, allergies: e.target.value })}
@@ -191,6 +211,7 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
               onChange={e => setFields({ ...fields, current_medications: e.target.value })}
             />
           </div>
+          {children}
           <button type="submit" className="w-full mt-2 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold transition-colors">
             Save Report
           </button>
