@@ -49,7 +49,7 @@ export const uploadFile = async (medicalFile) => {
   console.log("file uploaded: ", data);
   return data.file_id;
 };
-export default function MedicalReportModal({ open, onClose, onSubmit, initialValues }) {
+export default function MedicalReportModal({ open, onClose, onSubmit, initialValues,isEdit }) {
   const modalRef = useRef();
   const [fields, setFields] = useState({
     diagnosis: '',
@@ -60,7 +60,9 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
   });
   const [photoFile, setPhotoFile] = useState(null);
   const [medicalFile, setMedicalFile] = useState(null);
-
+  const handleSaveReport = (data) => {
+    setMedicalReport(data);
+  }
   // Load initial values if editing
   useEffect(() => {
     if (open && initialValues) {
@@ -122,6 +124,7 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
             </label>
             <input
               name="photoFile"
+              disabled={isEdit}
               type="file"
               accept=".jpg,.jpeg,.png"
               className="block w-full text-gray-600 text-base file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100"
@@ -135,6 +138,7 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
             <input
               name="medicalFile"
               type="file"
+              disabled={isEdit}
               accept=".pdf,.jpg,.jpeg,.png"
               className="block w-full text-gray-600 text-base file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100"
               onChange={e => setMedicalFile(e.target.files[0] || null)}
@@ -144,6 +148,7 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
             <label className="block font-medium mb-1 text-gray-800">Chronic Diseases</label>
             <input
               name="chronic_diseases"
+              disabled={isEdit}
               type="text"
               className="w-full border border-gray-300 rounded px-3 py-2 outline-blue-400 focus:border-blue-500 placeholder:text-gray-400"
               placeholder="Enter any chronic diseases..."
@@ -155,6 +160,7 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
             <label className="block font-medium mb-1 text-gray-800">Previous Surgeries</label>
             <input
               name="previous_surgeries"
+              disabled={isEdit}
               type="text"
               className="w-full border border-gray-300 rounded px-3 py-2 outline-blue-400 focus:border-blue-500 placeholder:text-gray-400"
               placeholder="Previous surgeries..."
@@ -166,6 +172,7 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
             <label className="block font-medium mb-1 text-gray-800">Allergies</label>
             <input
               name="allergies"
+              disabled={isEdit}
               type="text"
               className="w-full border border-gray-300 rounded px-3 py-2 outline-blue-400 focus:border-blue-500 placeholder:text-gray-400"
               placeholder="Known allergies..."
