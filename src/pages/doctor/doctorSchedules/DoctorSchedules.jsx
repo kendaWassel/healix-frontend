@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import DoctorHeader from "../../../components/headers/DoctorHeader";
 import Footer from "../../../components/footer/Footer";
+import PatientDetailsModal from "./PatientDetailsModal";
 /*
 const Schedules = [ 
   { key: "mhd", title: " Patient Mohammed", time: "At 9 Am", call: "Call", period: "pending" },
@@ -29,26 +30,35 @@ export default function DoctorSchedules() {
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
-
-  
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    itemsPerPage: 6,
+    totalItems: 0,
+    totalPages: 1,
+  });
+  const[patientId,setPatientId]=useState(null);
   const token = localStorage.getItem("token");
 
- const fetchSchedules = async (page=1,perPage=10) => {
+ const fetchSchedules = async (page, perPage) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(
-        "https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/my-schedules?page=1&per_page=10",
+      // Build URL with pagination and filter
+      let url = `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/my-schedules?page=${page}&per_page=${perPage}`;
       
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
+      // Add status filter only if not "All"
+      if (selectedFilter !== "All") {
+        url += `&status=${selectedFilter}`;
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         const serverError = await response.json().catch(() => ({}));
@@ -57,10 +67,15 @@ export default function DoctorSchedules() {
 
       const data = await response.json();
       console.log("Schedules fetched:", data);
-
- 
       if (data.status === "success" && Array.isArray(data.data)) {
         setSchedules(data.data);
+        const totalItems = data.meta?.total || data.total || 0;
+        const totalPages = Math.ceil(totalItems / (perPage || 6));
+        setPagination((prev) => ({
+          ...prev,
+          totalItems: totalItems,
+          totalPages: totalPages,
+        }));
       } else {
         throw new Error("Invalid response format");
       }
@@ -73,42 +88,9 @@ export default function DoctorSchedules() {
   };
 
   useEffect(() => {
-    fetchSchedules();
-  }, []);
+    fetchSchedules(pagination.currentPage, pagination.itemsPerPage);
+  }, [pagination.currentPage, pagination.itemsPerPage, selectedFilter]);
 
-const handleFilterClick = () => setFilterOpen(!filterOpen);
-
-const handleSelectFilter = (filter) => {
-  setSelectedFilter(filter);
-  setFilterOpen(false);
-};
-
-
-const filteredSchedules =
-  selectedFilter === "All"
-    ? schedules
-    : schedules.filter((s) => s.status === selectedFilter);
-
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    itemsPerPage: 3,
-    totalItems: filteredSchedules.length,
-    totalPages: Math.ceil(filteredSchedules.length / 3),
-  });
-
-  useEffect(() => {
-    const totalPages = Math.ceil(filteredSchedules.length / pagination.itemsPerPage);
-    if (
-      pagination.totalItems !== filteredSchedules.length ||
-      pagination.totalPages !== totalPages
-    ) {
-      setPagination((prev) => ({
-        ...prev,
-        totalItems: filteredSchedules.length,
-        totalPages: totalPages,
-      }));
-    }
-  }, [filteredSchedules, pagination.itemsPerPage, pagination.totalItems, pagination.totalPages]);
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPages) {
       setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
@@ -121,21 +103,27 @@ const filteredSchedules =
     }
   };
 
-  const startIndex = (pagination.currentPage - 1) * pagination.itemsPerPage;
-  const currentSchedules = filteredSchedules.slice(
-    startIndex,
-    startIndex + pagination.itemsPerPage
-  );
+const handleFilterClick = () => setFilterOpen(!filterOpen);
 
-  const handleViewDetails = async (e, consultationId) => {
+const handleSelectFilter = (filter) => {
+  setSelectedFilter(filter);
+  setFilterOpen(false);
+  // Reset to first page when filter changes
+  setPagination((prev) => ({ ...prev, currentPage: 1 }));
+};
+
+
+
+  const handleViewDetails = async (e, patientId) => {
     e.preventDefault();
+    console.log("patient id: ",patientId);
     setIsLoadingDetails(true);
     setError(null);
     setDetails(null);
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/schedules/${consultationId}`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/patients/${patientId}/view-details`,
         {
           method: "GET",
           headers: {
@@ -146,11 +134,12 @@ const filteredSchedules =
         }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch schedule details");
+      if (!response.ok) throw new Error("Failed to fetch patient details");
 
       const data = await response.json();
-      console.log("Details:", data);
-      setDetails(data);
+      console.log("Patient details:", data);
+      // Most APIs wrap payload in data; fall back to raw if not
+      setDetails(data.data || data);
       setSuccessMsg("Details loaded successfully.");
     } catch (err) {
       
@@ -190,33 +179,16 @@ const filteredSchedules =
           </div>
           <p>Check your schedules here</p>
         </div>
-
-        {isLoading && <p className={styles.loading}>Loading schedules...</p>}
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.CardForm}>
-          {currentSchedules.map((item) => (
-            <div key={item.consultation_id} className={styles.CardItem}>
+          {schedules && schedules.length > 0 ? schedules.map((item) => (
+            <div key={item.id} className={styles.CardItem}>
               <div className={styles.CardTop}>
                 <div className={styles.PatientText}>
-                  <h3>{item.patient_name}</h3>
-                  <p>{item.patient_phone}</p>
-                </div>
-              </div>
-
-              <button className={styles.callButton}>
-                <FontAwesomeIcon icon={faPhone} />
-                {item.call_type === "schedule_later" ? "Schedule Later" : "Call Now"}
-              </button>
-
-              <div className={styles.divider}></div>
-
-              <div className={styles.CardBottom}>
-              <span>
-                  <FontAwesomeIcon icon={faClock} className={styles.clock} />
-                  {new Date(item.scheduled_at).toLocaleString()}
+                  <h3 className="mb-3">{item.patient_name || "Unknown"}</h3>
                   <span
-                    className={`${styles.period} ${
+                    className={`${styles.period} border-[2px] rounded-[10px] p-[0.2rem_0.5rem] ${
                       item.status === "completed"
                         ? styles.completed
                         : item.status === "pending"
@@ -224,28 +196,37 @@ const filteredSchedules =
                         : styles.inProgress
                     }`}
                   >
-                    {" "}
-                    {item.status}
+                    {item.status || "Unknown"}
                   </span>
+                </div>
+              </div>
+
+              <button className={styles.callButton}>
+                <FontAwesomeIcon icon={faPhone} />
+                Call
+              </button>
+
+              <div className={styles.divider}></div>
+
+              <div className={styles.CardBottom}>
+              <span>
+                  <FontAwesomeIcon icon={faClock} className={styles.clock} />
+                  {new Date(item.scheduled_at).toLocaleString() || "Unknown"}
                 </span>
   <button
     type="button"
-    onClick={(e) => handleViewDetails(e, item.consultation_id)}
-    className={styles.detailsButton}
+    onClick={(e) => handleViewDetails(e, item.patient_id)}
+    className={`${styles.detailsButton} bg-[#f4f4f4]`}
   >
-    View Details
+    {isLoadingDetails ? <>Loading Details ...</> : error ? <div className={styles.errorMsg}>{error} ,Try again</div> : <>View Details</>}
   </button>
-
-  {isLoadingDetails && <p>Loading Details ...</p>}
-    
-          {error && <div className={styles.errorMsg}>{error}</div>}
           {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
               </div>
             </div>
-          ))}
+          )) : isLoading ? <p className={styles.loading}>Loading schedules...</p> : <p className={styles.loading}>No schedules found.</p>}
         </div>
 
-        {filteredSchedules.length > 0 && (
+        {schedules.length > 0 && (
           <div className={styles.paginationControls}>
             <button
               type="button"
@@ -272,10 +253,14 @@ const filteredSchedules =
         )}
 
         {details && (
-          <div className={styles.detailsBox}>
-            <h3>Details Loaded:</h3>
-            <pre>{JSON.stringify(details, null, 2)}</pre>
-          </div>
+          <PatientDetailsModal
+            details={details}
+            onClose={() => {
+              setDetails(null);
+              setSuccessMsg(null);
+              setError(null);
+            }}
+          />
         )}
       </div>
       <Footer />

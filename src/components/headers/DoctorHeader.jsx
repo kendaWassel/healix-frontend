@@ -21,21 +21,21 @@ const DoctorHeader = () => {
       {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
-          to="/Doctor"
+          to="/doctor"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
         </NavLink>
 
         <NavLink
-          to="/Doctor/DoctorSchedules" 
+          to="/doctor/doctor-schedules" 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules
         </NavLink>
 
         <NavLink
-          to="/Doctor/receipts"
+          to="/doctor/receipts"
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Receipts
@@ -60,21 +60,21 @@ const DoctorHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/Doctor' 
+            to='/doctor' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to="/Doctor/DoctorSchedules" 
+            to="/doctor/doctor-schedules" 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules 
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/Doctor/receipts' 
+            to='/doctor/receipts' 
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My receipts

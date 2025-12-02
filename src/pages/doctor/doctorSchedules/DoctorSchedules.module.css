@@ -109,7 +109,6 @@
   .PatientText h3 {
     color: #052443;
     font-weight: bold;
-    margin: 0;
     font-size: 20px;
     margin-top: 10px;
   }
@@ -154,20 +153,22 @@
   }
 
 
-  .bending {
-    color: #f0ad4e; 
+  .pending {
+    color: brown; 
   }
   
   .completed {
     color: #5cb85c; 
   }
+  .inProgress{
+    color: #f0ad4e;
+  }
   .detailsButton {
-    padding: 12px 10px;
+    padding: 12px 12px;
     font-size: 16px;
     border-radius: 10px;
     color: #009999;
     border: none;
-    background: transparent;
     cursor: pointer;
   }
   
@@ -214,4 +215,102 @@
     color: green;
     font-weight: bold;
     margin-top: 10px;
+  }
+
+  .detailsModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 36, 67, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .detailsModal {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 24px 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .detailsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  
+  .detailsHeader h3 {
+    margin: 0;
+    font-size: 22px;
+    color: #052443;
+    font-weight: 600;
+  }
+  
+  .closeButton {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    color: #767676;
+  }
+  
+  .closeButton:hover {
+    color: #052443;
+  }
+  
+  .detailsContent {
+    font-size: 15px;
+    color: #052443;
+  }
+  
+  .detailsRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  .detailsLabel {
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  
+  .detailsGroup {
+    margin-top: 14px;
+  }
+  
+  .detailsGroup ul {
+    margin: 6px 0 0 18px;
+    padding: 0;
+  }
+  
+  .detailsGroup li {
+    margin-bottom: 4px;
+  }
+  
+  .detailsFooter {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .closeFooterButton {
+    padding: 8px 18px;
+    border-radius: 10px;
+    border: none;
+    background-color: #052443;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .closeFooterButton:hover {
+    background-color: #001f3f;
   }

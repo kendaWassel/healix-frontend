@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import styles from "./PatientRegister.module.css";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import MapPicker from "../../../components/map/MapPicker";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPhone,
@@ -41,6 +41,7 @@ export default function PatientRegister() {
     longitude: null ,
   });
   const inputRef = useRef(null);
+  const navigate = useNavigate();
   const [isMedicalModalOpen, setIsMedicalModalOpen] = useState(false);
   const [medicalReport, setMedicalReport] = useState(null);
 
@@ -91,7 +92,6 @@ export default function PatientRegister() {
             allergies: medicalReport.allergies || "",
             current_medications: medicalReport.current_medications || "",
             attachments: [imageId, fileId],
-            // attachments: [imageId, fileId].filter(Boolean),
           },
         };
         console.log('users data: ',user);
@@ -127,6 +127,7 @@ export default function PatientRegister() {
         });
         setMedicalReport(null);
         setIsLoading(false);
+        navigate('/login');
       })
       .catch((error) => {
         setError(error.message || "Failed to create user. Please try again.");

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function BookingOption({ isOpen, onClose, onConfirm }) {
+export default function BookingOption({ isOpen, onClose, onConfirm, isLoading }) {
   const [selectedOption, setSelectedOption] = useState("Call Now");
 
   if (!isOpen) return null;
@@ -68,17 +68,12 @@ export default function BookingOption({ isOpen, onClose, onConfirm }) {
           <button
             onClick={() => {
               onConfirm(selectedOption);
-              onClose();
             }}
-            className="px-6 py-2 rounded-md bg-[#001f3f] hover:bg-[#001634] text-white transition"
+            disabled={isLoading}
+            className="px-6 py-2 rounded-md bg-[#001f3f] hover:bg-[#001634] text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Confirm
+            {isLoading ? "Processing..." : "Confirm"}
           </button>
-          {/* <BookingOption
-        isOpen={openConsultation}
-        onClose={() => setOpenConsultation(false)}
-        onConfirm={handleConfirm}
-      /> */}
         </div>
       </div>
     </div>

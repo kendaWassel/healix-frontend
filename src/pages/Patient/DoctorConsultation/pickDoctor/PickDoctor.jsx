@@ -11,7 +11,7 @@ import { Link,useParams } from "react-router-dom";
 import BookingOption from "../Booking/BookingOption";
 import BookingDone from "../Booking/BookingDone";
 import ScheduleLaterModal from "../Booking/ScheduleLaterModal";
-import CallNowModal from "../Booking/CallNowModal";
+import PatientCallNowModal from "../Booking/PatientCallNowModal";
 const PickDoctor = () => {
   const { id } = useParams();
   const [openPickOption, setOpenPickOption] = useState(false);
@@ -176,20 +176,29 @@ const PickDoctor = () => {
     }
   }, [id, pagination.currentPage, pagination.itemsPerPage]);
 
-        const handleConfirm = (option) => {
+        const handleConfirm = async (option) => {
           console.log("Selected option:", option);
-          setOpenPickOption(false);
+          
           if(option === "Schedule For later"){
+            setOpenPickOption(false);
             setTimeout(() => {
               setOpenScheduleLater(true);
             }, 200);
           } 
           else if(option === "Call Now"){
+            if (selected === null || !doctors[selected]) {
+              setError("Please select a doctor first");
+              setOpenPickOption(false);
+              return;
+            }
+            
+            setOpenPickOption(false);
             setTimeout(() => {
               setOpenCallNow(true);
             }, 200);
           }
           else {
+            setOpenPickOption(false);
             setTimeout(() => {
               setOpenModalDone(true);
             }, 400);
@@ -240,7 +249,8 @@ const PickDoctor = () => {
         <></>
         }
         <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-[2rem] pt-[2rem] md:px-[5rem] px-[2rem]">
-            {doctors && doctors.length > 0 ? doctors.map((doctor,index) => {
+            {isLoading ? <p>Loading doctors...</p> :
+            doctors && doctors.length > 0 ? doctors.map((doctor,index) => {
                 const isActive = selected === index;
                 const isDimmed = selected !== index;
                 return (
@@ -255,7 +265,7 @@ const PickDoctor = () => {
                     }}
                   />
                 );
-            }) : isLoading ? <p>Loading doctors...</p> : <p>No doctors found.</p>}
+            }) : <p>No doctors found.</p>}
         </div>
         {/* Pagination Controls */}
         <div className="flex justify-center items-center gap-3 my-[2rem]">
@@ -301,10 +311,15 @@ const PickDoctor = () => {
       <BookingDone
         isOpen={openModalDone}
         onHome={handleGoHome}
+        message="Booking done"
       />
-      <CallNowModal
-      onClose={() => setOpenCallNow(false)}
+      <PatientCallNowModal
+        onClose={() => setOpenCallNow(false)}
         isOpen={openCallNow}
+        doctorId={selected !== null && doctors[selected] ? doctors[selected].id : null}
+        onConfirm={() => {
+          console.log("Call initiated successfully");
+        }}
       />
       <Footer />
     </div>
