@@ -26,7 +26,7 @@ export default function ScheduleLaterModal({ isOpen, onClose, doctorId, onConfir
         console.log('date: ',formattedDateTime);
         const consultation = {
             doctor_id: doctorId || doctor,
-            type: "schedule_later",
+            call_type: "schedule",
             scheduled_at: formattedDateTime,
         };
 

@@ -151,7 +151,7 @@ useEffect(() => {
       <div className={styles.CardContainer}>
         <div className={styles.CardHeader}>
           <h1>My Receipts</h1>
-          <button className={styles.AddButton}>Add A Receipt</button>
+          <button className={styles.AddButton}>Upload Receipt</button>
           <p>Check Your Receipts and send them or add new ones</p>
         </div>
 
