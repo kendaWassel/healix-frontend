@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faEnvelope, faLock,faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
 import LogoImage from "../../../components/logoImage/LogoImage";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
  import styles from "../adminLogin/AdminLogin.module.css";
  const UserLogin = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
     password: "",
   });
   const inputRef = useRef(null);
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -89,7 +89,7 @@ import { Link } from "react-router-dom";
                 Enter your credential to login
               </p>
             </div>
-            {error ? <div className="alert alert-danger">{error}</div> : ""}
+            {error ? <div className="text-red-500">{error} ,Try again</div> : ""}
             {successMsg ? (
               <div className="alert alert-success">{successMsg}</div>
             ) : (

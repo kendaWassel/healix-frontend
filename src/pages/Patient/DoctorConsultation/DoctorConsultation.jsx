@@ -150,11 +150,9 @@ export default function DoctorConsultation() {
            >
              Next
          </Link>
-          {isLoading && <p>Loading specialities...</p>}
-     {/*      {!isLoading && specsLoaded && currentSpecs.length === 0 && <p>No specialities found.</p>} */}
-          {error && <div className={styles.errorMsg}>{error}</div>}
-          {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
         </div>
+          {isLoading && <p>Loading specialities...</p>}
+          {error && <div className={styles.errorMsg}>{error}</div>}
 
         <div className={styles.ConsultationForm}>
           {Specialitytypes.map((type,index) => (

@@ -33,7 +33,7 @@ export default function App() {
       <Route path="/delivery-register" element={<DeliveryRegister/>}/> {/*done*/}
       <Route path="/admin" element={<AdminLogin/>}/> {/*done*/}
     <Route path="/patient/*" element={<Patient />}/>
-    <Route path="/Doctor/*" element={<Doctor/>}/>
+    <Route path="/doctor/*" element={<Doctor/>}/>
     <Route path="/nurse/*" element={<Nurse/>}/>
     <Route path="/physio/*" element={<Physio/>}/>
     <Route path="/pharmacist/*" element={<Pharmacist/>}/>

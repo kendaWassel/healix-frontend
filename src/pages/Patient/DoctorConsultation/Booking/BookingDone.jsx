@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import styles from "./BookingDone.module.css";
 
-export default function BookingDone({ isOpen, onClose, onHome }) {
+export default function BookingDone({ isOpen, onClose, onHome, message = "You Are Done" }) {
   if (!isOpen) return null;
 
 
@@ -30,7 +30,7 @@ export default function BookingDone({ isOpen, onClose, onHome }) {
     <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] backdrop-blur-sm z-50">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-[90%] max-w-md text-center animate-fadeIn border border-gray-100">
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-          {"You Are Done"}
+          {message}
         </h2>
 
         <div className="flex justify-center mb-8">

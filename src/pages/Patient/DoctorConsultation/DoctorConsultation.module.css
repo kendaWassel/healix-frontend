@@ -35,6 +35,21 @@
    
  
   }
+  .nextButton{
+    color: #FFFFFF;
+    background: #052443;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    cursor: pointer;
+   font-size: 18px;
+   float: right;
+   margin-right: 50px;
+   transition: 0.3s ease;
+  }
+  .nextButton:hover{
+ background-color:lightgray;
+ color:#052443;
+  }
   .ConsaltationForm{
     display: grid;
     grid-template-columns: repeat(2, 1fr);

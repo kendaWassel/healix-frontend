@@ -2,11 +2,15 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+
 const PatientHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  
   const activeStyle = "text-[var(--cyan)] font-semibold";
   const normalStyle = "text-[var(--text-color)] hover:text-[var(--cyan)] font-medium duration-300";
 
@@ -51,16 +55,19 @@ const PatientHeader = () => {
         >
           My Receipts
         </NavLink>
+
       </div>
 
-      {/* mobile menu */}
-      <button
-        onClick={toggleMenu}
-        className="md:hidden focus:outline-none"
-        aria-label="Toggle menu"
-      >
-<FontAwesomeIcon icon={faBars} size="xl" />
-      </button>
+      {/* Mobile nav - Notifications */}
+      <div className="md:hidden flex items-center gap-4">
+        <button
+          onClick={toggleMenu}
+          className="focus:outline-none"
+          aria-label="Toggle menu"
+        >
+          <FontAwesomeIcon icon={faBars} size="xl" />
+        </button>
+      </div>
       <div
         className={`absolute top-full left-0 right-0 bg-white border-b-[1px] border-[var(--card-border)] shadow-lg md:hidden duration-300 ${
           isMenuOpen

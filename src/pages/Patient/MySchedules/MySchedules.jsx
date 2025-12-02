@@ -1,159 +1,103 @@
 import React, { useEffect, useState } from "react";
 import { Phone, Clock, DollarSign } from "lucide-react";
-import doctor1 from "../../../assets/doctoricon.png";
 import Footer from "../../../components/footer/Footer";
 import PatientHeader from "../../../components/headers/PatientHeader";
 
 const MySchedules = () => {
     const [schedules, setSchedules] = useState([]);
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(2);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const token = localStorage.getItem("token");
 
-    // بيانات افتراضية 
-    const mockData = {
-        1: [
+    const [pagination, setPagination] = useState({
+        currentPage: 1,
+        itemsPerPage: 3,
+        totalItems: 0,
+        totalPages: 1,
+    });
+
+    const fetchSchedules = (page, perPage) => {
+        setIsLoading(true);
+        setError(null);
+
+        fetch(
+            `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/my-schedules?page=${page}&per_page=${perPage}`,
             {
-                id: 1,
-                name: "Dr. Ahmad Youssef",
-                desc: "Cardiologist - Al Amin Clinic",
-                time: "10:30 AM - 11:00 AM",
-                price: "40",
-                image: doctor1,
-                phone: "+963999999111",
-            },
-            {
-                id: 2,
-                name: "Dr. Lina H.",
-                desc: "Dermatologist - SkinCare Center",
-                time: "11:00 AM - 11:30 AM",
-                price: "55",
-                image: doctor1,
-                phone: "+963999999222",
-            },
-            {
-                id: 3,
-                name: "Dr. Rami S.",
-                desc: "Dentist - Smile Dental Clinic",
-                time: "1:00 PM - 1:30 PM",
-                price: "60",
-                image: doctor1,
-                phone: "+963999999333",
-            },
-            {
-                id: 4,
-                name: "Dr. Sara Khaled",
-                desc: "Neurologist - City Hospital",
-                time: "9:00 AM - 9:30 AM",
-                price: "50",
-                image: doctor1,
-                phone: "+963999999444",
-            },
-            {
-                id: 5,
-                name: "Dr. Omar Ali",
-                desc: "Pediatrician - Kids Care Center",
-                time: "10:00 AM - 10:30 AM",
-                price: "45",
-                image: doctor1,
-                phone: "+963999999555",
-            },
-            {
-                id: 6,
-                name: "Dr. Hiba N.",
-                desc: "Orthopedic - City Orthopedic Clinic",
-                time: "2:00 PM - 2:30 PM",
-                price: "70",
-                image: doctor1,
-                phone: "+963999999666",
-            },
-        ],
-        2: [
-            {
-                id: 7,
-                name: "Dr. Maher K.",
-                desc: "ENT Specialist - Al Salam Clinic",
-                time: "3:00 PM - 3:30 PM",
-                price: "55",
-                image: doctor1,
-                phone: "+963999999777",
-            },
-            {
-                id: 8,
-                name: "Dr. Noor A.",
-                desc: "Psychiatrist - MindCare Center",
-                time: "12:00 PM - 12:30 PM",
-                price: "65",
-                image: doctor1,
-                phone: "+963999999888",
-            },
-            {
-                id: 9,
-                name: "Dr. Basel T.",
-                desc: "Surgeon - Damascus Hospital",
-                time: "5:00 PM - 5:30 PM",
-                price: "90",
-                image: doctor1,
-                phone: "+963999999999",
-            },
-            {
-                id: 10,
-                name: "Dr. Dima R.",
-                desc: "Oncologist - Hope Clinic",
-                time: "4:00 PM - 4:30 PM",
-                price: "80",
-                image: doctor1,
-                phone: "+963999999100",
-            },
-            {
-                id: 11,
-                name: "Dr. Tarek M.",
-                desc: "Gastroenterologist - Stomach Health",
-                time: "6:00 PM - 6:30 PM",
-                price: "50",
-                image: doctor1,
-                phone: "+963999999101",
-            },
-            {
-                id: 12,
-                name: "Dr. Yara S.",
-                desc: "Endocrinologist - City Care",
-                time: "7:00 PM - 7:30 PM",
-                price: "60",
-                image: doctor1,
-                phone: "+963999999102",
-            },
-        ],
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
+                    "Authorization": `Bearer ${token}`,
+                },
+            }
+        )
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((serverError) => {
+                        throw new Error(serverError.message || "Request failed");
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Success getting schedules: ", data);
+                setSchedules(data.data);
+
+                // Update pagination from API response
+                const totalItems = data.meta?.total || data.total || schedules.length;
+                const totalPages = Math.ceil(totalItems / (perPage || 3));
+                setPagination((prev) => ({
+                    ...prev,
+                    totalItems: totalItems,
+                    totalPages: totalPages,
+                }));
+            })
+            .catch((error) => {
+                console.error("Error fetching schedules:", error);
+                setError(error.message || "Failed to load schedules.");
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
 
-    const fetchSchedules = async (pageNumber = 1) => {
-        try {
-            //  كود  API   
-            /*
-            const response = await fetch(`https://your-api.com/api/schedules?page=${pageNumber}`);
-            const data = await response.json();
-            setSchedules(data.schedules || []);
-            setTotalPages(data.total_pages || 1);
-            */
-
-            //  الداتا الافتراضية
-            setSchedules(mockData[pageNumber] || []);
-            setPage(pageNumber);
-        } catch (error) {
-            console.error("Error fetching schedules:", error);
+    const handleNextPage = () => {
+        if (pagination.currentPage < pagination.totalPages) {
+            setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
         }
     };
 
+    const handlePrevPage = () => {
+        if (pagination.currentPage > 1) {
+            setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
+        }
+    };
+
+    const formatDateTime = (dateString) => {
+        const date = new Date(dateString);
+    
+        const formattedDate = date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
+    
+        const formattedTime = date.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    
+        return `${formattedDate} at ${formattedTime}`;
+    };
+    const fixImageUrl = (url) => {
+        if (!url) return '/no-photo.png';
+        return url.replace("http://", "https://");
+    };
+    
+
     useEffect(() => {
-        fetchSchedules();
-    }, []);
-
-    const handleNext = () => {
-        if (page < totalPages) fetchSchedules(page + 1);
-    };
-
-    const handlePrevious = () => {
-        if (page > 1) fetchSchedules(page - 1);
-    };
+        fetchSchedules(pagination.currentPage, pagination.itemsPerPage);
+    }, [pagination.currentPage, pagination.itemsPerPage]);
 
     return (
          <>
@@ -163,31 +107,33 @@ const MySchedules = () => {
                 <h1 className="text-[#0a3460] text-3xl font-bold">My Schedules</h1>
                 <p className="text-gray-600 text-lg mt-2">Check your Schedules here</p>
             </div>
+            {error && <p className="text-center text-red-600 mb-4">{error}</p>}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
-                {schedules.slice(0, 6).map((item) => (
+                {schedules && schedules.length > 0 ? schedules.map((schedule) => (
                     <div
-                        key={item.id}
+                        key={schedule.id}
                         className="bg-white shadow-md rounded-[10px] p-5 hover:shadow-xl transition-all duration-300 border-[1px] border-[var(--card-border)]"
                     >
                         <div className="flex items-center justify-between pb-[1rem] mb-[1rem] border-b-[2px] border-[var(--card-border)]">
                             <div className="flex items-start gap-4">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="w-[40px] h-[40px] rounded-full object-cover border border-blue-400"
-                                />
+                            <img
+    src={fixImageUrl(schedule.doctor_image)}
+    alt="doctor's photo"
+    className="w-[40px] h-[40px] rounded-full object-cover border border-blue-400"
+/>
+
                                 <div>
-                                    <h2 className="text-lg font-semibold text-gray-800">{item.name}</h2>
-                                    <p className="text-sm text-gray-500 font-medium">{item.desc}</p>
+                                    <h2 className="text-lg font-semibold text-gray-800">{schedule.doctor_name}</h2>
+                                    <p className="text-sm text-gray-500 font-medium">{schedule.specialization}</p>
                                 </div>
                             </div>
 
                             <button
-                                onClick={() => window.open(`tel:${item.phone}`, "_self")}
+                                onClick={() => window.open(`tel:${schedule.doctor_phone}`, "_self")}
                                 className="flex items-center gap-2 bg-[#ecf8f6] text-[#0a3460] px-3 py-2 rounded-xl hover:bg-[#39cccc97] transition"
                             >
-<Phone size={18} className="text-[#39CCCC]" />
+                                <Phone size={18} className="text-[#39CCCC]" />
                                 <span>Call</span>
                             </button>
                         </div>
@@ -195,45 +141,50 @@ const MySchedules = () => {
                         <div className="flex items-center gap-4 text-gray-700 mb-[1rem]">
                             <div className="flex items-center gap-2">
                                 <Clock size={18} className="text-[#39CCCC]" />
-                                <span className="text-sm font-medium">{item.time}</span>
+                                <span className="text-sm font-medium">
+    {formatDateTime(schedule.scheduled_at)}
+</span>
+
                             </div>
                             <div className="flex items-end">
                                 <DollarSign size={18} className="text-[#39CCCC]" />
-                                <span className="text-sm font-medium">{item.price}</span>
+                                <span className="text-sm font-medium">{schedule.fee}</span>
                             </div>
                         </div>
 
                     </div>
-                ))}
+                )) : isLoading ? <p className="col-span-full text-center text-gray-600">Loading schedules...</p> : <p className="col-span-full text-center text-gray-600">No schedules found.</p>}
             </div>
 
-            <div className="flex justify-center items-center gap-4">
-                <button
-                    onClick={handlePrevious}
-                    disabled={page === 1}
-                    className={`px-5 py-2 rounded-lg border text-sm font-medium ${page === 1
-                        ? "text-gray-400 border-gray-300 cursor-pointer"
-                        : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
-                        }`}
-                >
-                    Previous
-                </button>
+            {schedules.length > 0 && (
+                <div className="flex justify-center items-center gap-4">
+                    <button
+                        onClick={handlePrevPage}
+                        disabled={pagination.currentPage === 1}
+                        className={`px-5 py-2 rounded-lg border text-sm font-medium ${pagination.currentPage === 1
+                            ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                            : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                            }`}
+                    >
+                        Previous
+                    </button>
 
-                <span className="text-gray-700 font-semibold">
-                     {page} of {totalPages}
-                </span>
+                    <span className="text-gray-700 font-semibold">
+                        {pagination.currentPage} / {pagination.totalPages}
+                    </span>
 
-                <button
-                    onClick={handleNext}
-                    disabled={page === totalPages}
-                    className={`px-5 py-2 rounded-lg border text-sm font-medium ${page === totalPages
-                        ? "text-gray-400 border-gray-300 cursor-pointer"
-                        : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
-                        }`}
-                >
-                    Next
-                </button>
-            </div>
+                    <button
+                        onClick={handleNextPage}
+                        disabled={pagination.currentPage === pagination.totalPages}
+                        className={`px-5 py-2 rounded-lg border text-sm font-medium ${pagination.currentPage === pagination.totalPages
+                            ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                            : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                            }`}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
         <Footer/>
        </>

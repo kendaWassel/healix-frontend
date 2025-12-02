@@ -7,8 +7,8 @@ import {
   faMap,
 } from "@fortawesome/free-solid-svg-icons";
 import MapPicker from "../../../components/map/MapPicker";
-import { faCertificate } from "@fortawesome/free-solid-svg-icons";
 import LogoImage from "../../../components/logoImage/LogoImage";
+import { useNavigate } from "react-router-dom";
 const FormPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,7 @@ const FormPage = () => {
     longitude: "",
   });
   const inputRef = useRef(null);
-  
+  const navigate = useNavigate();
   const handleBack = () => window.history.back();
 
   const uploadFile = async (certificateFile) => {
@@ -122,6 +122,7 @@ const FormPage = () => {
         });
         setCertificateFile(null);
         setCertificateFileName("");
+        navigate('/login');
       })
       .catch((error) => {
         console.error("Registration error:", error);
