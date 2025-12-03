@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Phone } from "lucide-react";
-import EndCallModal from "./EndCallModal";
+import PatientEndCallModal from "./PatientEndCallModal";
 import RatingModal from "./RatingModal";
 import BookingDone from "./BookingDone";
 
@@ -45,7 +45,7 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
             headers: {
               "Content-Type": "application/json",
               "ngrok-skip-browser-warning": "true",
-              Authorization: `Bearer ${token}`,
+              "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({
               doctor_id: doctorId,
@@ -182,7 +182,7 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
         </button>
       </div>
 
-      <EndCallModal
+      <PatientEndCallModal
         isOpen={showEndCallModal}
         onClose={() => setShowEndCallModal(false)}
         consultationId={consultationId}
