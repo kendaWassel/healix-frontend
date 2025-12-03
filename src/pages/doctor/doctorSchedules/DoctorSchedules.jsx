@@ -11,6 +11,7 @@ import {
 import DoctorHeader from "../../../components/headers/DoctorHeader";
 import Footer from "../../../components/footer/Footer";
 import PatientDetailsModal from "./PatientDetailsModal";
+import DoctorCallNow from "../doctorCallNow/DoctorCallNow";
 /*
 const Schedules = [ 
   { key: "mhd", title: " Patient Mohammed", time: "At 9 Am", call: "Call", period: "pending" },
@@ -36,7 +37,10 @@ export default function DoctorSchedules() {
     totalItems: 0,
     totalPages: 1,
   });
-  const[patientId,setPatientId]=useState(null);
+  const [patientPhone, setPatientPhone] = useState(null);
+  const [showCallModal, setShowCallModal] = useState(false);
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [selectedConsultationId, setSelectedConsultationId] = useState(null);
   const token = localStorage.getItem("token");
 
  const fetchSchedules = async (page, perPage) => {
@@ -201,7 +205,16 @@ const handleSelectFilter = (filter) => {
                 </div>
               </div>
 
-              <button className={styles.callButton}>
+              <button 
+                className={styles.callButton}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedPatientId(item.patient_id);
+                  setPatientPhone(item.patient_phone);
+                  setSelectedConsultationId(item.consultation_id || item.id);
+                  setShowCallModal(true);
+                }}
+              >
                 <FontAwesomeIcon icon={faPhone} />
                 Call
               </button>
@@ -262,6 +275,19 @@ const handleSelectFilter = (filter) => {
             }}
           />
         )}
+
+        <DoctorCallNow
+          isOpen={showCallModal}
+          onClose={() => {
+            setShowCallModal(false);
+            setSelectedPatientId(null);
+            setPatientPhone(null);
+            setSelectedConsultationId(null);
+          }}
+          patientId={selectedPatientId}
+          patient_phone={patientPhone}
+          consultationId={selectedConsultationId}
+        />
       </div>
       <Footer />
     </>

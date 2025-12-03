@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function EndCallModal({ isOpen, onClose, consultationId, onEndSuccess }) {
+export default function PatientEndCallModal({ isOpen, onClose, consultationId, onEndSuccess }) {
   const [isEnding, setIsEnding] = useState(false);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState("Consultation is in progress");
