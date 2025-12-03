@@ -25,8 +25,8 @@ const mockData = {
             source: "Soucre: Doctor",
             patient: "Patient: Sami",
             medicines: [
-                { name: "Panadol", dosage: "500mg", boxes: 1 ,instructions:'twice daily'},
-                { name: "Cetamol", dosage: "500mg", boxes: 1 ,instructions:'twice daily'}
+                { name: "Unadol", dosage: "500mg", boxes: 1 ,instructions:'twice daily'},
+                { name: "Aspirine", dosage: "500mg", boxes: 1 ,instructions:'twice daily'}
             ],
             total_boxes: 2,
             notes:'Notes: take after meal',
@@ -38,8 +38,8 @@ const mockData = {
             source: "Source: Doctor",
             patient: "Patient: Alaa",
             medicines: [
-                { name: "Panadol", dosage: "500mg", boxes: 2,instructions:'twice daily' },
-                { name: "Cetamol", dosage: "500mg", boxes: 3,instructions:'twice daily' }
+                { name: "Paractemol", dosage: "500mg", boxes: 2,instructions:'twice daily' },
+                { name: "Grippestop", dosage: "500mg", boxes: 3,instructions:'twice daily' }
             ],
             total_boxes: 4,
             notes:'Notes: take after meal',
@@ -80,6 +80,11 @@ export default function PrescreptionOrders(){
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [ShowAcceptPopup,setShowAcceptPopup]=useState(false);
+    const [currentAcceptId,setCurrentAcceptId]=useState(null);
+    const [AcceptValue,setAcceptValue]=useState("");
+    const [selectedItem,setSelectedItem] = useState(null);
+    const [reopenAcceptAfterImage, setReopenAcceptAfterImage] = useState(false);
 
     const itemsPerPage = 6;
 
@@ -142,6 +147,7 @@ const displayedItems = prescriptions.slice(
   };
 
     const handleAccept = async (id) => {
+      console.log("Accepting Order with id :",id )
         try {
           const response = await fetch('', {
             method: "POST", 
@@ -160,6 +166,8 @@ const displayedItems = prescriptions.slice(
                 item.id === id ? { ...item, status: "accepted" } : item
               )
             );
+            setShowAcceptPopup(false);
+            setAcceptValue("");
           } else {
             console.error(" Failed to accept order",data.message);
           }
@@ -256,7 +264,13 @@ const displayedItems = prescriptions.slice(
                     </div>
                     <div className="flex flex-col gap-2">
                     <button
-                      onClick={() => handleAccept(item.id)}
+                      onClick={() => {
+                        setSelectedItem(item)
+                      setCurrentAcceptId(item.id);
+                      setShowAcceptPopup(true);
+                     
+                       }
+                      }
                       disabled={item.status === "accepted"}
                       className={`font-semibold transition duration-300 ease-in-out ${
                         item.status === "accepted"
@@ -265,7 +279,9 @@ const displayedItems = prescriptions.slice(
                       }`}
                     >
                       {item.status === "accepted" ? "Accepted" : "Accept"}
+                  
                     </button>
+                    
                     <button
                       onClick={() => handleReject(item.id)}
                       disabled={item.status === "rejected"}
@@ -325,7 +341,13 @@ const displayedItems = prescriptions.slice(
           {selectedImage && (
   <div
    className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50"
-    onClick={() => setSelectedImage(null)}
+    onClick={() => {
+      setSelectedImage(null)
+      if (reopenAcceptAfterImage) {
+        setShowAcceptPopup(true);     
+        setReopenAcceptAfterImage(false);
+      }
+    }}
   >
     <img
       src={selectedImage}
@@ -335,7 +357,66 @@ const displayedItems = prescriptions.slice(
   </div>
 )}
 
-          <Footer />
-        </>
-      );
-}
+{ShowAcceptPopup && (
+  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+    <div className="bg-white p-6 rounded-xl w-[400px] shadow-lg">
+      
+      <h2 className="text-xl font-semibold text-[#0a3460] mb-4">
+        Medicine Details
+      </h2>
+
+      <div className="mt-2 text-sm text-gray-600 mb-4">
+        {selectedItem.medicines && selectedItem.medicines.length > 0 ? (
+          selectedItem.medicines.map((med, index) => (
+            <p key={index}>{med.name}</p>
+          ))
+        ) : 
+          selectedItem.image_url &&(
+            <img
+src={selectedItem.image_url}
+onClick={(e) => {
+  setShowAcceptPopup(false)
+  setSelectedImage(selectedItem.image_url)
+  setReopenAcceptAfterImage(true);
+}}
+alt="Prescription"
+className="w-25 h-25 object-cover rounded-lg mt-2 cursor-pointer hover:opacity-80"
+/>
+        )}
+      </div>
+
+ 
+      <input 
+        type="text"
+        value={AcceptValue}
+        onChange={(e)=>setAcceptValue(e.target.value)}
+        placeholder="Enter The Price ..."
+        className="w-full border px-3 py-2 rounded-lg mb-4 focus:ring-2 focus:ring-[#39CCCC]"
+      />
+
+      
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => handleAccept(currentAcceptId, AcceptValue)}
+          className="px-4 py-2 bg-[#39CCCC] text-white rounded-lg font-medium hover:bg-[#2fa8a8] transition"
+        >
+          Save
+        </button>
+
+        <button
+          onClick={() => {
+            setShowAcceptPopup(false)
+            setAcceptValue("");
+           }}
+          className="px-4 py-2 bg-gray-300 rounded-lg font-medium hover:bg-gray-400 transition"
+        >
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+</>
+    )  
+  }
