@@ -5,27 +5,6 @@ export default function BookingOption({ isOpen, onClose, onConfirm, isLoading })
 
   if (!isOpen) return null;
 
-  /*const handleConfirm = async (option) => {
-    try {
-      const res = await fetch("http://localhost:5000/api/consultation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ choice: option }),
-      });
-
-      if (res.ok) {
-        console.log("Option saved successfully");
-        setOpen(false);
-        alert(`You chose: ${option === "call" ? "Call Now" : "Schedule Later"}`);
-        setTimeout(() => setOpenSuccess(true), 400); 
-      } else {
-        console.error("Request failed");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };*/
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] z-50">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-[90%] max-w-md animate-fadeIn">

@@ -100,12 +100,15 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
 
   return (
     <div ref={modalRef} onClick={handleOverlayClick} className="fixed z-50 inset-0 bg-black/30 flex items-center justify-center">
-      <div className="w-full max-w-[400px] rounded-lg bg-white p-6 relative mx-2 animate-fadeIn shadow-xl">
-        <button type="button" className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl focus:outline-none" onClick={onClose}>
-          <FontAwesomeIcon icon={faTimes} />
-        </button>
-        <h2 className="text-2xl font-semibold text-center mb-4">Medical Report</h2>
-        <form className="space-y-3" onSubmit={handleLocalSubmit}>
+      <div className="w-full max-w-[70%] max-h-[90vh] rounded-lg bg-white relative mx-2 animate-fadeIn shadow-xl flex flex-col">
+        <div className="flex-shrink-0 p-6 pb-4">
+          <button type="button" className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl focus:outline-none" onClick={onClose}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          <h2 className="text-2xl font-semibold text-center mb-4">Medical Report</h2>
+        </div>
+        <form className="flex flex-col flex-1 min-h-0" onSubmit={handleLocalSubmit}>
+          <div className="flex-1 overflow-y-auto px-6 space-y-3 pb-4">
           <div>
             <label className="block font-medium mb-1 text-gray-800">Diagnosis</label>
             <input
@@ -211,10 +214,13 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
               onChange={e => setFields({ ...fields, current_medications: e.target.value })}
             />
           </div>
-          {children}
-          <button type="submit" className="w-full mt-2 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold transition-colors">
-            Save Report
-          </button>
+            {children}
+          </div>
+          <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-200">
+            <button type="submit" className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold transition-colors">
+              Save Report
+            </button>
+          </div>
         </form>
       </div>
     </div>
