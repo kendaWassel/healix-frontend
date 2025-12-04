@@ -22,7 +22,7 @@ const ReceiptDetails = ({ open, onClose, receipt }) => {
  
           {receipt?.type === "image" && (
             <img
-              src={receipt.image_url}
+            src={receipt.local_preview || receipt.image_url}
               alt="Prescription"
               className="w-full h-auto rounded-md shadow"
             />
