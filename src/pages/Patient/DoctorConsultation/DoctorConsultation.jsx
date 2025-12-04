@@ -98,37 +98,6 @@ export default function DoctorConsultation() {
     fetchSpecializations(pagination.currentPage, pagination.itemsPerPage);
   }, [pagination.currentPage, pagination.itemsPerPage]);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (!selected) {
-  //     setError("Please select a speciality before proceeding.");
-  //     return;
-  //   }
-  //   setError(null);
-  //   setSuccessMsg(null);
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch("https://example.com/api/fake-endpoint", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ speciality: selected }),
-  //     });
-
-  //     if (!response.ok) throw new Error("Can't continue. Please try again.");
-
-  //     await response.json();
-  //     setSuccessMsg("Speciality type selected successfully!");
-  //   } catch (err) {
-        
-  //       if (err.message === "Failed to fetch") {
-  //         setError("Failed please try again");
-  //       } else {
-  //         setError(err.message);
-  //       }
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
   
 
   return (

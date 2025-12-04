@@ -2,48 +2,92 @@ import MedicalReportModal from "../../registers/patientRegister/MedicalReportMod
 import { useEffect, useState } from "react";
 
 export default function ModifyMedicalReport({
+  isOpen,
+  onClose,
   onSave,
-  medicalReport
-})
-
-{
-
-  const [editOpen, setEditOpen] = useState(true);  
+  medicalReport,
+  patientId,
+  consultationId
+}) {
+  const [editOpen, setEditOpen] = useState(false);  
   const [fields, setFields] = useState({
     diagnosis: "",
     chronic_diseases: "",
     previous_surgeries: "",
     allergies: "",
     current_medications: "",
-    treatment_plan:""
+    treatment_plan: ""
   });
 
- 
   useEffect(() => {
-    if (medicalReport) {
-      setFields(medicalReport);
+    if (isOpen) {
+      setEditOpen(true);
+      if (medicalReport) {
+        setFields({
+          diagnosis: medicalReport.diagnosis || "",
+          chronic_diseases: medicalReport.chronic_diseases || "",
+          previous_surgeries: medicalReport.previous_surgeries || "",
+          allergies: medicalReport.allergies || "",
+          current_medications: medicalReport.current_medications || "",
+          treatment_plan: medicalReport.treatment_plan || ""
+        });
+      }
     }
-  }, [medicalReport]);
-  useEffect(() => {
-    setEditOpen(true);  
-  }, []);
+  }, [isOpen, medicalReport]);
   
-  const handleLocalSubmit = () => {
-    onSave(fields);       
-    setEditOpen(false);   
+  const handleLocalSubmit = async (formFields) => {
+    const token = localStorage.getItem("token");
+    try {
+      // Merge treatment_plan from fields state since MedicalReportModal doesn't include it
+      const dataToSubmit = {
+        ...formFields,
+        treatment_plan: fields.treatment_plan,
+        consultation_id: consultationId,
+      };
+      
+      // Replace with actual API endpoint
+      const response = await fetch(
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/patients/${patientId}/medical-record`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify(dataToSubmit),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Medical report updated:", data);
+        setEditOpen(false);
+        if (onSave) onSave(dataToSubmit);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Failed to update medical report");
+      }
+    } catch (err) {
+      console.error("Error updating medical report:", err);
+      alert("Failed to update medical report. Please try again.");
+    }
   };
+
+  if (!isOpen || !editOpen) return null;
 
   return (
     <>
       <MedicalReportModal
         open={editOpen}
-        onClose={() => setEditOpen(false)}
-        onSave={handleLocalSubmit}
-        fields={fields}
-        setFields={setFields}
+        onClose={() => {
+          setEditOpen(false);
+          if (onClose) onClose();
+        }}
+        onSubmit={handleLocalSubmit}
+        initialValues={fields}
         isEdit={true}
       >
-    
         <label className="block font-medium mb-1 text-gray-800">Treatment Plan</label>
         <input
           name="treatment_plan"
@@ -56,6 +100,4 @@ export default function ModifyMedicalReport({
       </MedicalReportModal>
     </>
   );
-  
-
 }
