@@ -7,7 +7,7 @@ import YouAreDone from "./YouAreDone";
 import Footer from "../../../components/footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { useState,useEffect } from "react";
+import { useState,useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 const ReceiptsData = [
   { 
@@ -75,6 +75,7 @@ export default function Receipts() {
   const [error, setError] = useState(null);
   const [sendPharmacy, setSendPharmacy] = useState(false);
   const [done, setDone] = useState(false);
+  const [uploadDisabled,setuploadDisabled]=useState(false)
   const [pagination, setPagination] = useState({
     currentPage: 1,
     itemsPerPage: 6,
@@ -120,17 +121,75 @@ const fetchReceipts= async (page=1,perPage=10) => {
     setIsLoading(false);
   }
 };
+*/
 useEffect(() => {
-  fetchReceipts();
+  //fetchReceipts();
+
 }, []);
 
-*/
-  const totalItems = ReceiptsData.length;
-  const totalPages = Math.ceil(totalItems / pagination.itemsPerPage);
+
+const fileInputRef =useRef(null) 
+const handleUpload=()=>{
+  setuploadDisabled(true)
+fileInputRef.current.click()
+
+}
+const handleFileChange=async (e)=>{
+  const file=e.target.files[0]
+  if (!file) {
+    setuploadDisabled(false)
+    return
+  }
+  const imageURL = URL.createObjectURL(file);
+
+  const token = localStorage.getItem("token")
+
+  const formData = new FormData();
+  formData.append("image", file);       
+  formData.append("category", "prescription");      
+try {
+  setIsLoading(true);
+  const response=await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/prescriptions/upload`,{
+method:"POST",
+headers:{
+  "Authorization": `Bearer ${token}`,
+},
+body:formData
+  })
+  if (!response.ok){
+    throw new Error("Upload failed")
+  }
+  const data = await response.json();
+    console.log("Upload success:", data);
+
+    const newReceipt = {
+      id: data.data.prescription_id,
+      Name: "Uploaded Receipt",
+      Date: new Date().toLocaleDateString(),
+      type: "image",
+      local_preview: imageURL
+    };
+
+    setReceipts((prev) => [...prev, newReceipt]);
+    
+}
+catch(error){
+  console.error("Upload error",error)
+setError("failed to Upload Receipt")
+}
+finally{
+  setIsLoading(false)
+}
+    setuploadDisabled(false)
+    fileInputRef.current.value = "";
+
+}
+  const totalItems = receipts.length;
+  const totalPages = Math.max(1,Math.ceil(totalItems / pagination.itemsPerPage));
 
   const indexOfLastItem = pagination.currentPage * pagination.itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - pagination.itemsPerPage;
-  const currentItems = ReceiptsData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = receipts.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleNextPage = () => {
     if (pagination.currentPage < totalPages) {
@@ -151,11 +210,20 @@ useEffect(() => {
       <div className={styles.CardContainer}>
         <div className={styles.CardHeader}>
           <h1>My Receipts</h1>
-          <button className={styles.AddButton}>Upload Receipt</button>
+          <button className={styles.AddButton} onClick={handleUpload} disabled={uploadDisabled}>
+            Upload Receipt
+            </button>
+            <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            style={{display:'none'}}
+            onChange={handleFileChange}
+            />
           <p>Check Your Receipts and send them or add new ones</p>
         </div>
 
-        {isLoading && <p className={styles.loading}>Loading receipts...</p>}
+        {isLoading && <p className={styles.loading}>uploading receipt...</p>}
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.CardsWrapper}>
@@ -244,4 +312,5 @@ useEffect(() => {
       <Footer />
     </>
   );
+  
 }
