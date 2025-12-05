@@ -12,12 +12,9 @@ export default function PatientEndCallModal({ isOpen, onClose, consultationId, o
       setError("Consultation ID is missing");
       return;
     }
-
     setIsEnding(true);
     setError(null);
-
     const token = localStorage.getItem("token");
-
     try {
       const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/consultations/${consultationId}/end`, {
         method: "POST",

@@ -1,6 +1,6 @@
 import styles from "./DeliveryRegister.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import {
   faArrowLeft,
@@ -35,6 +35,7 @@ export default function DeliveryRegister() {
   const [LicenseFileName, setLicenseFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
+  const navigate=useNavigate();
 
   useEffect(() => {
     document.title = "Dilevery Account Setup";
@@ -139,6 +140,9 @@ export default function DeliveryRegister() {
           plate_number: null,
           driving_license_id:null,
         });
+        setTimeout(() => {
+          navigate('/login');
+        }, 300);
       })
       .catch((error) => {
         console.error("Registration error:", error);

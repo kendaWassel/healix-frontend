@@ -1,36 +1,33 @@
 import { useState, useEffect } from "react";
 import { Phone } from "lucide-react";
-import DoctorEndCallModal from "./DoctorEndCallModal";
-import BookingDone from "../../Patient/DoctorConsultation/Booking/BookingDone";
+import PatientEndCallModal from "../DoctorConsultation/Booking/PatientEndCallModal";
+import RatingModal from "../DoctorConsultation/Booking/RatingModal";
+import BookingDone from "../DoctorConsultation/Booking/BookingDone";
 
-export default function DoctorCallNow({ isOpen, onClose, patientId, consultationId ,patient_phone}) {
+export default function PatientScheduleCall({ isOpen, onClose, consultationId, doctorId, doctorPhone }) {
   const [isCalling, setIsCalling] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [patientPhone, setPatientPhone] = useState(patient_phone);
   const [message, setMessage] = useState("");
   const [showEndCallModal, setShowEndCallModal] = useState(false);
-  const [showConsDone, setShowConsDone] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showBookingDone, setShowBookingDone] = useState(false);
   const [canCall, setCanCall] = useState(false);
 
   useEffect(() => {
     if (!isOpen) {
       setError(null);
       setMessage("");
-      setPatientPhone(null);
       setShowEndCallModal(false);
-      setShowConsDone(false);
+      setShowRatingModal(false);
+      setShowBookingDone(false);
       setCanCall(false);
-    } else {
-      if (patient_phone) {
-        console.log("Setting patient phone from prop:", patient_phone);
-        setPatientPhone(patient_phone);
-      }
     }
-  }, [isOpen, patient_phone]);
+  }, [isOpen]);
 
+  // Initiate call on open
   useEffect(() => {
-    if (!isOpen || !patientId || !consultationId) return;
+    if (!isOpen || !consultationId) return;
 
     const initiateCall = async () => {
       setIsLoading(true);
@@ -41,7 +38,7 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
 
       try {
         const response = await fetch(
-          `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/consultations/${consultationId}/call`,
+          `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/consultations/${consultationId}/call`,
           {
             method: "POST",
             headers: {
@@ -58,8 +55,8 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
         if (!response.ok || data.status !== "success") {
           throw new Error(data.message || "Failed to initiate call");
         }
-        // Set message from response
-        setMessage(data.message || "You can call the patient now");
+        
+        setMessage(data.message || "You can call the doctor now");
         setCanCall(true);
       } catch (err) {
         setError(err.message || "Failed to initiate call");
@@ -71,20 +68,25 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
     };
 
     initiateCall();
-  }, [isOpen, patientId, consultationId]);
+  }, [isOpen, consultationId]);
+
   const handleCallClick = async () => {
-    const phone = patientPhone || patient_phone;
+    const phone = doctorPhone;
     if (!phone) {
-      setError("Patient phone number missing.");
+      setError("Doctor phone number missing.");
       return;
     }
   
     setIsCalling(true);
-
+  
+    // Open phone dialer
     window.open(`tel:${phone}`, "_self");
-    let callWasOpened = false;  
+  
+    // Detect returning from call
+    let callWasOpened = false;
+  
     window.onblur = () => {
-      callWasOpened = true; 
+      callWasOpened = true;
     };
   
     window.onfocus = () => {
@@ -98,14 +100,16 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
   
     setIsCalling(false);
   };
-  
 
   const handleEndCallSuccess = () => {
     setShowEndCallModal(false);
     setMessage("Call ended successfully.");
-    setTimeout(() => {
-      setShowConsDone(true);
-    }, 300);
+    setShowRatingModal(true);
+  };
+
+  const handleRatingSuccess = () => {
+    setShowRatingModal(false);
+    setShowBookingDone(true);
   };
 
   if (!isOpen) return null;
@@ -118,9 +122,9 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
             <p className="text-red-800 text-sm">{error}</p>
           </div>
         )}
-        {(patientPhone || patient_phone) && (
+        {doctorPhone && (
           <div className="mb-4 p-3 border-[var(--card-border)] bg-[var(--card-border)] rounded-md">
-            <p className="text-[var(--dark-blue)] text-sm">Patient Phone: {patientPhone || patient_phone}</p>
+            <p className="text-[var(--dark-blue)] text-sm">Doctor Phone: {doctorPhone}</p>
           </div>
         )}
 
@@ -131,9 +135,9 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
         ) : (
           <button
             onClick={handleCallClick}
-            disabled={!canCall || !(patientPhone || patient_phone) || error}
+            disabled={!canCall || !doctorPhone || error}
             className={`mb-4 text-[20px] w-[80%] mx-auto flex items-center justify-center gap-2 px-6 py-2 rounded-md text-white transition ${
-              !canCall || !(patientPhone || patient_phone) || error
+              !canCall || !doctorPhone || error
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-[var(--dark-blue)] hover:bg-[#052443db]"
             }`}
@@ -151,21 +155,31 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
         </button>
       </div>
 
-      <DoctorEndCallModal
+      <PatientEndCallModal
         isOpen={showEndCallModal}
         onClose={() => setShowEndCallModal(false)}
         consultationId={consultationId}
-        patientId={patientId}
         onEndSuccess={handleEndCallSuccess}
       />
+      <RatingModal
+        isOpen={showRatingModal}
+        onClose={() => {
+          setShowRatingModal(false);
+          setShowBookingDone(true);
+        }}
+        consultationId={consultationId}
+        doctor_id={doctorId}
+        onRatingSuccess={handleRatingSuccess}
+      />
       <BookingDone
-        isOpen={showConsDone}
+        isOpen={showBookingDone}
         onHome={() => {
-          setShowConsDone(false);
+          setShowBookingDone(false);
           onClose();
         }}
-        message="Call completed successfully!"
+        message="Thank you for your feedback!"
       />
     </div>
   );
 }
+

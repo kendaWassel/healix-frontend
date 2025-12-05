@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Phone, Clock, DollarSign } from "lucide-react";
 import Footer from "../../../components/footer/Footer";
 import PatientHeader from "../../../components/headers/PatientHeader";
+import PatientScheduleCall from "./PatientScheduleCall";
 
 const MySchedules = () => {
     const [schedules, setSchedules] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showCallModal, setShowCallModal] = useState(false);
+    const [selectedConsultationId, setSelectedConsultationId] = useState(null);
+    const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+    const [selectedDoctorPhone, setSelectedDoctorPhone] = useState(null);
     const token = localStorage.getItem("token");
 
     const [pagination, setPagination] = useState({
@@ -130,7 +135,13 @@ const MySchedules = () => {
                             </div>
 
                             <button
-                                onClick={() => window.open(`tel:${schedule.doctor_phone}`, "_self")}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setSelectedConsultationId(schedule.consultation_id || schedule.id);
+                                    setSelectedDoctorId(schedule.doctor_id);
+                                    setSelectedDoctorPhone(schedule.doctor_phone);
+                                    setShowCallModal(true);
+                                }}
                                 className="flex items-center gap-2 bg-[#ecf8f6] text-[#0a3460] px-3 py-2 rounded-xl hover:bg-[#39cccc97] transition"
                             >
                                 <Phone size={18} className="text-[#39CCCC]" />
@@ -187,6 +198,19 @@ const MySchedules = () => {
             )}
         </div>
         <Footer/>
+
+        <PatientScheduleCall
+          isOpen={showCallModal}
+          onClose={() => {
+            setShowCallModal(false);
+            setSelectedConsultationId(null);
+            setSelectedDoctorId(null);
+            setSelectedDoctorPhone(null);
+          }}
+          consultationId={selectedConsultationId}
+          doctorId={selectedDoctorId}
+          doctorPhone={selectedDoctorPhone}
+        />
        </>
     );
 };
