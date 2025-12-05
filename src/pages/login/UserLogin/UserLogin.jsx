@@ -46,14 +46,25 @@ import { Link,useNavigate } from "react-router-dom";
         return response.json();
       })
       .then((data) => {
-        console.log("message from api: ", data.message);
+        console.log("message from api: ", data);
         setSuccessMsg("Logged in successeully!!");
         localStorage.setItem('token',data.token)
         setNewUser({
           email: "",
           password: "",
         });
-        navigate('/patient');
+        if(data.role === "patient")
+          navigate('/patient');
+        else if(data.role === "doctor")
+          navigate('/doctor');
+        else if(data.role === "pharmacist")
+          navigate('/pharmacist');
+        else if(data.role === "careprovider")
+          navigate('/careprovider');
+        else{
+          navigate('/delivery');
+        }
+
       })
       .catch((error) => {
         setError(error.message || "Failed to login. Please try again.");
@@ -67,12 +78,6 @@ import { Link,useNavigate } from "react-router-dom";
     inputRef.current.focus();
   }, []);
 
-  //     useEffect(()=>{
-  //     inputRef.current.focus();
-  //     if(userData.isAuthorized) {
-  //       navigate('/logged');
-  //     }
-  //   },[navigate]);
 
 
   return (

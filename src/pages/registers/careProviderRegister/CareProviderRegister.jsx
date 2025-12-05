@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
 import LogoImage from "../../../components/logoImage/LogoImage";
+import { useNavigate } from "react-router-dom";
 import styles from "../doctorRegister/DoctorRegister.module.css";
 const CareProviderRegister = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -27,6 +28,7 @@ const CareProviderRegister = () => {
   const [LicenseFileName, setLicenseFileName] = useState("");
   const [photoPreview, setPhotoPreview] = useState(null);
   const inputRef = useRef(null);
+  const navigate= useNavigate();
 
 
   const uploadImage = async (photoFile) => {
@@ -132,6 +134,9 @@ const CareProviderRegister = () => {
           sessiom_fee: null,
           license_file_id: null,
         });
+        setTimeout(() => {
+          navigate('/login');
+        }, 300);
       })
       .catch((error) => {
         console.error("Registration error:", error);

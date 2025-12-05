@@ -127,7 +127,9 @@ export default function PatientRegister() {
         });
         setMedicalReport(null);
         setIsLoading(false);
-        navigate('/login');
+        setTimeout(() => {
+          navigate('/login');
+        }, 300);
       })
       .catch((error) => {
         setError(error.message || "Failed to create user. Please try again.");

@@ -122,7 +122,9 @@ const FormPage = () => {
         });
         setCertificateFile(null);
         setCertificateFileName("");
-        navigate('/login');
+        setTimeout(() => {
+          navigate('/login');
+        }, 300);
       })
       .catch((error) => {
         console.error("Registration error:", error);

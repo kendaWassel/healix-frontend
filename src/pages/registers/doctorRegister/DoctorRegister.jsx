@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faL } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import styles from "./DoctorRegister.module.css";
 const DoctorRegister = () => {
@@ -29,9 +29,10 @@ const DoctorRegister = () => {
   const [specs, setSpecs] = useState([]);
   const [specsLoaded, setSpecsLoaded] = useState(false);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
 
   const specsRequest = () => {
-    if (specsLoaded) return; // Prevent duplicate requests
+    if (specsLoaded) return; 
     
     setIsLoading(true);
     setError(null);
@@ -52,7 +53,6 @@ const DoctorRegister = () => {
       })
       .then((data) => {
         console.log('success getting specs: ', data);
-        // Handle the API response structure: {status: 'success', data: [...], message: '...'}
         if (data.status === 'success' && data.data) {
           setSpecs(data.data);
           setSpecsLoaded(true);
@@ -120,7 +120,6 @@ const DoctorRegister = () => {
     setError(null);
     setSuccessMsg(null);
 
-
     const imageId = await uploadImage(photoFile);
     const fileId = await uploadFile(certificateFile);
 
@@ -177,6 +176,9 @@ const DoctorRegister = () => {
         setPhotoFile(null);
         setCertificateFile(null);
         setCertificateFileName("");
+        setTimeout(() => {
+          navigate('/login');
+        }, 300);
       })
       .catch((error) => {
         console.error("Registration error:", error);
