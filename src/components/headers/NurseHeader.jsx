@@ -22,6 +22,7 @@ const NurseHeader = () => {
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
           to="/nurse"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
@@ -29,13 +30,14 @@ const NurseHeader = () => {
 
         <NavLink
           to="/nurse/new-orders"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           New Orders
         </NavLink>
         <NavLink 
-           
-          to="/nurse/appointment "
+          to="/nurse/appointment"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
             My Appointments
@@ -61,24 +63,27 @@ const NurseHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/nurse/' 
+            to="/nurse"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/nurse/new-orders/' 
+            to="/nurse/new-orders"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           New Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/nurse/my-schedules/' 
+            to="/nurse/appointment"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My Schedules
+          My Appointments
           </NavLink>
         </div>
       </div>

@@ -21,26 +21,30 @@ const DeliveryHeader = () => {
       {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
-          to="/"
+          to="/delivery"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
         </NavLink>
         <NavLink
-          to="/new-orders"
+          to="/delivery/new-orders"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           New Orders
         </NavLink>
         <NavLink
-          to="/past-orders"
+          to="/delivery/past-orders"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Past Orders
         </NavLink>
 
         <NavLink
-          to="/current-orders"
+          to="/delivery/current-orders"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Current orders
@@ -65,28 +69,32 @@ const DeliveryHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/delivery"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/delivery/new-orders"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           New Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/delivery/past-orders"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
             Past Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/delivery/current-orders"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Current orders

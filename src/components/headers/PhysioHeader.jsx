@@ -22,6 +22,7 @@ const PhysioHeader = () => {
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
           to="/physio"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
@@ -29,12 +30,14 @@ const PhysioHeader = () => {
 
         <NavLink
           to="/physio/new-orders"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           New Orders
         </NavLink>
         <NavLink
-          to="/physio/my-schedules "
+          to="/physio/my-schedules"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
             My Schedules 
@@ -60,21 +63,24 @@ const PhysioHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/physio/' 
+            to="/physio"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/physio/new-orders' 
+            to="/physio/new-orders"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           New Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/physio/my-schedules' 
+            to="/physio/my-schedules"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules

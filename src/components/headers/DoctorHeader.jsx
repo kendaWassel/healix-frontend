@@ -14,7 +14,7 @@ const DoctorHeader = () => {
   return (
     <nav className="md:px-[3rem] px-[2rem] md:py-[1.5rem] py-[1rem] flex items-center justify-between border-b-[1px] border-[var(--card-border)] relative">
       {/* Logo */}
-      <NavLink to="/Doctor" className="logo w-[125px]">
+      <NavLink to="/doctor" className="logo w-[125px]">
         <img src="/Logo-dark.png" alt="logo" />
       </NavLink>
 
@@ -22,13 +22,15 @@ const DoctorHeader = () => {
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
           to="/doctor"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
         </NavLink>
 
         <NavLink
-          to="/doctor/doctor-schedules" 
+          to="/doctor/doctor-schedules"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules
@@ -36,6 +38,7 @@ const DoctorHeader = () => {
 
         <NavLink
           to="/doctor/receipts"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Receipts
@@ -60,21 +63,24 @@ const DoctorHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/doctor' 
+            to="/doctor"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to="/doctor/doctor-schedules" 
+            to="/doctor/doctor-schedules"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules 
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/doctor/receipts' 
+            to="/doctor/receipts"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My receipts

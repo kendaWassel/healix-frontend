@@ -7,7 +7,17 @@
     width: 100%;
 }
 body{
-    margin: 0 !important;
+  margin: 0 !important;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: inherit !important;
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
 }
 button{
     cursor: pointer;
