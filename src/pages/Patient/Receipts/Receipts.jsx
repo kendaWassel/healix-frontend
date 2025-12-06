@@ -53,13 +53,14 @@ export default function Receipts() {
       if (data.status === "success") {
         const formatted = data.data.items.map((p) => ({
           id: p.id,
-          Name: p.doctor_name,
+          Name: p.source === "patient_uploaded" || !p.doctor_name ? "Uploaded by you" : p.doctor_name,
           Date: new Date(p.issued_at).toLocaleDateString(),
-          type: "digital",
+          type: p.type || (p.image_url ? "image" : "digital"),
           diagnosis: p.diagnosis,
           status: p.status,
+          image_url: p.image_url,
+          source: p.source,
         }));
-
         setReceipts(formatted);
 
         setPagination((prev) => ({
@@ -137,10 +138,6 @@ export default function Receipts() {
       fileInputRef.current.value = "";
     }
   };
-
-  // -----------------------------------------------------
-  // Pagination
-  // -----------------------------------------------------
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPages) {
       setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
@@ -152,10 +149,6 @@ export default function Receipts() {
       setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
     }
   };
-
-  // -----------------------------------------------------
-  // Render
-  // -----------------------------------------------------
   return (
     <>
       <PatientHeader />
@@ -238,7 +231,7 @@ export default function Receipts() {
           <ReceiptDetails
             open={true}
             onClose={() => setSelectedReceiptId(null)}
-            receiptId={selectedReceiptId} // Pass only the ID
+            receiptId={selectedReceiptId}
           />
         )}
       </div>

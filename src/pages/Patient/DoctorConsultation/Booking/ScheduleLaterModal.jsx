@@ -26,8 +26,11 @@ export default function ScheduleLaterModal({
     setLoading(true);
 
     const token = localStorage.getItem("token");
-    const localDateTime = new Date(`${selectedDate}T${time}:00`);
-    const formattedDateTime = localDateTime.toISOString();
+    const timeParts = time.split(':');
+    const timeWithSeconds = timeParts.length === 2 
+      ? `${time}:00` 
+      : time;
+    const formattedDateTime = `${selectedDate}T${timeWithSeconds}`;
     console.log("date: ", formattedDateTime);
     const consultation = {
       doctor_id: doctorId || doctor,

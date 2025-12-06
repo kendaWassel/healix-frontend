@@ -141,13 +141,6 @@ export default function PatientRegister() {
     if (inputRef.current) inputRef.current.focus();
   }, []);
 
-  //     useEffect(()=>{
-  //     inputRef.current.focus();
-  //     if(userData.isAuthorized) {
-  //       navigate('/logged');
-  //     }
-  //   },[navigate]);
-
   return (
     
     <div className={styles.formContainer}>
@@ -232,6 +225,7 @@ export default function PatientRegister() {
             type={passwordShown ? "text" : "password"}
             placeholder="Type password..."
             value={newUser.password}
+            autoComplete="off"
             onChange={(e) =>
               setNewUser({ ...newUser, password: e.target.value })
             }
@@ -304,7 +298,7 @@ export default function PatientRegister() {
         </div>
         <button
           type="submit"
-          className={styles.registerButton}
+          className={`${styles.registerButton} disabled:opacity-50 disabled:cursor-not-allowed`}
           disabled={isLoading}
         >
           {isLoading ? "Registering..." : "Register"}
@@ -315,7 +309,7 @@ export default function PatientRegister() {
         open={isMedicalModalOpen}
         onClose={() => setIsMedicalModalOpen(false)}
         onSubmit={handleSaveMedicalReport}
-        initialValues={medicalReport} // if editing, prefill fields
+        initialValues={medicalReport}
       />
       {isMapOpen && (
         <MapPicker

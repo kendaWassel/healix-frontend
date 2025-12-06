@@ -37,6 +37,7 @@ const PatientHeader = () => {
 
         <NavLink
           to="/patient"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
@@ -44,6 +45,7 @@ const PatientHeader = () => {
 
         <NavLink
           to="/patient/my-schedules"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules
@@ -51,6 +53,7 @@ const PatientHeader = () => {
 
         <NavLink
           to="/patient/Receipts"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Receipts
@@ -89,7 +92,8 @@ const PatientHeader = () => {
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/patient"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
@@ -97,13 +101,15 @@ const PatientHeader = () => {
           <NavLink
             onClick={() => setIsMenuOpen(false)}
             to="/patient/my-schedules"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules 
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to="/patient/receipts" 
+            to="/patient/receipts"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My receipts

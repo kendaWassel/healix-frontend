@@ -45,7 +45,6 @@ const MySchedules = () => {
                 return response.json();
             })
             .then((data) => {
-                console.log("Success getting schedules: ", data);
                 setSchedules(data.data);
 
                 // Update pagination from API response
@@ -58,7 +57,6 @@ const MySchedules = () => {
                 }));
             })
             .catch((error) => {
-                console.error("Error fetching schedules:", error);
                 setError(error.message || "Failed to load schedules.");
             })
             .finally(() => {
@@ -79,17 +77,51 @@ const MySchedules = () => {
     };
 
     const formatDateTime = (dateString) => {
-        const date = new Date(dateString);
+        if (!dateString) {
+            return "Unknown date";
+        }
+        
+        // Handle different date formats from API
+        let date;
+        
+        // If it's a number (timestamp), use it directly
+        if (typeof dateString === 'number') {
+            date = new Date(dateString);
+        } else if (typeof dateString === 'string') {
+            // Check if it already has timezone info (ends with Z or has +/- after the time)
+            const hasTimezone = dateString.endsWith('Z') || 
+                              /[+-]\d{2}:\d{2}$/.test(dateString) ||
+                              /[+-]\d{4}$/.test(dateString);
+            
+            if (hasTimezone) {
+                date = new Date(dateString);
+            } else if (dateString.includes('T')) {
+                // ISO format without timezone - treat as UTC by appending Z
+                date = new Date(dateString + 'Z');
+            } else {
+                // Try parsing as-is
+                date = new Date(dateString);
+            }
+        } else {
+            date = new Date(dateString);
+        }
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+            return "Invalid date";
+        }
     
         const formattedDate = date.toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "2-digit",
-            year: "numeric"
+            year: "numeric",
+            timeZone: "UTC"
         });
     
         const formattedTime = date.toLocaleTimeString("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
+            timeZone: "UTC"
         });
     
         return `${formattedDate} at ${formattedTime}`;

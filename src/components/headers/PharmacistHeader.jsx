@@ -21,14 +21,16 @@ const PharmacistHeader = () => {
       {/* Desktop nav */}
       <div className="hidden md:flex items-center gap-[3rem]">
         <NavLink
-          to="/"
+          to="/pharmacist"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
         </NavLink>
 
         <NavLink
-          to="/past-orders"
+          to="/pharmacist/past-orders"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Past Orders
@@ -36,12 +38,14 @@ const PharmacistHeader = () => {
 
         <NavLink
           to="/pharmacist/PrescreptionOrders"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My New Orders
         </NavLink>
         <NavLink
-          to="/receipts"
+          to="/pharmacist/receipts"
+          end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Receipts
@@ -66,28 +70,32 @@ const PharmacistHeader = () => {
         <div className="flex flex-col p-4 gap-3">
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/pharmacist"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Home
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/pharmacist/past-orders"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Past Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/pharmacist/PrescreptionOrders"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My New Orders
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to='/' 
+            to="/pharmacist/receipts"
+            end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           Receipts
