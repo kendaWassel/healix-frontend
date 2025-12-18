@@ -14,10 +14,13 @@ export default function Receipts() {
   const [receipts, setReceipts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const [sendPharmacy, setSendPharmacy] = useState(false);
   const [done, setDone] = useState(false);
+
   const [uploadDisabled, setUploadDisabled] = useState(false);
-  const [selectedReceiptId, setSelectedReceiptId] = useState(null); 
+  const [selectedReceiptId, setSelectedReceiptId] = useState(null);
+  const [sendPharmacyReceiptId, setSendPharmacyReceiptId] = useState(null);
 
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -28,11 +31,10 @@ export default function Receipts() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-
+  /* ================= Fetch Receipts ================= */
   const fetchReceipts = async () => {
     setIsLoading(true);
     setError(null);
-
     const token = localStorage.getItem("token");
 
     try {
@@ -50,28 +52,30 @@ export default function Receipts() {
 
       const data = await response.json();
 
-      if (data.status === "success") {
+      if (data?.status === "success" && Array.isArray(data?.data?.items)) {
         const formatted = data.data.items.map((p) => ({
           id: p.id,
-          Name: p.source === "patient_uploaded" || !p.doctor_name ? "Uploaded by you" : p.doctor_name,
-          Date: new Date(p.issued_at).toLocaleDateString(),
-          type: p.type || (p.image_url ? "image" : "digital"),
-          diagnosis: p.diagnosis,
-          status: p.status,
-          image_url: p.image_url,
-          source: p.source,
+          Name: p.doctor_name || "Uploaded by you",
+          Date: p.issued_at ? new Date(p.issued_at).toLocaleDateString() : "",
+          status: p.status || "N/A",
+          diagnosis: p.diagnosis || "N/A",
+          prescription_image_url: p.prescription_image_url || null,
         }));
+
         setReceipts(formatted);
 
         setPagination((prev) => ({
           ...prev,
-          totalPages: Math.ceil(data.data.meta.total / data.data.meta.per_page),
+          totalPages: Math.ceil(
+            (data.data.meta?.total || 0) / (data.data.meta?.per_page || 1)
+          ),
         }));
       } else {
-        throw new Error("Invalid response format");
+        setReceipts([]);
+        setPagination((prev) => ({ ...prev, totalPages: 1 }));
       }
     } catch (err) {
-      console.error("Failed fetching receipts:", err);
+      console.error(err);
       setError("Failed to load receipts.");
     } finally {
       setIsLoading(false);
@@ -80,9 +84,9 @@ export default function Receipts() {
 
   useEffect(() => {
     fetchReceipts();
-  }, [pagination.currentPage]); 
+  }, [pagination.currentPage]);
 
-  
+  /* ================= Upload ================= */
   const handleUpload = () => {
     setUploadDisabled(true);
     fileInputRef.current.click();
@@ -95,9 +99,7 @@ export default function Receipts() {
       return;
     }
 
-    const imageURL = URL.createObjectURL(file);
     const token = localStorage.getItem("token");
-
     const formData = new FormData();
     formData.append("image", file);
     formData.append("category", "prescription");
@@ -106,29 +108,24 @@ export default function Receipts() {
       setIsLoading(true);
 
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/prescriptions/upload`,
+        "https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/prescriptions/upload",
         {
           method: "POST",
           headers: {
+      
+            "ngrok-skip-browser-warning": "true",
             Authorization: `Bearer ${token}`,
           },
           body: formData,
         }
       );
 
-      if (!response.ok) throw new Error("Upload failed");
-
       const data = await response.json();
 
-      const newReceipt = {
-        id: data.data.prescription_id,
-        Name: "Uploaded Receipt",
-        Date: new Date().toLocaleDateString(),
-        type: "image",
-        local_preview: imageURL,
-      };
-
-      setReceipts((prev) => [...prev, newReceipt]);
+      if (data.status === "success") {
+        const prescriptionId = data.data.prescription_id;
+        fetchReceipts();
+      }
     } catch (err) {
       console.error(err);
       setError("Failed to upload receipt.");
@@ -138,17 +135,26 @@ export default function Receipts() {
       fileInputRef.current.value = "";
     }
   };
+
+  /* ================= Pagination ================= */
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPages) {
-      setPagination((prev) => ({ ...prev, currentPage: prev.currentPage + 1 }));
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: prev.currentPage + 1,
+      }));
     }
   };
 
   const handlePrevPage = () => {
     if (pagination.currentPage > 1) {
-      setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
+      setPagination((prev) => ({
+        ...prev,
+        currentPage: prev.currentPage - 1,
+      }));
     }
   };
+
   return (
     <>
       <PatientHeader />
@@ -184,7 +190,7 @@ export default function Receipts() {
             <div
               key={item.id}
               className={styles.Cardbtn}
-              onClick={() => setSelectedReceiptId(item.id)} 
+              onClick={() => setSelectedReceiptId(item.id)}
             >
               <div className={styles.CardTop}>
                 <div className={styles.DoctorText}>
@@ -197,19 +203,20 @@ export default function Receipts() {
                 className={styles.sendBtn}
                 onClick={(e) => {
                   e.stopPropagation();
+                  setSendPharmacyReceiptId(item.id);
                   setSendPharmacy(true);
                 }}
               >
-                <Send size={16} />
-                Send to Pharmacy
+                <Send size={16} /> Send to Pharmacy
               </button>
             </div>
           ))}
         </div>
 
-      
+        {/* ===== Send To Pharmacy ===== */}
         <SendToPharmacy
           open={sendPharmacy}
+          prescription_id={sendPharmacyReceiptId}
           onClose={() => setSendPharmacy(false)}
           onDone={() => {
             setSendPharmacy(false);
@@ -217,7 +224,7 @@ export default function Receipts() {
           }}
         />
 
-  
+        {/* ===== Done ===== */}
         <YouAreDone
           isOpen={done}
           onHome={() => {
@@ -226,17 +233,17 @@ export default function Receipts() {
           }}
         />
 
-       
+        {/* ===== Receipt Details ===== */}
         {selectedReceiptId && (
           <ReceiptDetails
             open={true}
+            prescription_id={selectedReceiptId}
             onClose={() => setSelectedReceiptId(null)}
-            receiptId={selectedReceiptId}
           />
         )}
       </div>
 
-      {/* Pagination Controls */}
+      {/* ===== Pagination ===== */}
       <div className={styles.paginationControls}>
         <button
           className={styles.pageButton}
