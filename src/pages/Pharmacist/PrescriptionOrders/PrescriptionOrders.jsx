@@ -1,422 +1,467 @@
-import PharmacistHeader from "../../../components/headers/PharmacistHeader"
-import Footer from "../../../components/footer/Footer"
-import receipt from "../../../assets/OIP.jpg"
+import PharmacistHeader from "../../../components/headers/PharmacistHeader";
+import Footer from "../../../components/footer/Footer";
 import { Clock } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { useState,useEffect } from "react";
+export default function PrescriptionOrders() {
 
-const mockData = {
-    prescriptions: [
-        {
-            id: 1,
-            source: " Source: Doctor",
-            patient: "Patient: Fadi",
-            medicines: [
-                { name: "Panadol", dosage: "500mg", boxes: 2,instructions:'twice daily' },
-                { name: "Cetamol", dosage: "500mg", boxes: 1,instructions:'twice daily' }
-            ],
-            total_boxes: 3,
-            notes:'Notes: take after meal',
-            status: "sent to pharmacy",
-            created_at: "27/11/2025 3:40 PM"
-        },
-        {
-            id: 2,
-            source: "Soucre: Doctor",
-            patient: "Patient: Sami",
-            medicines: [
-                { name: "Unadol", dosage: "500mg", boxes: 1 ,instructions:'twice daily'},
-                { name: "Aspirine", dosage: "500mg", boxes: 1 ,instructions:'twice daily'}
-            ],
-            total_boxes: 2,
-            notes:'Notes: take after meal',
-            status: "sent to pharmacy",
-            created_at: "18/10/2025 1:15 PM"
-        },
-        {
-            id: 3,
-            source: "Source: Doctor",
-            patient: "Patient: Alaa",
-            medicines: [
-                { name: "Paractemol", dosage: "500mg", boxes: 2,instructions:'twice daily' },
-                { name: "Grippestop", dosage: "500mg", boxes: 3,instructions:'twice daily' }
-            ],
-            total_boxes: 4,
-            notes:'Notes: take after meal',
-            status: "sent to pharmacy",
-            created_at: "2/9/2025 11:30 PM"
-        },
-        {
-            id: 4,
-            source: "Soucre: patient upload",
-            patient: "Patient: Rola",
-            image_url: receipt,
-            status: "sent to pharmacy",
-            created_at: "20/8/2025 12:20 PM"
-        },
-        {
-          id: 5,
-          source: "Soucre: patient upload",
-          patient: "Patient: Lama",
-          image_url: receipt,
-          status: "sent to pharmacy",
-          created_at: "30/10/2025 9:39 AM"
-      },
-      {
-        id: 6,
-        source: "Soucre: patient upload",
-        patient: "Patient: Kareem",
-        image_url: receipt,
-        status: "sent to pharmacy",
-        created_at: "2/9/2025 6:30 PM"
-    }
-    
-    ]
-};
-export default function PrescreptionOrders(){
-    const [prescriptions,setPrescreption]=useState(mockData.prescriptions)
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(2);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [ShowAcceptPopup,setShowAcceptPopup]=useState(false);
-    const [currentAcceptId,setCurrentAcceptId]=useState(null);
-    const [AcceptValue,setAcceptValue]=useState("");
-    const [selectedItem,setSelectedItem] = useState(null);
-    const [reopenAcceptAfterImage, setReopenAcceptAfterImage] = useState(false);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const itemsPerPage = 6;
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showAcceptPopup, setShowAcceptPopup] = useState(false);
+  const [showRejectPopup,setShowRejectPopup]= useState(false);
 
-    /*const token = localStorage.getItem("token");
-    const fetchPrescreptions = async (pageNumber = 1) => {
- setIsLoading(true);
+  const [RejectReason,setRejectReason]=useState("");
+
+  const [selectedItem, setSelectedItem] = useState(null);
+  
+  const [prices, setPrices] = useState({});
+  const [singlePrice, setSinglePrice] = useState("");
+
+  const [ShowImageInputs,setShowImageInputs]=useState(false);
+  const [dosageName,setdosageName]=useState("");
+
+  const [dosage,setDosage]=useState("")
+
+  const token = localStorage.getItem("token");
+
+    const fetchPrescriptions = async (pageNumber = 1) => {
+    setLoading(true);
     setError(null);
+
     try {
-      const response = await fetch("",
-      {
-        method: "GET",
-        headers:{
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-          "Authorization": `Bearer ${token}`,
-        },
-      }
-    )
-    
-    if (!response.ok) {
-      const serverError = await response.json().catch(() => ({}));
-      throw new Error(serverError.message || "Request failed");
-    }
+      const response = await fetch(
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions?status=sent_to_pharmacy&page=${pageNumber}&per_page=6`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Request failed");
 
       const data = await response.json();
-      console.log("Prescreptions Fetched:",data)
-      if (data.status === "success" && Array.isArray(data.data)) {
-        setOrders(data.data);
-        setPage(pageNumber);
 
-      } else {
-        throw new Error("Invalid response format");
-      }
-    } catch (error) {
-      console.error("Failed fetching prescreptions:", error);
-      setError(error.message || "Failed to load prescreptions.");
+      setPrescriptions(data.data);
+      setPage(data.meta.current_page);
+      setTotalPages(data.meta.last_page);
+
+    } catch (err) {
+      setError("Failed to load prescriptions");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-      fetchPrescreptions();
+    fetchPrescriptions();
   }, []);
-*/
-useEffect(() => {
-  setTotalPages(Math.ceil(prescriptions.length / itemsPerPage));
-}, [prescriptions]);
 
-const displayedItems = prescriptions.slice(
-  (page - 1) * itemsPerPage,
-  page * itemsPerPage
-);
-  const handleNext = () => {
-      if (page < totalPages) fetchPrescreptions(page + 1);
-  };
+  const formatSource = (source) =>
+    source === "doctor" ? "Source: Doctor" : "Source: Patient Upload";
 
-  const handlePrevious = () => {
-      if (page > 1) fetchPrescreptions(page - 1);
-  };
+  const handleAccept = async (order_id) => {
 
-    const handleAccept = async (id) => {
-      console.log("Accepting Order with id :",id )
-        try {
-          const response = await fetch('', {
-            method: "POST", 
-            headers: {
-              "Content-Type": "application/json",
-              "ngrok-skip-browser-warning": "true",
-              "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({ accepted: true }),
-          });
-    
-          const data = await response.json();
-          if (data.status==="success"){
-            setPrescreption((prev) =>
-              prev.map((item) =>
-                item.id === id ? { ...item, status: "accepted" } : item
-              )
-            );
-            setShowAcceptPopup(false);
-            setAcceptValue("");
-          } else {
-            console.error(" Failed to accept order",data.message);
-          }
-        } catch (error) {
-          console.error(" Error accepting order:", error);
-        }
-      };
-      const handleReject = async (id) => {
-        try{
-          const response = await fetch('', {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "ngrok-skip-browser-warning": "true",
-              "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({ rejected: true }),
-          });
-    
-          const data = await response.json();
-    
-          if (data.status === "success") {
-            setPrescreption((prev) =>
-              prev.map((item) =>
-                item.id === id ? { ...item, status: "rejected" } : item
-              )
-            );
-          } else {
-            console.error("Failed to reject order", data.message);
-          }
-        } catch (error) {
-          console.error("Error rejecting order:", error);
-        }
-      }; 
-        
+
+    try {
       
-    return (
-        <>
-          <PharmacistHeader />
-          <div className="p-10 bg-gray-50 min-h-screen">
-            <div className="mb-10 text-left">
-              <h1 className="text-[#0a3460] text-3xl font-bold">Prescription Orders</h1>
-              <p className="text-gray-600 text-lg mt-2">Check your Orders here</p>
-            </div>
-            {isLoading && (
-  <p className="text-center text-gray-500 text-lg font-medium animate-pulse">
-    Loading orders...
-  </p>
-)}
+     const response = await fetch(
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${order_id}/accept`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+       
+        }
+      );
+      
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.message)
+  
+    
 
-{error && (
-  <p className="text-center text-red-500 text-lg font-semibold mt-4">
-    {error}
-  </p>
-)}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
-              {displayedItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white shadow-md rounded-2xl p-5 hover:shadow-xl transition-all duration-300"
-                >
-                 <div className="flex items-start justify-start gap-4">
-                    <div className="flex-1">
-                      <h2 className="text-lg font-semibold text-gray-800">{item.patient}</h2>
-                      <p className="text-sm text-gray-500">{item.source}</p>
-                      <div className="mt-2 text-sm text-gray-600">
-                {item.medicines?(
-                   <ul className="mt-2 text-sm text-gray-600">
-                    {item.medicines.map((med, index) => (
-      <li key={index}>
-        {med.name} - {med.dosage} - {med.boxes} - {med.instructions}
-      </li>
-    ))}
-                    </ul>
-                ): item.image_url &&(
-                  <img
-      src={item.image_url}
-      onClick={() => setSelectedImage(item.image_url)}
-      alt="Prescription"
-      className="w-25 h-25 object-cover rounded-lg mt-2 cursor-pointer hover:opacity-80"
-    />
-                )}
-              </div>
-              <div className="text-sm text-gray-500 font-medium mt-2">
-             {item.notes}
-             </div>
-                      {item.total_boxes && (
-                        <p className="text-sm text-gray-500 font-medium mt-2">
-                          Total Boxes: {item.total_boxes}
-                        </p>
-
-                      )}
-            
-                    </div>
-                    <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() => {
-                        setSelectedItem(item)
-                      setCurrentAcceptId(item.id);
-                      setShowAcceptPopup(true);
-                     
-                       }
-                      }
-                      disabled={item.status === "accepted"}
-                      className={`font-semibold transition duration-300 ease-in-out ${
-                        item.status === "accepted"
-                          ? "text-green-600 cursor-default"
-                          : "text-[#0a3460] hover:text-[#39CCCC]"
-                      }`}
-                    >
-                      {item.status === "accepted" ? "Accepted" : "Accept"}
-                  
-                    </button>
-                    
-                    <button
-                      onClick={() => handleReject(item.id)}
-                      disabled={item.status === "rejected"}
-                      className={`font-semibold transition duration-300 ease-in-out  ${
-                        item.status === "rejected"
-                          ? "text-red-600 cursor-default"
-                          : "text-[#0a3460] hover:text-[#39CCCC]"
-                      }`}
-                    >
-                      {item.status === "rejected" ? "Rejected" : "Reject"}
-                    </button>
-                    </div>
-                  </div>
-                  <hr className="my-4 border-gray-200" />
-                  <div className="flex items-center gap-4 text-gray-700">
-                    <div className="flex items-center gap-2">
-                      <Clock size={18} className="text-[#39CCCC]" /> 
-                     <span className="text-sm">{item.created_at}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-
-                      {item.status}
-                      </div>
-                    
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center items-center gap-4">
-                <button
-                    onClick={handlePrevious}
-                    disabled={page === 1}
-                    className={`px-5 py-2 rounded-lg border text-sm font-medium ${page === 1
-                        ? "text-gray-400 border-gray-300 cursor-pointer"
-                        : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
-                        }`}
-                >
-                    Previous
-                </button>
-
-                <span className="text-gray-700 font-semibold">
-                     {page} of {totalPages}
-                </span>
-
-                <button
-                    onClick={handleNext}
-                    disabled={page === totalPages}
-                    className={`px-5 py-2 rounded-lg border text-sm font-medium ${page === totalPages
-                        ? "text-gray-400 border-gray-300 cursor-pointer"
-                        : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
-                        }`}
-                >
-                    Next
-                </button>
-            </div>
-          </div>
-          {selectedImage && (
-  <div
-   className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50"
-    onClick={() => {
-      setSelectedImage(null)
-      if (reopenAcceptAfterImage) {
-        setShowAcceptPopup(true);     
-        setReopenAcceptAfterImage(false);
+      if (result.data?.status === "accepted") {
+        await sendPrice(order_id);
       }
-    }}
-  >
-    <img
-      src={selectedImage}
-      className="max-w-3xl max-h-[90vh] rounded-lg shadow-lg"
-      onClick={(e) => e.stopPropagation()} 
-    />
-  </div>
-)}
-
-{ShowAcceptPopup && (
-  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
-    <div className="bg-white p-6 rounded-xl w-[400px] shadow-lg">
       
-      <h2 className="text-xl font-semibold text-[#0a3460] mb-4">
-        Medicine Details
-      </h2>
 
-      <div className="mt-2 text-sm text-gray-600 mb-4">
-        {selectedItem.medicines && selectedItem.medicines.length > 0 ? (
-          selectedItem.medicines.map((med, index) => (
-            <p key={index}>{med.name}</p>
-          ))
-        ) : 
-          selectedItem.image_url &&(
-            <img
-src={selectedItem.image_url}
-onClick={(e) => {
-  setShowAcceptPopup(false)
-  setSelectedImage(selectedItem.image_url)
-  setReopenAcceptAfterImage(true);
-}}
-alt="Prescription"
-className="w-25 h-25 object-cover rounded-lg mt-2 cursor-pointer hover:opacity-80"
-/>
-        )}
+      
+      setPrescriptions((prev) =>
+      prev.filter((p) => p.order_id !== order_id)
+    );
+    
+      setShowAcceptPopup(false)
+      setPrices({});
+      setSinglePrice("")
+      setdosageName("")
+      setDosage("")
+
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+
+const sendPrice= async (order_id)=>{
+
+  let items = [];
+  if (selectedItem?.medicines && selectedItem.medicines.length > 0) {
+  
+    items = selectedItem.medicines.map((med, index) => ({
+      medicine_name: med.name ,
+      dosage: med.dosage,
+      price: Number(prices[index]),
+    }));
+  } else {
+   // ${med.dosage}`
+    items = [
+      {
+        medicine_name: dosageName,
+        dosage: dosage ,
+        price: Number(singlePrice),
+      },
+    ];
+  }
+
+  const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${order_id}/add-price`,
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+  },
+  body: JSON.stringify({items}),
+  }
+)
+const result = await response.json();
+if(!response.ok) {
+ throw new Error(result.message||"Failed to add price") 
+}
+ alert("Medicine Prices Added successfully")
+}
+
+
+
+
+  const handleReject = async (order_id) => {
+    if(!RejectReason){
+      alert("please enter your rejection reason")
+      return;
+    }
+    try {
+    const response=  await fetch(
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${order_id}/reject`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+          body:JSON.stringify({reason:RejectReason})
+        }
+      );
+      const result = await response.json();
+
+      if (!response.ok || result.status !== "success") {
+        throw new Error(result.message || "Reject failed");
+      }
+      const rejectedId = result.data.order_id;
+
+      
+      setPrescriptions((prev) =>
+        prev.filter((p) => p.order_id !== rejectedId)
+      );
+      setRejectReason('');
+      setShowRejectPopup(false);
+    
+
+      
+    } catch (err){
+      alert(err.message);
+    }
+  };
+
+  
+  const isSaveDisabled = () => {
+    // حالة medicines
+    if (selectedItem?.medicines && selectedItem.medicines.length > 0) {
+      if (Object.keys(prices).length !== selectedItem.medicines.length) return true;
+  
+      return Object.values(prices).some(
+        (price) => !price || Number(price) <= 0
+      );
+    }
+  
+    // حالة صورة
+    if (ShowImageInputs) {
+      return !singlePrice || Number(singlePrice) <= 0 || !dosageName.trim();
+    }
+  
+    return true; // قبل إدخال أي شيء
+
+
+  };
+  
+  return (
+    <>
+      <PharmacistHeader />
+
+      <div className="p-10 bg-gray-50 min-h-screen">
+
+        <h1 className="text-3xl font-bold text-[#0a3460] mb-2">
+          Prescription Orders
+        </h1>
+
+        {loading && <p className="text-center">Loading...</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          {prescriptions.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white p-5 rounded-xl shadow"
+            >
+
+              <h2 className="font-semibold">{item.patient}</h2>
+              <p className="text-sm text-gray-500">
+                {formatSource(item.source)}
+              </p>
+
+              {item.medicines ? (
+                <ul className="mt-2 text-sm">
+                  {item.medicines.map((m, i) => (
+                    <li key={i}>
+                      {m.name} - {m.dosage} x {m.boxes}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <img
+                  src={item.image_url}
+                  className="w-24 mt-3 rounded cursor-pointer"
+                  onClick={() => setSelectedImage(item.image_url)}
+                />
+              )}
+
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={() => {
+                    setSelectedItem(item);
+                    setPrices({})
+                    setSinglePrice('')
+                    setShowAcceptPopup(true)
+                    setdosageName('')
+                    setShowImageInputs(false)
+                    setDosage('')
+                  }}
+                 
+                  className="text-green-600 font-semibold"
+                >
+                  Accept
+                </button>
+
+                <button
+                  onClick={() => { 
+                   setSelectedItem(item)
+                  setShowRejectPopup(true);
+                  setRejectReason('')
+                  } 
+                }
+             
+                  className="text-red-600 font-semibold disabled:opacity-50"
+                >
+                  Reject
+                </button>
+              </div>
+          
+              <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
+                <Clock size={16} />
+                {new Date(item.created_at).toLocaleString()}
+              </div>
+            </div>
+          ))}
+
+        </div>
+
+        <div className="flex justify-center gap-4 mt-8 ">
+          <button
+            onClick={() => fetchPrescriptions(page - 1)}
+            disabled={page === 1}
+            className={`px-5 py-2 rounded-lg border text-sm font-medium ${
+              page === 1
+                ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] transition-all duration-300"
+            }`}
+          >
+            Previous
+          </button>
+
+          <span>{page} / {totalPages}</span>
+
+          <button
+            onClick={() => fetchPrescriptions(page + 1)}
+            disabled={page === totalPages}
+            className={`px-5 py-2 rounded-lg border text-sm font-medium ${
+              page === totalPages
+                  ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                  : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] transition-all duration-300"
+          }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black/40 flex justify-center items-center"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img src={selectedImage} className="max-h-[90vh] rounded" />
+        </div>
+      )}
+
+      {showAcceptPopup && selectedItem && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
+          <div className="bg-white p-6 rounded w-[400px]">
+    
+            
+
+
+    {selectedItem.medicines && selectedItem.medicines.length > 0 ? (
+      <>
+            <h2 className="font-semibold mb-4">Enter Price</h2>
+      {selectedItem.medicines.map((med, index) => (
+      <div key={index} className="mb-3">
+      <label className="block text-sm font-medium mb-1">
+
+        {med.name} ({med.dosage})
+        </label>
+      
+         <input
+        type="number"
+        min='1'
+        placeholder="Enter price"
+        value={prices[index] || ""}
+        onChange={(e) =>
+          setPrices((prev) => ({
+            ...prev,
+            [index]: e.target.value,
+          }))
+        }
+        className="border w-full p-2 rounded"
+      />
+   
+       </div>
+       ))} </>
+      ) : (
+        <>
+        {!ShowImageInputs && (
+          <button type="button"
+           onClick={()=>setShowImageInputs(true)}
+           className="text-[#39CCCC] font-semibold mb-3"
+           >
+            Add Dosage Name
+             </button>
+        )}
+       
+     {ShowImageInputs&& (
+      <> 
+      <input
+       type="text"
+      placeholder="Add Dosage Name"
+      value={dosageName}
+      onChange={(e)=>setdosageName(e.target.value)}
+      className="border w-full p-2 rounded mb-2"
+      />
+      <input
+      type="text"
+      placeholder="Ad Dosage"
+      value={dosage}
+      onChange={(e)=>setDosage(e.target.value)}
+      className="border w-full p-2 rounded mb-2"
+      />
+      <input
+      type="number"
+      min='1'
+      placeholder="Add price"
+      value={singlePrice}
+      onChange={(e)=>setSinglePrice(e.target.value)}
+      className="border w-full p-2 rounded"
+      />
+      </>
+     )}
+     </>
+      )}
+    
  
-      <input 
-        type="text"
-        value={AcceptValue}
-        onChange={(e)=>setAcceptValue(e.target.value)}
-        placeholder="Enter The Price ..."
-        className="w-full border px-3 py-2 rounded-lg mb-4 focus:ring-2 focus:ring-[#39CCCC]"
+            <div className="flex justify-end gap-3 mt-4">
+              <button
+                onClick={() => handleAccept(selectedItem.order_id)}
+                className={`px-4 py-2 rounded text-white ${
+                  isSaveDisabled()
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#39CCCC] hover:bg-[#2bb3b3] transition-colors duration-300"
+                }`}
+                disabled={isSaveDisabled()}
+              >
+                Save
+              </button>
+
+              <button
+                onClick={() => setShowAcceptPopup(false)}
+              >
+                Cancel
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+      {showRejectPopup && selectedItem && (
+  <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
+    <div className="bg-white p-6 rounded w-[400px]">
+      <h2 className="font-semibold mb-4">Reject Reason</h2>
+
+      <textarea
+        value={RejectReason}
+        onChange={(e) => setRejectReason(e.target.value)}
+        className="border w-full p-2 rounded"
+        placeholder="Medicine not available..."
       />
 
-      
-      <div className="flex justify-end gap-3">
+      <div className="flex justify-end gap-3 mt-4">
         <button
-          onClick={() => handleAccept(currentAcceptId, AcceptValue)}
-          className="px-4 py-2 bg-[#39CCCC] text-white rounded-lg font-medium hover:bg-[#2fa8a8] transition"
+          onClick={()=>handleReject(selectedItem.order_id)}
+          className="bg-red-600 px-4 py-2 text-white rounded"
         >
-          Save
+          Reject
         </button>
 
         <button
-          onClick={() => {
-            setShowAcceptPopup(false)
-            setAcceptValue("");
-           }}
-          className="px-4 py-2 bg-gray-300 rounded-lg font-medium hover:bg-gray-400 transition"
+          onClick={() => setShowRejectPopup(false)}
         >
           Cancel
         </button>
       </div>
-
     </div>
   </div>
 )}
-</>
-    )  
-  }
+
+      <Footer />
+    </>
+  );
+}

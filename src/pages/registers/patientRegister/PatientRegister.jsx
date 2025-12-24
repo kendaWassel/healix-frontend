@@ -25,6 +25,7 @@ export default function PatientRegister() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
+
   useEffect(() => {
     document.title = "Patient Account Setup";
   }, []);
@@ -100,6 +101,7 @@ export default function PatientRegister() {
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
+       
           },
           body: JSON.stringify(user),
         });
