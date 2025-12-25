@@ -127,7 +127,7 @@ export default function ScheduleLaterModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] z-50 ">
       <div className="bg-white rounded-2xl shadow-lg p-6 w-[95%] max-w-xl">
         <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">
           Schedule for later
@@ -161,7 +161,7 @@ export default function ScheduleLaterModal({
             (times.length > 0 ? (
               <div>
                 <p className="text-sm text-gray-700 mb-2">Available times</p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto">
                   {times.map((time, idx) => (
                     <button
                       key={`${time}-${idx}`}

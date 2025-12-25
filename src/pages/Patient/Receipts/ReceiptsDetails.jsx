@@ -29,7 +29,7 @@ const ReceiptDetails = ({ open, onClose, prescription_id }) => {
         );
 
         const data = await response.json();
-
+console.log('receipt details: ',data)
         if (data.status === "success") {
           setReceipt(data.data);
         } else {
@@ -60,10 +60,8 @@ const ReceiptDetails = ({ open, onClose, prescription_id }) => {
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
 
-      {/* ===== CONTENT ===== */}
       {receipt && (
         <div className="overflow-y-auto max-h-[55vh] pr-2 space-y-4">
-          {/* ===== CASE 1: IMAGE PRESCRIPTION ===== */}
           {receipt.prescription_image_url ? (
             <div className="flex flex-col items-center gap-4">
               <img

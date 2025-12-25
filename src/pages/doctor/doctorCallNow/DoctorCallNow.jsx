@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Phone } from "lucide-react";
 import DoctorEndCallModal from "./DoctorEndCallModal";
-import BookingDone from "../../Patient/DoctorConsultation/Booking/BookingDone";
+import DoneModal from "../../Patient/DoctorConsultation/Booking/DoneModal";
 
 export default function DoctorCallNow({ isOpen, onClose, patientId, consultationId ,patient_phone}) {
   const [isCalling, setIsCalling] = useState(false);
@@ -158,7 +158,7 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
         patientId={patientId}
         onEndSuccess={handleEndCallSuccess}
       />
-      <BookingDone
+      <DoneModal
         isOpen={showConsDone}
         onHome={() => {
           setShowConsDone(false);

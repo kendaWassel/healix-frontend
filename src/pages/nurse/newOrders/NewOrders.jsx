@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Clock,MapPin } from "lucide-react";
 import NurseHeader from "../../../components/headers/NurseHeader";
 import Footer from "../../../components/footer/Footer";
 
 const NewOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [acceptingOrderId, setAcceptingOrderId] = useState(null);
   const [error, setError] = useState(null);
   const [current_page, setPage] = useState(1);
   const [total, setTotal] = useState(2);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("Order Accepted Successfully");
 
   // بيانات افتراضية
   /*
@@ -137,6 +140,7 @@ const NewOrders = () => {
     if (current_page > 1) fetchOrders(current_page - 1);
   };
   const handleAccept = async (id) => {
+    setAcceptingOrderId(id);
     try {
       const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/nurse/orders/${id}/accept`, {
         method: "POST", 
@@ -145,21 +149,26 @@ const NewOrders = () => {
           "ngrok-skip-browser-warning": "true",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ accepted: true }),
       });
 
       const data = await response.json();
       if (data.status==="success"){
-        setOrders((prev) =>
-          prev.map((item) =>
-            item.id === id ? { ...item, status: "accepted" } : item
-          )
-        );
+        // Show modal with message from response
+        setModalMessage(data.message);
+        setIsModalOpen(true);
+        // Trigger refetch
+        fetchOrders();
       } else {
         console.error(" Failed to accept order",data.message);
+        setModalMessage(data.message || "Failed to accept order");
+        setIsModalOpen(true);
       }
     } catch (error) {
       console.error(" Error accepting order:", error);
+      setModalMessage("Error accepting order. Please try again.");
+      setIsModalOpen(true);
+    } finally {
+      setAcceptingOrderId(null);
     }
   };
   return (
@@ -191,32 +200,35 @@ const NewOrders = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="text-xl font-semibold text-[var(--dark-blue)]">
                   {item.patient_name}
                 </h2>
-                <p className="text-sm text-gray-500">{item.service}</p>
-                <p className="text-sm text-gray-500 font-medium mt-[1rem]">{item.address}</p>
+                <div className="flex items-center gap-2">
+                <p className="text-md my-5">Service:</p>
+                <span className="text-[var(--text-color)] font-medium">{item.service}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[var(--dark-blue)] text-[13px] font-medium mt-2">
+                <MapPin size={16} />
+                  {item.address}
+                </div>
               </div>
               <button
                 onClick={() => handleAccept(item.id)}
-                disabled={item.status === "accepted"}
-                className={`font-semibold transition duration-300 ease-in-out ${
-                  item.status === "accepted"
-                    ? "text-green-600 cursor-default"
-                    : "text-[#0a3460] hover:text-[#39CCCC]"
-                }`}
+                disabled={acceptingOrderId === item.id}
+                className={`font-semibold transition duration-300 ease-in-out text-green-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
               >
-                {item.status === "accepted" ? "Accepted" : "Accept"}
+                {acceptingOrderId === item.id ? "Accepting" : "Accept"}
               </button>
             </div>
 
             <hr className="my-4 border-gray-200" />
 
-            <div className="flex items-center gap-4 text-gray-700">
+            <div className="flex items-center justify-between gap-4 text-gray-700">
               <div className="flex items-center gap-2">
                 <Clock size={18} className="text-[#39CCCC]" />
                 <span className="text-sm">{new Date(item.scheduled_at).toLocaleString()}</span>
               </div>
+              <span>{item.status}</span>
             </div>
           </div>
         ))}
@@ -253,6 +265,22 @@ const NewOrders = () => {
       </div>
     </div>
     <Footer/>
+    {isModalOpen && (
+      <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] backdrop-blur-sm z-50">
+        <div className="bg-white rounded-2xl shadow-lg p-8 w-[90%] max-w-md text-center animate-fadeIn border border-gray-100">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            {modalMessage}
+          </h2>
+
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="w-full py-3 bg-[#001f3f] hover:bg-[#001634] text-white font-medium rounded-lg transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    )}
     </>
   );
 };

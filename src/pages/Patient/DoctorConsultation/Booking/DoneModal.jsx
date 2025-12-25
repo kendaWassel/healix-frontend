@@ -2,9 +2,9 @@ import React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import styles from "./BookingDone.module.css";
+import styles from "./DoneModal.module.css";
 
-export default function BookingDone({ isOpen, onClose, onHome, message = "You Are Done" }) {
+export default function DoneModal({ isOpen, onClose, onHome, message = "You Are Done" }) {
   if (!isOpen) return null;
 
 
@@ -45,7 +45,7 @@ export default function BookingDone({ isOpen, onClose, onHome, message = "You Ar
         >
           Go to Home Screen
         </button>
-         {/* <BookingDone isOpen={open} onClose={() => setOpen(false)} /> */}
+         {/* <DoneModal isOpen={open} onClose={() => setOpen(false)} /> */}
       </div>
     </div>
   );

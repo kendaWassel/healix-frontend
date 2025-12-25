@@ -59,8 +59,10 @@ import { Link,useNavigate } from "react-router-dom";
           navigate('/doctor');
         else if(data.role === "pharmacist")
           navigate('/pharmacist');
-        else if(data.role === "careprovider")
-          navigate('/careprovider');
+        else if(data.role === "nurse")
+          navigate('/nurse');
+        else if(data.role === "physio")
+          navigate('/physio');
         else{
           navigate('/delivery');
         }

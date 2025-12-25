@@ -7,13 +7,14 @@ import {
     faChevronLeft,
     faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link,useParams } from "react-router-dom";
+import { Link,useParams,useNavigate } from "react-router-dom";
 import BookingOption from "../Booking/BookingOption";
-import BookingDone from "../Booking/BookingDone";
+import DoneModal from "../Booking/DoneModal";
 import ScheduleLaterModal from "../Booking/ScheduleLaterModal";
 import PatientCallNowModal from "../Booking/PatientCallNowModal";
 const PickDoctor = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [openPickOption, setOpenPickOption] = useState(false);
   const [openModalDone, setOpenModalDone] = useState(false);
       const [openScheduleLater, setOpenScheduleLater] = useState(false);
@@ -207,7 +208,7 @@ const PickDoctor = () => {
       
         const handleGoHome = () => {
           setOpenModalDone(false);
-          // navigate("/patient"); 
+          navigate("/patient"); 
         };
         
         //   useEffect(() => {
@@ -308,7 +309,7 @@ const PickDoctor = () => {
           setTimeout(() => setOpenModalDone(true), 300);
         }}
       />
-      <BookingDone
+      <DoneModal
         isOpen={openModalDone}
         onHome={handleGoHome}
         message="Booking done"
