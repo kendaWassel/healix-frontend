@@ -186,8 +186,8 @@ const Appointments = () => {
                         disabled={page === 1}
                         className={`px-5 py-2 rounded-lg border text-sm font-medium ${
                             page === 1
-                             ? "text-gray-400 border-gray-300 cursor-pointer"
-                                : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                             ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                                : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] transition-all duration-300"
                         }`}
                     >
                         Previous
@@ -203,7 +203,7 @@ const Appointments = () => {
                         className={`px-5 py-2 rounded-lg border text-sm font-medium ${
                             page === totalPages
                                 ? "text-gray-400 border-gray-300 cursor-pointer"
-                                : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                                : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] transition-all duration-300"
                         }`}
                     >
                         Next
