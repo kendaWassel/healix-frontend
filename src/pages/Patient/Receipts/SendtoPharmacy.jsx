@@ -22,6 +22,7 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
     total: 0,
   });
 
+
   const CITY = "Damascus";
   const ITEMS_PER_PAGE = 10;
 
@@ -46,7 +47,7 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
         );
 
         const data = await response.json();
-
+        console.log('pharmacies: ',data);
         if (data.status === "success" && Array.isArray(data.data)) {
           setPharmacies(data.data);
           if (data.meta) {
@@ -184,30 +185,27 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
                   <div className="bg-[#39CCCC] w-8 h-8 rounded-xl flex items-center justify-center">
                     <Hospital size={20} className="text-white" />
                   </div>
-
-
-
-                  {p.name || "N/A"}
+                  {p.name || "Unknown"}
                 </h2>
-                <p className="text-gray-600 text-sm">
-                  {p.address || "N/A"}, {p.area || "N/A"}
+                <p className="text-gray-800 text-sm my-1">
+                  {p.city || "Unknown"}
                 </p>
                 <div className="flex items-center gap-2 text-gray-600 text-sm mt-1">
-                  <Phone size={14} /> {p.phone || "N/A"}
+                  <Phone size={14} /> {p.phone || "Unknown"}
                 </div>
               </div>
 
               <div className="flex items-center gap-1 text-[#0A2A4A] font-semibold text-sm">
-                <Star size={16} /> {p.rating ?? "N/A"}
+                <Star size={16} /> {p.rating ?? "Unknown"}
               </div>
             </div>
 
             <div className="flex gap-6 mt-4 text-gray-600 text-sm">
               <div className="flex items-center gap-1">
-                <Clock size={16} /> {p.from || "N/A"} - {p.to || "N/A"}
+                <Clock size={16} /> {p.from || "Unknown"} - {p.to || "Unknown"}
               </div>
               <div className="flex items-center gap-1">
-                <MapPin size={16} /> {p.city || "N/A"}
+                <MapPin size={16} /> {p.address || "Unknown"}
               </div>
               {p.open_now !== undefined && (
                 <div

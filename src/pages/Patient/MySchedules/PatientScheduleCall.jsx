@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Phone } from "lucide-react";
 import PatientEndCallModal from "../DoctorConsultation/Booking/PatientEndCallModal";
 import RatingModal from "../DoctorConsultation/Booking/RatingModal";
-import BookingDone from "../DoctorConsultation/Booking/BookingDone";
+import DoneModal from "../DoctorConsultation/Booking/DoneModal";
 
 export default function PatientScheduleCall({ isOpen, onClose, consultationId, doctorId, doctorPhone }) {
   const [isCalling, setIsCalling] = useState(false);
@@ -171,7 +171,7 @@ export default function PatientScheduleCall({ isOpen, onClose, consultationId, d
         doctor_id={doctorId}
         onRatingSuccess={handleRatingSuccess}
       />
-      <BookingDone
+      <DoneModal
         isOpen={showBookingDone}
         onHome={() => {
           setShowBookingDone(false);

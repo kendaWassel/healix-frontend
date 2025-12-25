@@ -3,7 +3,7 @@ import Footer from "../../../components/footer/Footer";
 import { Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function PrescriptionOrders() {
+export default function NewOrders() {
 
   const [prescriptions, setPrescriptions] = useState([]);
   const [page, setPage] = useState(1);
@@ -48,7 +48,7 @@ export default function PrescriptionOrders() {
       if (!response.ok) throw new Error("Request failed");
 
       const data = await response.json();
-
+console.log('prescriptions: ',data);
       setPrescriptions(data.data);
       setPage(data.meta.current_page);
       setTotalPages(data.meta.last_page);
@@ -224,9 +224,9 @@ if(!response.ok) {
           Prescription Orders
         </h1>
 
-        {loading && <p className="text-center">Loading...</p>}
+        {loading && <p className="text-center text-lg my-5">Loading...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
-
+{prescriptions.length > 0 ? 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
           {prescriptions.map((item) => (
@@ -292,10 +292,14 @@ if(!response.ok) {
                 {new Date(item.created_at).toLocaleString()}
               </div>
             </div>
-          ))}
+          ))
+        }
 
         </div>
-
+        :
+        !loading && 
+          <p className="text-center text-lg my-5">No Receipts Found</p>
+      }
         <div className="flex justify-center gap-4 mt-8 ">
           <button
             onClick={() => fetchPrescriptions(page - 1)}

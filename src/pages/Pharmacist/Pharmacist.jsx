@@ -1,5 +1,5 @@
 import PharmacistHomePage from "./PharmacistHomePage/pharmacisthomepage";
-import PrescreptionOrders from "./PrescriptionOrders/PrescriptionOrders";
+import NewOrders from "./NewOrders/NewOrders";
 import MyOrders from "./MyOrders/MyOrders"
 import { Routes,Route } from "react-router-dom";
 
@@ -8,7 +8,7 @@ const  Pharmacist=()=>{
         <>
         <Routes>
 <Route index element={<PharmacistHomePage/>}/>
-<Route path="PrescreptionOrders" element={<PrescreptionOrders/>}/>
+<Route path="NewOrders" element={<NewOrders/>}/>
 <Route path="MyOrders" element={<MyOrders />} />
         </Routes>
         </>

@@ -1,4 +1,3 @@
-import styles from "./Receipts.module.css";
 import PatientHeader from "../../../components/headers/PatientHeader";
 import { Send } from "lucide-react";
 import SendToPharmacy from "./SendtoPharmacy";
@@ -9,11 +8,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./Receipts.module.css";
 
 export default function Receipts() {
   const [receipts, setReceipts] = useState([]);
+  const [pharmacistReceipts, setPharmacistReceipts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPharmacist, setIsLoadingPharmacist] = useState(false);
   const [error, setError] = useState(null);
+  const [errorPharmacist, setErrorPharmacist] = useState(null);
 
   const [sendPharmacy, setSendPharmacy] = useState(false);
   const [done, setDone] = useState(false);
@@ -24,15 +27,20 @@ export default function Receipts() {
 
   const [pagination, setPagination] = useState({
     currentPage: 1,
-    itemsPerPage: 6,
+    itemsPerPage: 3,
+    totalPages: 1,
+  });
+
+  const [pharmacistPagination, setPharmacistPagination] = useState({
+    currentPage: 1,
+    itemsPerPage: 3,
     totalPages: 1,
   });
 
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-  /* ================= Fetch Receipts ================= */
-  const fetchReceipts = async () => {
+  const fetchMyReceipts = async () => {
     setIsLoading(true);
     setError(null);
     const token = localStorage.getItem("token");
@@ -51,7 +59,7 @@ export default function Receipts() {
       );
 
       const data = await response.json();
-
+console.log('my reciepts: ',data);
       if (data?.status === "success" && Array.isArray(data?.data?.items)) {
         const formatted = data.data.items.map((p) => ({
           id: p.id,
@@ -82,11 +90,72 @@ export default function Receipts() {
     }
   };
 
+  const fetchPharmacistReceipts = async () => {
+    setIsLoadingPharmacist(true);
+    setErrorPharmacist(null);
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/view-prescriptions-with-pricing?page=${pharmacistPagination.currentPage}&per_page=${pharmacistPagination.itemsPerPage}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      console.log('pharmacist receipts: ', data);
+      
+      // Handle response structure: {data: [...], meta: {...}} or {status: "success", data: [...], meta: {...}}
+      const receiptData = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+      const meta = data?.meta || data.meta;
+      
+      if (Array.isArray(receiptData)) {
+        const formatted = receiptData.map((p) => ({
+          id: p.prescription_id,
+          name: p.pharmacy?.name || "Unknown Pharmacy",
+          source: p.source || "Unknown",
+          date: p.priced_at ? new Date(p.priced_at).toLocaleDateString() : "",
+          status: p.status || "Unknown",
+          pharmacy: p.pharmacy,
+          items: p.items || [],
+          total_quantity: p.total_quantity || 0,
+          total_price: p.total_price || 0,
+        }));
+
+        setPharmacistReceipts(formatted);
+
+        setPharmacistPagination((prev) => ({
+          ...prev,
+          totalPages: Math.ceil(
+            (meta?.total_pages || 0) / (meta?.per_page || 1)
+          ),
+        }));
+      } else {
+        setPharmacistReceipts([]);
+        setPharmacistPagination((prev) => ({ ...prev, totalPages: 1 }));
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorPharmacist("Failed to load pharmacist receipts.");
+    } finally {
+      setIsLoadingPharmacist(false);
+    }
+  };
+
   useEffect(() => {
-    fetchReceipts();
+    fetchMyReceipts();
   }, [pagination.currentPage]);
 
-  /* ================= Upload ================= */
+  useEffect(() => {
+    fetchPharmacistReceipts();
+  }, [pharmacistPagination.currentPage]);
+
   const handleUpload = () => {
     setUploadDisabled(true);
     fileInputRef.current.click();
@@ -124,7 +193,7 @@ export default function Receipts() {
 
       if (data.status === "success") {
         const prescriptionId = data.data.prescription_id;
-        fetchReceipts();
+        fetchMyReceipts();
       }
     } catch (err) {
       console.error(err);
@@ -136,7 +205,6 @@ export default function Receipts() {
     }
   };
 
-  /* ================= Pagination ================= */
   const handleNextPage = () => {
     if (pagination.currentPage < pagination.totalPages) {
       setPagination((prev) => ({
@@ -155,11 +223,96 @@ export default function Receipts() {
     }
   };
 
+  const handlePharmacistNextPage = () => {
+    if (pharmacistPagination.currentPage < pharmacistPagination.totalPages) {
+      setPharmacistPagination((prev) => ({
+        ...prev,
+        currentPage: prev.currentPage + 1,
+      }));
+    }
+  };
+
+  const handlePharmacistPrevPage = () => {
+    if (pharmacistPagination.currentPage > 1) {
+      setPharmacistPagination((prev) => ({
+        ...prev,
+        currentPage: prev.currentPage - 1,
+      }));
+    }
+  };
+
   return (
     <>
       <PatientHeader />
-
+      <div className="ph-receipts">
       <div className={styles.CardContainer}>
+        <div className={styles.CardHeader}>
+          <h1>Receipts from pharmacist</h1>
+
+          <p className="mt-[1rem_!important]">Check Your accepted receipts</p>
+        </div>
+
+        {isLoadingPharmacist && <p className={styles.loading}>Loading...</p>}
+        {errorPharmacist && <p className={styles.error}>{errorPharmacist}</p>}
+
+        <div className={styles.CardsWrapper}>
+          {pharmacistReceipts.map((item) => (
+            <div
+              key={item.id}
+              className={styles.Cardbtn}
+            >
+                <div className={styles.DoctorText}>
+                  <h3 className="text-[22px]">{item.name}</h3>
+                  <p className="font-medium my-2 text-[var(--cyan)]">Source: {item.source}</p>
+                  {item.items && item.items.length > 0 && (
+                    <div className="border-b py-3">
+                      <h4 className="text-[19px] font-medium">Medicines:</h4>
+                      <div className="my-1">
+                        {item.items.map((medicine, index) => (
+                          <div key={index} className="flex justify-between items-center text-sm">
+                            <div className="flex-1 my-1">
+                              <p className="font-medium">{medicine.medicine_name}</p>
+                              <p className="text-gray-500">Quantity: {medicine.quantity}</p>
+                            </div>
+                            <p className="font-semibold text-[var(--text-color)]">${medicine.price?.toFixed(2) || '0.00'}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-sm text-gray-600 font-semibold">Total: ${item.total_price.toFixed(2)}</p>
+                    <p className="text-sm text-[var(--text-color)] font-semibold">{item.date}</p>
+                  </div>
+                </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className={styles.paginationControls}>
+        <button
+          className={styles.pageButton}
+          onClick={handlePharmacistPrevPage}
+          disabled={pharmacistPagination.currentPage === 1}
+        >
+          <FontAwesomeIcon icon={faChevronLeft} /> Prev
+        </button>
+
+        <span className={styles.pageInfo}>
+          {pharmacistPagination.currentPage} of {pharmacistPagination.totalPages}
+        </span>
+
+        <button
+          className={styles.pageButton}
+          onClick={handlePharmacistNextPage}
+          disabled={pharmacistPagination.currentPage === pharmacistPagination.totalPages}
+        >
+          Next <FontAwesomeIcon icon={faChevronRight} />
+        </button>
+      </div>
+    </div>
+    <div className="my-receipts">
+      <div className={`${styles.CardContainer} pt-[0_!important]`}>
         <div className={styles.CardHeader}>
           <h1>My Receipts</h1>
 
@@ -189,7 +342,7 @@ export default function Receipts() {
           {receipts.map((item) => (
             <div
               key={item.id}
-              className={styles.Cardbtn}
+              className={`${styles.Cardbtn} cursor-pointer`}
               onClick={() => setSelectedReceiptId(item.id)}
             >
               <div className={styles.CardTop}>
@@ -198,7 +351,7 @@ export default function Receipts() {
                   <p>{item.Date}</p>
                 </div>
               </div>
-
+{item.status === "created" ? 
               <button
                 className={styles.sendBtn}
                 onClick={(e) => {
@@ -209,11 +362,15 @@ export default function Receipts() {
               >
                 <Send size={16} /> Send to Pharmacy
               </button>
+              :
+              <h3 className="mt-3 bg-[var(--card-border)] w-[fit-content] p-1 rounded-[12px] cursor-default">
+                Sent
+              </h3>
+}
             </div>
           ))}
         </div>
 
-        {/* ===== Send To Pharmacy ===== */}
         <SendToPharmacy
           open={sendPharmacy}
           prescription_id={sendPharmacyReceiptId}
@@ -224,7 +381,6 @@ export default function Receipts() {
           }}
         />
 
-        {/* ===== Done ===== */}
         <YouAreDone
           isOpen={done}
           onHome={() => {
@@ -233,7 +389,6 @@ export default function Receipts() {
           }}
         />
 
-        {/* ===== Receipt Details ===== */}
         {selectedReceiptId && (
           <ReceiptDetails
             open={true}
@@ -243,7 +398,6 @@ export default function Receipts() {
         )}
       </div>
 
-      {/* ===== Pagination ===== */}
       <div className={styles.paginationControls}>
         <button
           className={styles.pageButton}
@@ -265,6 +419,7 @@ export default function Receipts() {
           Next <FontAwesomeIcon icon={faChevronRight} />
         </button>
       </div>
+    </div>
 
       <Footer />
     </>

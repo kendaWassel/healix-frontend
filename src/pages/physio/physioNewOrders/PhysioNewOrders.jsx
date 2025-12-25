@@ -197,8 +197,8 @@ const PhysioNewOrders = () => {
                 <h2 className="text-lg font-semibold text-gray-800">
                   {item.patient_name}
                 </h2>
-                <p className="text-sm text-gray-500">{item.service}</p>
-                <p className="text-sm text-gray-500 font-medium mt-[1rem]">{item.address}</p>
+                <p className="text-sm text-gray-500 me-[1rem]">{item.address}</p>
+                <p className="text-sm text-gray-500 font-medium mt-[1rem]">{item.reason}</p>
               </div>
               <button
                 onClick={() => handleAccept(item.id)}

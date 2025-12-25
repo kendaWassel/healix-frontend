@@ -3,6 +3,10 @@ import { Phone, Clock, DollarSign } from "lucide-react";
 import Footer from "../../../components/footer/Footer";
 import PatientHeader from "../../../components/headers/PatientHeader";
 import PatientScheduleCall from "./PatientScheduleCall";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faStar
+} from "@fortawesome/free-solid-svg-icons";
 
 const MySchedules = () => {
     const [schedules, setSchedules] = useState([]);
@@ -46,7 +50,7 @@ const MySchedules = () => {
             })
             .then((data) => {
                 setSchedules(data.data);
-
+console.log('schedules: ',data);
                 // Update pagination from API response
                 const totalItems = data.meta?.total || data.total || schedules.length;
                 const totalPages = Math.ceil(totalItems / (perPage || 3));
@@ -139,13 +143,109 @@ const MySchedules = () => {
     return (
          <>
          <PatientHeader />
-        <div className="p-10 bg-gray-50 min-h-screen">
+        <div className="doctor-schedules px-10 pt-[2rem] pb-0 bg-gray-50">
             <div className="mb-10 text-left">
-                <h1 className="text-[#0a3460] text-3xl font-bold">My Schedules</h1>
+                <h1 className="text-[#0a3460] text-3xl font-bold">Doctor Schedules</h1>
                 <p className="text-gray-600 text-lg mt-2">Check your Schedules here</p>
             </div>
             {error && <p className="text-center text-red-600 mb-4">{error}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+                {schedules && schedules.length > 0 ? schedules.map((schedule) => (
+                    <div
+                        key={schedule.id}
+                        className="bg-white shadow-md rounded-[10px] p-5 hover:shadow-xl transition-all duration-300 border-[1px] border-[var(--card-border)]"
+                    >
+                        <div className="flex items-center justify-between pb-[1rem] mb-[1rem] border-b-[2px] border-[var(--card-border)]">
+                            <div className="flex items-start gap-4">
+                            <img
+    src={fixImageUrl(schedule.doctor_image)}
+    alt="doctor's photo"
+    className="w-[40px] h-[40px] rounded-full object-cover border border-blue-400"
+/>
 
+                                <div>
+                                    <h2 className="text-lg font-semibold text-gray-800">{schedule.doctor_name}</h2>
+                                    <p className="text-sm text-gray-500 font-medium">{schedule.specialization}</p>
+                                </div>
+                            </div>
+{schedule.status != "completed" ? 
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setSelectedConsultationId(schedule.consultation_id || schedule.id);
+                                    setSelectedDoctorId(schedule.doctor_id);
+                                    setSelectedDoctorPhone(schedule.doctor_phone);
+                                    setShowCallModal(true);
+                                }}
+                                className="flex items-center gap-2 bg-[#ecf8f6] text-[#0a3460] px-3 py-2 rounded-xl hover:bg-[#39cccc97] transition"
+                            >
+                                <Phone size={18} className="text-[#39CCCC]" />
+                                <span>Call</span>
+                            </button>
+                            :
+<></>
+}
+                        </div>
+<div className="flex justify-between items-center mb-[1rem]">
+                        <div className="flex items-center gap-4 text-gray-700">
+                            <div className="flex items-center gap-2">
+                                <Clock size={18} className="text-[#39CCCC]" />
+                                <span className="text-sm font-medium">
+    {formatDateTime(schedule.scheduled_at)}
+</span>
+
+                            </div>
+                            <div className="flex items-end">
+                                <DollarSign size={18} className="text-[#39CCCC]" />
+                                <span className="text-sm font-medium">{schedule.fee}</span>
+                            </div>
+                        </div>
+                            <span className="text-[var(--text-color)] font-medium">
+                    {schedule.status || "Unknown"}
+                  </span>
+
+</div>
+
+                    </div>
+                )) : isLoading ? <p className="col-span-full text-center text-gray-600">Loading schedules...</p> : <p className="col-span-full text-center text-gray-600">No schedules found.</p>}
+            </div>
+
+            {schedules.length > 0 && (
+                <div className="flex justify-center items-center gap-4">
+                    <button
+                        onClick={handlePrevPage}
+                        disabled={pagination.currentPage === 1}
+                        className={`px-5 py-2 rounded-lg border text-sm font-medium ${pagination.currentPage === 1
+                            ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                            : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                            }`}
+                    >
+                        Previous
+                    </button>
+
+                    <span className="text-gray-700 font-semibold">
+                        {pagination.currentPage} / {pagination.totalPages}
+                    </span>
+
+                    <button
+                        onClick={handleNextPage}
+                        disabled={pagination.currentPage === pagination.totalPages}
+                        className={`px-5 py-2 rounded-lg border text-sm font-medium ${pagination.currentPage === pagination.totalPages
+                            ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                            : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                            }`}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+        </div>
+        <div className="careprovider-schedules px-10 pb-[2rem] pt-5 bg-gray-50">
+            <div className="mb-10 text-left">
+                <h1 className="text-[#0a3460] text-3xl font-bold">Care Provider Schedules</h1>
+                <p className="text-gray-600 text-lg mt-2">Check your Schedules here</p>
+            </div>
+            {error && <p className="text-center text-red-600 mb-4">{error}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
                 {schedules && schedules.length > 0 ? schedules.map((schedule) => (
                     <div
@@ -176,12 +276,14 @@ const MySchedules = () => {
                                 }}
                                 className="flex items-center gap-2 bg-[#ecf8f6] text-[#0a3460] px-3 py-2 rounded-xl hover:bg-[#39cccc97] transition"
                             >
-                                <Phone size={18} className="text-[#39CCCC]" />
-                                <span>Call</span>
+                                <FontAwesomeIcon icon={faStar} className="text-[var(--cyan)]"/>
+                                <span>
+                                     Rate
+                                </span>
                             </button>
                         </div>
-
-                        <div className="flex items-center gap-4 text-gray-700 mb-[1rem]">
+<div className="flex justify-between items-center mb-[1rem]">
+                        <div className="flex items-center gap-4 text-gray-700">
                             <div className="flex items-center gap-2">
                                 <Clock size={18} className="text-[#39CCCC]" />
                                 <span className="text-sm font-medium">
@@ -194,7 +296,10 @@ const MySchedules = () => {
                                 <span className="text-sm font-medium">{schedule.fee}</span>
                             </div>
                         </div>
-
+                  <span className="text-[var(--text-color)] font-medium">
+                    {schedule.status || "Unknown"}
+                  </span>
+</div>
                     </div>
                 )) : isLoading ? <p className="col-span-full text-center text-gray-600">Loading schedules...</p> : <p className="col-span-full text-center text-gray-600">No schedules found.</p>}
             </div>
