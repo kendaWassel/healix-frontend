@@ -58,17 +58,20 @@ export default function MyOrders() {
         }
       );
 
-      if   (!response.ok) {
-            throw new Error("Request failed");
-          }
-      console.log("Request Accepted")
+      if (!response.ok) {
+        const serverError = await response.json().catch(() => ({}));
+        throw new Error(serverError.message || "Request failed");
+      }
+
       const data = await response.json();
-      setOrders(data.data)
-      setPage(data.meta.current_page)
-      setTotalPages(data.meta.last_page)
+      console.log("Request Accepted: ", data);
+      setOrders(data.data || []);
+      setPage(data.meta?.current_page || 1);
+      setTotalPages(data.meta?.last_page || 1);
 
     } catch (err) {
-      setError("Failed to load Orders");
+      console.error("Failed fetching orders:", err);
+      setError(err?.message || "Failed to load orders.");
     } finally {
       setIsLoading(false);
     }
@@ -133,40 +136,37 @@ export default function MyOrders() {
             Orders ready for delivery or pickup
           </p>
         </div>
-
-         {isLoading && (
-          <p className="text-center text-gray-500">Loading orders...</p>
-        )}
-        {error && (
-          <p className="text-center text-red-500">{error}</p>
-        )}
-
-
         {/* CARDS */}
+        {isLoading ?
+          <p className="text-center text-gray-500">Loading orders...</p>
+        :
+        orders.length > 0 ?
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {orders.map((order) => (
             <div
               key={order.id}
-              className="bg-white rounded-2xl shadow-md border border-gray-100
-                         p-5 hover:shadow-lg transition-all"
+              className="bg-white rounded-2xl shadow-md border border-gray-100 p-5 hover:shadow-lg transition-all"
             >
-              <h2 className="text-lg font-semibold text-gray-800">
+              <h2 className="text-xl font-bold text-gray-800">
                 {order.patient}
               </h2>
-              <p className="text-sm text-gray-500">Source: {order.source}</p>
-              
+              <p className="text-md text-gray-500 my-2"><span className="text-[var(--cyan)] font-bold">Source:</span> {order.source}</p>
               {/* CONTENT */}
-              <div className="mt-3 text-sm text-gray-600">
-         
-              {order.medicines && order.medicines.length > 0 && (
-             order.medicines.map((med, index) => (
-            <p key={index}>
-           {med.name} - {med.dosage} - {med.quantity || med.boxes} x {med.price_per_unit}
-                   </p>
-                          ))
-
-                     )}
-                     {order.image_url && (
+              <div className="my-4">
+                {order.medicines.length > 0 && (
+                  order.medicines.map((med, index) => (
+                    <div> 
+                      <h3 key={index} className="text-gray-700 font-bold">
+                        {med.name} - {med.dosage} :
+                      </h3>
+                      <div className="flex flex-col ms-5 font-bold text-[var(--text-color)]">
+                        <p>Box: { med.quantity || med.boxes }</p> 
+                        <p>Price per box: {med.price_per_unit}</p>
+                      </div>
+                    </div>
+                  ))
+                ) }
+                {order.image_url && (
                     <img
                       src={order.image_url}
                       alt="Prescription"
@@ -175,7 +175,7 @@ export default function MyOrders() {
                     />
                   )}
               </div>
-              <p className="mt-2 font-semibold">
+              <p className="mt-2 text-[18px] text-[var(--dark-blue)] font-bold">
               Total: {order.total_quantity} items - {order.total_medicine_price} $
                  </p>
 
@@ -204,6 +204,12 @@ export default function MyOrders() {
             </div>
           ))}
         </div>
+        :
+        error ? 
+        <p className="text-center text-red-500">{error}</p>
+        :
+<p className="text-center text-lg my-5">No Orders Found</p>
+      }
 
         {/* PAGINATION */}
         <div className="flex justify-center items-center gap-4 mt-10">

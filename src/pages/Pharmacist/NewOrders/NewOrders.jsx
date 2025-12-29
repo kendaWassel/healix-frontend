@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 export default function NewOrders() {
 
   const [prescriptions, setPrescriptions] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -35,7 +35,7 @@ export default function NewOrders() {
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions?status=sent_to_pharmacy&page=${pageNumber}&per_page=6`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions?status=sent_to_pharmacy&page=${pageNumber}&per_page=3`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -214,6 +214,13 @@ if(!response.ok) {
 
   };
   
+  const handleNext = () => {
+    if (current_page < total) fetchOrders(current_page + 1);
+  };
+
+  const handlePrevious = () => {
+    if (current_page > 1) fetchOrders(current_page - 1);
+  };
   return (
     <>
       <PharmacistHeader />
@@ -223,92 +230,88 @@ if(!response.ok) {
         <h1 className="text-3xl font-bold text-[#0a3460] mb-2">
           Prescription Orders
         </h1>
+{loading ?
+  <p className="text-center text-lg my-5">Loading...</p>
+  :
+prescriptions.length > 0 ?  
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {prescriptions.map((item) => (
+  <div
+    key={item.id}
+    className="bg-white p-5 rounded-xl shadow"
+  >
 
-        {loading && <p className="text-center text-lg my-5">Loading...</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
-{prescriptions.length > 0 ? 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <h2 className="font-semibold">{item.patient}</h2>
+    <p className="text-sm text-gray-500">
+      {formatSource(item.source)}
+    </p>
 
-          {prescriptions.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white p-5 rounded-xl shadow"
-            >
+    {item.medicines ? (
+      <ul className="mt-2 text-sm">
+        {item.medicines.map((m, i) => (
+          <li key={i}>
+            {m.name} - {m.dosage} x {m.boxes}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <img
+        src={item.image_url}
+        className="w-24 mt-3 rounded cursor-pointer"
+        onClick={() => setSelectedImage(item.image_url)}
+      />
+    )}
 
-              <h2 className="font-semibold">{item.patient}</h2>
-              <p className="text-sm text-gray-500">
-                {formatSource(item.source)}
-              </p>
+    <div className="flex justify-between mt-4">
+      <button
+        onClick={() => {
+          setSelectedItem(item);
+          setPrices({})
+          setSinglePrice('')
+          setShowAcceptPopup(true)
+          setdosageName('')
+          setShowImageInputs(false)
+          setDosage('')
+        }}
+       
+        className="text-green-600 font-semibold"
+      >
+        Accept
+      </button>
 
-              {item.medicines ? (
-                <ul className="mt-2 text-sm">
-                  {item.medicines.map((m, i) => (
-                    <li key={i}>
-                      {m.name} - {m.dosage} x {m.boxes}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <img
-                  src={item.image_url}
-                  className="w-24 mt-3 rounded cursor-pointer"
-                  onClick={() => setSelectedImage(item.image_url)}
-                />
-              )}
+      <button
+        onClick={() => { 
+         setSelectedItem(item)
+        setShowRejectPopup(true);
+        setRejectReason('')
+        } 
+      }
+   
+        className="text-red-600 font-semibold disabled:opacity-50"
+      >
+        Reject
+      </button>
+    </div>
 
-              <div className="flex justify-between mt-4">
-                <button
-                  onClick={() => {
-                    setSelectedItem(item);
-                    setPrices({})
-                    setSinglePrice('')
-                    setShowAcceptPopup(true)
-                    setdosageName('')
-                    setShowImageInputs(false)
-                    setDosage('')
-                  }}
-                 
-                  className="text-green-600 font-semibold"
-                >
-                  Accept
-                </button>
-
-                <button
-                  onClick={() => { 
-                   setSelectedItem(item)
-                  setShowRejectPopup(true);
-                  setRejectReason('')
-                  } 
-                }
-             
-                  className="text-red-600 font-semibold disabled:opacity-50"
-                >
-                  Reject
-                </button>
-              </div>
-          
-              <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
-                <Clock size={16} />
-                {new Date(item.created_at).toLocaleString()}
-              </div>
-            </div>
-          ))
-        }
-
-        </div>
-        :
-        !loading && 
-          <p className="text-center text-lg my-5">No Receipts Found</p>
+    <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
+      <Clock size={16} />
+      {new Date(item.created_at).toLocaleString()}
+    </div>
+  </div>
+  ))
+  }
+  </div>
+  :
+  error ?
+  <p className="text-red-500 text-center">{error}</p>
+  :
+  <p className="text-center text-lg my-5">No Receipts Found</p>
       }
         <div className="flex justify-center gap-4 mt-8 ">
           <button
-            onClick={() => fetchPrescriptions(page - 1)}
-            disabled={page === 1}
-            className={`px-5 py-2 rounded-lg border text-sm font-medium ${
-              page === 1
-                ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] transition-all duration-300"
-            }`}
+          onClick={handlePrevious}
+                    disabled={current_page === 1 || loading || error}
+                    className={`px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] cursor-not-allowed !disabled:cursor-pointer !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
           >
             Previous
           </button>
@@ -316,13 +319,9 @@ if(!response.ok) {
           <span>{page} / {totalPages}</span>
 
           <button
-            onClick={() => fetchPrescriptions(page + 1)}
-            disabled={page === totalPages}
-            className={`px-5 py-2 rounded-lg border text-sm font-medium ${
-              page === totalPages
-                  ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                  : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] transition-all duration-300"
-          }`}
+          onClick={handleNext}
+                    disabled={current_page === totalPages || loading || error}
+                    className={`px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] cursor-not-allowed !disabled:cursor-pointer !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
           >
             Next
           </button>
