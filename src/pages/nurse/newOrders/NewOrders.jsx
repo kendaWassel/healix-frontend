@@ -8,8 +8,8 @@ const NewOrders = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [acceptingOrderId, setAcceptingOrderId] = useState(null);
   const [error, setError] = useState(null);
-  const [current_page, setPage] = useState(1);
-  const [total, setTotal] = useState(2);
+  const [current_page, setPage] = useState(0);
+  const [total, setTotal] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("Order Accepted Successfully");
 
@@ -95,7 +95,7 @@ const NewOrders = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/nurse/orders",
+      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/nurse/orders?page=${pageNumber}&per_page=6`,
       {
         method: "GET",
         headers:{
@@ -112,10 +112,11 @@ const NewOrders = () => {
     }
 
       const data = await response.json();
-      console.log("Orders Fetched:",data)
+      console.log("Orders Fetched:",data);
+      setPage(data.meta.current_page);
+      setTotal(data.meta.last_page);
       if (data.status === "success" && Array.isArray(data.data)) {
         setOrders(data.data);
-        setPage(pageNumber);
 
       } else {
         throw new Error("Invalid response format");
@@ -169,6 +170,7 @@ const NewOrders = () => {
       setIsModalOpen(true);
     } finally {
       setAcceptingOrderId(null);
+      fetchOrders();
     }
   };
   return (
@@ -179,21 +181,14 @@ const NewOrders = () => {
         <h1 className="text-[#0a3460] text-3xl font-bold">My Orders</h1>
         <p className="text-gray-600 text-lg mt-2">Check your Orders here</p>
       </div>
-
-      {isLoading && (
-  <p className="text-center text-gray-500 text-lg font-medium animate-pulse">
-    Loading orders...
-  </p>
-)}
-
-{error && (
-  <p className="text-center text-red-500 text-lg font-semibold mt-4">
-    {error}
-  </p>
-)}
-
+{isLoading ? 
+<p className="text-center text-gray-500 text-lg font-medium animate-pulse my-4">
+Loading orders...
+</p>
+:
+ orders.length > 0 ? 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
-        {orders.slice(0, 6).map((item) => (
+        {orders.map((item) => (
           <div
             key={item.id}
             className="bg-white shadow-md rounded-2xl p-5 hover:shadow-xl transition-all duration-300"
@@ -205,7 +200,7 @@ const NewOrders = () => {
                 </h2>
                 <div className="flex items-center gap-2">
                 <p className="text-md my-5">Service:</p>
-                <span className="text-[var(--text-color)] font-medium">{item.service}</span>
+                <span className="text-[var(--text-color)] font-bold">{item.service}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[var(--dark-blue)] text-[13px] font-medium mt-2">
                 <MapPin size={16} />
@@ -214,7 +209,7 @@ const NewOrders = () => {
               </div>
               <button
                 onClick={() => handleAccept(item.id)}
-                disabled={acceptingOrderId === item.id}
+                disabled={acceptingOrderId === item.id || (acceptingOrderId && acceptingOrderId != item.id)}
                 className={`font-semibold transition duration-300 ease-in-out text-green-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 {acceptingOrderId === item.id ? "Accepting" : "Accept"}
@@ -233,16 +228,20 @@ const NewOrders = () => {
           </div>
         ))}
       </div>
+:
+error ? 
+<p className="text-center text-red-500 text-lg font-semibold my-4">
+{error}
+</p>
+:
+<p className="text-center text-lg my-5">No Orders Found</p>
+}
 
       <div className="flex justify-center items-center gap-4">
         <button
           onClick={handlePrevious}
-          disabled={current_page === 1}
-          className={`px-5 py-2 rounded-lg border text-sm font-medium ${
-            current_page === 1
-              ? "text-gray-400 border-gray-300 cursor-pointer"
-              : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
-          }`}
+          disabled={current_page === 1 || isLoading|| error }
+          className={`px-5 py-2 rounded-lg border text-sm font-medium px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] disabled:cursor-not-allowed !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
         >
           Previous
         </button>
@@ -253,12 +252,8 @@ const NewOrders = () => {
 
         <button
           onClick={handleNext}
-          disabled={current_page === total}
-          className={`px-5 py-2 rounded-lg border text-sm font-medium ${
-            current_page === total
-              ? "text-gray-400 border-gray-300 cursor-pointer"
-              : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] "
-          }`}
+          disabled={current_page === total || isLoading || error}
+          className={`px-5 py-2 rounded-lg border text-sm font-medium px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] disabled:cursor-not-allowed !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
         >
           Next
         </button>

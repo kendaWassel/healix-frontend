@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Clock, MapPin } from "lucide-react";
 import PhysioHeader from "../../../components/headers/PhysioHeader";
 import Footer from "../../../components/footer/Footer";
 
 const PhysioNewOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [acceptingOrderId, setAcceptingOrderId] = useState(null);
   const [error, setError] = useState(null);
-  const [current_page, setPage] = useState(1);
-  const [total, setTotal] = useState(2);
+  const [current_page, setPage] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("Order Accepted Successfully");
 
   // بيانات افتراضية
   /*
@@ -92,7 +95,7 @@ const PhysioNewOrders = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/physiotherapist/orders",
+      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/physiotherapist/orders?page=${pageNumber}&per_page=6`,
       {
         method: "GET",
         headers:{
@@ -109,11 +112,11 @@ const PhysioNewOrders = () => {
     }
 
       const data = await response.json();
-      console.log("Orders Fetched:",data)
+      console.log("Orders Fetched:",data);
+      setPage(data.meta.current_page);
+      setTotal(data.meta.last_page);
       if (data.status === "success" && Array.isArray(data.data)) {
         setOrders(data.data);
-        setPage(pageNumber);
-
       } else {
         throw new Error("Invalid response format");
       }
@@ -140,6 +143,7 @@ const PhysioNewOrders = () => {
     if (current_page > 1) fetchOrders(current_page - 1);
   };
   const handleAccept = async (id) => {
+    setAcceptingOrderId(id);
     try {
       const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/physiotherapist/orders/${id}/accept`, {
         method: "POST", 
@@ -148,21 +152,27 @@ const PhysioNewOrders = () => {
           "ngrok-skip-browser-warning": "true",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ accepted: true }),
       });
 
       const data = await response.json();
       if (data.status==="success"){
-        setOrders((prev) =>
-          prev.map((item) =>
-            item.id === id ? { ...item, status: "accepted" } : item
-          )
-        );
+        // Show modal with message from response
+        setModalMessage(data.message);
+        setIsModalOpen(true);
+        // Trigger refetch
+        fetchOrders();
       } else {
         console.error(" Failed to accept order",data.message);
+        setModalMessage(data.message || "Failed to accept order");
+        setIsModalOpen(true);
       }
     } catch (error) {
       console.error(" Error accepting order:", error);
+      setModalMessage("Error accepting order. Please try again.");
+      setIsModalOpen(true);
+    } finally {
+      setAcceptingOrderId(null);
+      fetchOrders();
     }
   };
   return (
@@ -173,67 +183,67 @@ const PhysioNewOrders = () => {
         <h1 className="text-[#0a3460] text-3xl font-bold">My Orders</h1>
         <p className="text-gray-600 text-lg mt-2">Check your Orders here</p>
       </div>
-
-      {isLoading && (
-  <p className="text-center text-gray-500 text-lg font-medium animate-pulse">
-    Loading orders...
-  </p>
-)}
-
-{error && (
-  <p className="text-center text-red-500 text-lg font-semibold mt-4">
-    {error}
-  </p>
-)}
-
+        {isLoading ?
+        <p className="text-center text-gray-500 text-lg font-medium animate-pulse my-4">
+        Loading orders...
+      </p>
+      :
+        orders.length > 0 ?
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
-        {orders.slice(0, 6).map((item) => (
+        {orders.map((item) => (
           <div
             key={item.id}
             className="bg-white shadow-md rounded-2xl p-5 hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="text-xl font-semibold text-[var(--dark-blue)]">
                   {item.patient_name}
                 </h2>
-                <p className="text-sm text-gray-500 me-[1rem]">{item.address}</p>
-                <p className="text-sm text-gray-500 font-medium mt-[1rem]">{item.reason}</p>
+                <div className="flex items-center gap-2">
+                <p className="text-md my-5">Service:</p>
+                <span className="text-[var(--text-color)] font-bold">{item.service || item.reason}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[var(--dark-blue)] text-[13px] font-medium mt-2">
+                <MapPin size={16} />
+                  {item.address}
+                </div>
               </div>
               <button
                 onClick={() => handleAccept(item.id)}
-                disabled={item.status === "accepted"}
-                className={`font-semibold transition duration-300 ease-in-out ${
-                  item.status === "accepted"
-                    ? "text-green-600 cursor-default"
-                    : "text-[#0a3460] hover:text-[#39CCCC]"
-                }`}
+                disabled={acceptingOrderId === item.id || (acceptingOrderId && acceptingOrderId !=item.id)}
+                className={`font-semibold transition duration-300 ease-in-out text-green-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
               >
-                {item.status === "accepted" ? "Accepted" : "Accept"}
+                {acceptingOrderId === item.id ? "Accepting" : "Accept"}
               </button>
             </div>
 
             <hr className="my-4 border-gray-200" />
 
-            <div className="flex items-center gap-4 text-gray-700">
+            <div className="flex items-center justify-between gap-4 text-gray-700">
               <div className="flex items-center gap-2">
                 <Clock size={18} className="text-[#39CCCC]" />
                 <span className="text-sm">{new Date(item.scheduled_at).toLocaleString()}</span>
               </div>
+              <span>{item.status}</span>
             </div>
           </div>
         ))}
       </div>
+        :
+      error ?
+      <p className="text-center text-red-500 text-lg font-semibold my-4">
+      {error}
+    </p>
+    :
+    <p className="text-center text-lg my-5">No Orders Found</p>
+      }
 
       <div className="flex justify-center items-center gap-4">
         <button
           onClick={handlePrevious}
-          disabled={current_page === 1}
-          className={`px-5 py-2 rounded-lg border text-sm font-medium ${
-            current_page === 1
-              ? "text-gray-400 border-gray-300 cursor-pointer"
-              : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
-          }`}
+          disabled={current_page === 1 || isLoading || error}
+          className={`px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] disabled:cursor-not-allowed !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
         >
           Previous
         </button>
@@ -244,18 +254,30 @@ const PhysioNewOrders = () => {
 
         <button
           onClick={handleNext}
-          disabled={current_page === total}
-          className={`px-5 py-2 rounded-lg border text-sm font-medium ${
-            current_page === total
-              ? "text-gray-400 border-gray-300 cursor-pointer"
-              : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97] "
-          }`}
+          disabled={current_page === total || isLoading || error}
+          className={`px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] disabled:cursor-not-allowed !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
         >
           Next
         </button>
       </div>
     </div>
     <Footer/>
+    {isModalOpen && (
+      <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] backdrop-blur-sm z-50">
+        <div className="bg-white rounded-2xl shadow-lg p-8 w-[90%] max-w-md text-center animate-fadeIn border border-gray-100">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            {modalMessage}
+          </h2>
+
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="w-full py-3 bg-[#001f3f] hover:bg-[#001634] text-white font-medium rounded-lg transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    )}
     </>
   );
 };
