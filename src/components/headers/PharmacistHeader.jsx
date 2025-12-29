@@ -29,7 +29,7 @@ const PharmacistHeader = () => {
         </NavLink>
 
         <NavLink
-          to="/pharmacist/my-orders"
+          to="/pharmacist/MyOrders"
           end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
