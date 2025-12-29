@@ -1,10 +1,10 @@
 import PharmacistHeader from "../../../components/headers/PharmacistHeader";
 import Footer from "../../../components/footer/Footer";
 import { Clock } from "lucide-react";
-import receipt from "../../../assets/OIP.jpg";
+
 
 import { useState, useEffect } from "react";
-
+/*
 const mockData = {
     prescriptions: [
   {
@@ -28,71 +28,73 @@ const mockData = {
     created_at: "2025-11-13T11:10:00Z",
   },
 ]};
-
-
+*/
 export default function MyOrders() {
-  const [orders, setOrders] = useState(mockData.prescriptions);
+  const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loadingId, setLoadingId] = useState(null);
   const [error, setError] = useState(null);
-  const [showAcceptPopup, setShowAcceptPopup] = useState(false);
-  const [currentOrder, setCurrentOrder] = useState(null);
-  const [price, setPrice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
 
-  const itemsPerPage = 6;
+  
   const token = localStorage.getItem("token");
 
-  /*
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const response = await fetch("", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setOrders(data.data);
-       setPage(pageNumber);
-    } catch (err) {
-       setError("Failed to load orders");
-    } finally {
-       setIsLoading(false);
-    };
-   
-    useEffect(() => {
-     fetchOrders();
-  }, []); */
+  const fetchOrders = async (pageNumber = 1) => {
+    setIsLoading(true);
+    setError(null);
 
-  useEffect(() => {
-    setTotalPages(Math.ceil(orders.length / itemsPerPage));
-  }, [orders]);
-
-  const displayedOrders = orders.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
-  
-  const handleDeliverOrder = async (orderId) => {
     try {
-      setLoadingId(orderId);
-
-      const response = await fetch("",
+      const response = await fetch(
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/my-orders?page=${pageNumber}`,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
             "ngrok-skip-browser-warning": "true",
           },
-          body: JSON.stringify({
-            delivered: true,
-            delivery_method: "pickup",
-          }),
+        }
+      );
+
+      if 
+         
+          (!response.ok) {
+            throw new Error("Request failed");
+          }
+      console.log("Request Accepted")
+      const data = await response.json();
+      setOrders(data.data)
+      setPage(data.meta.current_page)
+      setTotalPages(data.meta.last_page)
+
+    } catch (err) {
+      setError("Failed to load Orders");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders(page);
+  }, [page]);
+
+ 
+  
+  const handleDeliverOrder = async (order_id) => {
+    try {
+      setLoadingId(order_id);
+
+      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/orders/${order_id}/ready`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+     
         }
       );
 
@@ -101,18 +103,18 @@ export default function MyOrders() {
       if (result.status === "success") {
         setOrders((prev) =>
           prev.map((order) =>
-            order.id === orderId
+            order.id === order_id
               ? {
                   ...order,
-                  status: "delivered",
-                  delivered_at: result.data.delivered_at,
+                  status: "ready_for_delivery",
+                
                 }
               : order
           )
         );
       }
-    setShowAcceptPopup(false);
-    setPrice("");
+
+
 
     } catch (error) {
       console.error("Deliver error:", error);
@@ -144,7 +146,7 @@ export default function MyOrders() {
 
         {/* CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayedOrders.map((order) => (
+          {orders.map((order) => (
             <div
               key={order.id}
               className="bg-white rounded-2xl shadow-md border border-gray-100
@@ -153,15 +155,16 @@ export default function MyOrders() {
               <h2 className="text-lg font-semibold text-gray-800">
                 {order.patient}
               </h2>
-              <p className="text-sm text-gray-500">{order.source}</p>
+              <p className="text-sm text-gray-500">Source: {order.source}</p>
 
               {/* CONTENT */}
               <div className="mt-3 text-sm text-gray-600">
                 {order.medicines ? (
                   order.medicines.map((med, index) => (
                     <p key={index}>
-                      {med.name} – {med.dosage} – {med.boxes} –{" "}
-                      {med.instructions}
+                      {med.name} - {med.dosage} - {""}
+                       { med.quantity || med.boxes } x {med.price_per_unit}
+                 
                     </p>
                   ))
                 ) : (
@@ -173,38 +176,32 @@ export default function MyOrders() {
                   />
                 )}
               </div>
+              <p className="mt-2 font-semibold">
+              Total: {order.total_quantity} items - {order.total_medicine_price} $
+                 </p>
 
-              {/* TIME */}
-              <div className="flex items-center gap-2 mt-4 text-gray-600">
-                <Clock size={16} className="text-[#39CCCC]" />
-                <span className="text-sm">
-                  {new Date(order.created_at).toLocaleString()}
-                </span>
-              </div>
+        
 
               {/* DELIVER BUTTON */}
               <button
                 onClick={() => handleDeliverOrder(order.id)}
-                disabled={order.status === "delivered"}
+                disabled={order.status !== "accepted"}
                 className={`w-full mt-5 py-2 rounded-lg font-semibold transition ${
-                  order.status === "delivered"
+                  order.status === "ready_for_delivery"
                     ? "bg-[#39CCCC]/20 text-[#0a3460] cursor-default"
+                    : order.status !== "accepted"
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-[#0a3460] text-white hover:bg-[#0a3460]/90"
                 }`}
               >
                 {loadingId === order.id
                   ? "Processing..."
-                  : order.status === "delivered"
-                  ? "Delivered"
-                  : "Set as ready to Deliver"}
+                  : order.status === "ready_for_delivery"
+                  ? "Ready for Delivery"
+                  : "Marks as Ready"}
               </button>
 
-              {order.delivered_at && (
-                <p className="text-xs text-gray-500 mt-2">
-                  Delivered at:{" "}
-                  {new Date(order.delivered_at).toLocaleString()}
-                </p>
-              )}
+           
             </div>
           ))}
         </div>
@@ -248,45 +245,12 @@ export default function MyOrders() {
             onClick={(e) => e.stopPropagation()}
           />
         </div>
+
+
       )}
 
-       {/* ACCEPT POPUP */}
-      {showAcceptPopup && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm
-                        flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl w-[400px] shadow-lg">
-            <h2 className="text-xl font-semibold text-[#0a3460] mb-4">
-              Confirm Order
-            </h2>
-
-            <input
-              type="text"
-              placeholder="Enter total price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full border px-3 py-2 rounded-lg mb-4
-                         focus:ring-2 focus:ring-[#39CCCC]"
-            />
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => handleSetReady(currentOrder.id)}
-                className="px-4 py-2 bg-[#39CCCC] text-white rounded-lg
-                           hover:bg-[#2fb6b6]"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={() => setShowAcceptPopup(false)}
-                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
+   
+        
       <Footer />
     </>
   );

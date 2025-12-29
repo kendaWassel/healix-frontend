@@ -123,7 +123,7 @@ const sendPrice= async (order_id)=>{
       price: Number(prices[index]),
     }));
   } else {
-   // ${med.dosage}`
+
     items = [
       {
         medicine_name: dosageName,
