@@ -45,6 +45,7 @@ console.log('receipt details: ',data)
     fetchDetails();
   }, [open, prescription_id]);
 
+
   return (
     <Modal
       open={open}
@@ -62,16 +63,17 @@ console.log('receipt details: ',data)
 
       {receipt && (
         <div className="overflow-y-auto max-h-[55vh] pr-2 space-y-4">
-          {receipt.prescription_image_url ? (
+         {receipt.prescription_image_url ? (
+          
             <div className="flex flex-col items-center gap-4">
               <img
-                src={receipt.prescription_image_url }
+               src={receipt.prescription_image_url}
                 alt="Prescription"
                 className="max-w-full max-h-[45vh] rounded-lg border"
               />
               <p className="text-sm text-gray-500">Uploaded prescription image</p>
             </div>
-          ) : (
+           ) : (
             /* ===== CASE 2: DIGITAL PRESCRIPTION ===== */
             <>
               <div>
@@ -91,7 +93,7 @@ console.log('receipt details: ',data)
                   <p><strong>Quantity:</strong> {med.quantity}</p>
                   <p><strong>Instructions:</strong> {med.instructions}</p>
                 </div>
-              ))}
+              ))} 
             </>
           )}
 

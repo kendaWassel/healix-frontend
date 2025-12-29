@@ -58,9 +58,7 @@ export default function MyOrders() {
         }
       );
 
-      if 
-         
-          (!response.ok) {
+      if   (!response.ok) {
             throw new Error("Request failed");
           }
       console.log("Request Accepted")
@@ -156,25 +154,26 @@ export default function MyOrders() {
                 {order.patient}
               </h2>
               <p className="text-sm text-gray-500">Source: {order.source}</p>
-
+              
               {/* CONTENT */}
               <div className="mt-3 text-sm text-gray-600">
-                {order.medicines ? (
-                  order.medicines.map((med, index) => (
-                    <p key={index}>
-                      {med.name} - {med.dosage} - {""}
-                       { med.quantity || med.boxes } x {med.price_per_unit}
-                 
-                    </p>
-                  ))
-                ) : (
-                  <img
-                    src={order.image_url}
-                    alt="Prescription"
-                    onClick={() => setSelectedImage(order.image_url)}
-                    className="w-28 h-28 mt-2 rounded-lg object-cover cursor-pointer"
-                  />
-                )}
+         
+              {order.medicines && order.medicines.length > 0 && (
+             order.medicines.map((med, index) => (
+            <p key={index}>
+           {med.name} - {med.dosage} - {med.quantity || med.boxes} x {med.price_per_unit}
+                   </p>
+                          ))
+
+                     )}
+                     {order.image_url && (
+                    <img
+                      src={order.image_url}
+                      alt="Prescription"
+                      onClick={() => setSelectedImage(order.image_url)}
+                      className="w-28 h-28 mt-2 rounded-lg object-cover cursor-pointer"
+                    />
+                  )}
               </div>
               <p className="mt-2 font-semibold">
               Total: {order.total_quantity} items - {order.total_medicine_price} $
