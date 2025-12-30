@@ -10,7 +10,7 @@ import NewAccountSetup from "./pages/registers/newaccountsetup/NewAccountSetup";
 import FormPage from "./pages/registers/pharmacistsRegister/FormPage";
 import CareProviderRegister from "./pages/registers/careProviderRegister/CareProviderRegister";
 import AdminLogin from './pages/login/adminLogin/AdminLogin'
-import Patient from "./pages/patient/Patient";
+import Patient from "./pages/Patient/Patient";
 import Doctor from "./pages/doctor/Doctor";
 import Nurse from "./pages/nurse/Nurse";
 import Physio from "./pages/physio/Physio";
