@@ -48,7 +48,7 @@ export default function NewOrders() {
       if (!response.ok) throw new Error("Request failed");
 
       const data = await response.json();
-console.log('prescriptions: ',data);
+      console.log('prescriptions: ',data);
       setPrescriptions(data.data);
       setPage(data.meta.current_page);
       setTotalPages(data.meta.last_page);
