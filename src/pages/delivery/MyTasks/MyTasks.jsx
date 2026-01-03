@@ -37,7 +37,7 @@ export default function MyTasks() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1)
   const [total,setTotal]=useState(0);
-
+  const [statusFilter,setStatusFilter]= useState("all");
   
        const token=localStorage.getItem("token")
      
@@ -128,8 +128,13 @@ console.log("Updated Status :",data)
         const handlePrevious = () => {
           if (page > 1) fetchMyTasks(page - 1);
         };
-      
 
+        const FilteredTasks = tasks.filter(task=>{
+          if (statusFilter==="delivered"){
+            return task.status==="delivered"
+          }
+          return true;
+        })
     return (
       <>
       <DeliveryHeader />
@@ -137,15 +142,40 @@ console.log("Updated Status :",data)
       <div className="p-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-6 text-[#024]">My Tasks</h1> 
-       
+       <div className="flex gap-4 mb-6">
+
+        <button 
+        onClick={()=> setStatusFilter("all")}
+        className={`px-4 py-2 rounded-lg font-semibold border
+        ${statusFilter === "all"
+          ? "bg-cyan-600 text-white"
+          : "bg-white text-gray-700 border-gray-300"}`}
+        
+        >
+          All tasks
+          </button>
+          <button
+           onClick={()=>setStatusFilter("delivered")}
+          className={`px-4 py-2 rounded-lg font-semibold border
+          ${statusFilter==="delivered"
+         ? "bg-cyan-600 text-white"
+         : "bg-white text-gray-700 border-gray-300"
+        }`}
+          
+          >
+            Delivered
+          </button>
+       </div>
+
           <p className="text-lg font-semibold text-gray-600">Orders you accepted and need to deliver</p>
+
         </div>
 
         {isLoading && <p className="text-center text-gray-500">Loading...</p>}
         {error && <p className="text-center text-red-500">{error}</p>}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tasks.map((task) => (
+          {FilteredTasks.map((task) => (
             <div
               key={task.task_id}
               className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md hover:border-cyan-300 transition-all max-w-2xl"
@@ -216,7 +246,7 @@ console.log("Updated Status :",data)
 
         <div className="flex justify-center items-center gap-4 mt-8">
           <button
-            className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-cyan-300 transition duration-300"
             onClick={handlePrevious}
             disabled={page === 1}
           >
@@ -228,7 +258,7 @@ console.log("Updated Status :",data)
           </span>
 
           <button
-            className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded-lg bg-white border border-gray-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:border-cyan-300 transition duration-300"
             onClick={handleNext}
             disabled={page === total}
           >

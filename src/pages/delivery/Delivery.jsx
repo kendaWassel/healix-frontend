@@ -1,7 +1,7 @@
 import { Routes,Route } from "react-router-dom";
 import DeliveryHomePage from "./deliveryHomePage/DeliveryHomePage";
-import MyOrders from "../Pharmacist/MyOrders/MyOrders";
 import MyTasks from "../delivery/MyTasks/MyTasks";
+import NewOrders from "./newOrders/neworder";
 
 const Delivery =()=>{
     return (
@@ -9,6 +9,7 @@ const Delivery =()=>{
         <Routes>
          <Route index element={<DeliveryHomePage />} />
          <Route path="my-tasks" element={<MyTasks />} />
+         <Route path="new-orders" element={<NewOrders/>}/>
         </Routes>
         
         </>
