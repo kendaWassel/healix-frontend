@@ -36,11 +36,11 @@ const NurseHeader = () => {
           New Orders
         </NavLink>
         <NavLink 
-          to="/nurse/appointment"
+          to="/nurse/my-schedules"
           end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-            My Appointments
+            My Schedules
         </NavLink>
         <div className="flex items-center gap-1">
         <svg width="41" height="44" viewBox="0 0 41 44" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,11 +98,11 @@ const NurseHeader = () => {
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to="/nurse/appointment"
+            to="/nurse/my-schedules"
             end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          My Appointments
+          My Schedules
           </NavLink>
         </div>
       </div>

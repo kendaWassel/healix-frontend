@@ -16,7 +16,7 @@ export default function PatientEndCallModal({ isOpen, onClose, consultationId, o
     setError(null);
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/consultations/${consultationId}/end`, {
+      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/consultations/${consultationId}/end`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

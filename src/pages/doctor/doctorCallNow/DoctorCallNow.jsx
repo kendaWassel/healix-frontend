@@ -41,7 +41,7 @@ export default function DoctorCallNow({ isOpen, onClose, patientId, consultation
 
       try {
         const response = await fetch(
-          `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/consultations/${consultationId}/call`,
+          `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/consultations/${consultationId}/call`,
           {
             method: "POST",
             headers: {

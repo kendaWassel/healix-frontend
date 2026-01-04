@@ -34,20 +34,13 @@ const DeliveryHeader = () => {
         >
           New Orders
         </NavLink>
-        <NavLink
-          to="/delivery/past-orders"
-          end
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          Past Orders
-        </NavLink>
 
         <NavLink
-          to="/delivery/my-tasks"
+          to="/delivery/my-orders"
           end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-          Current orders
+          My orders
         </NavLink>
         <div className="flex items-center gap-1">
         <svg width="45" height="44" viewBox="0 0 45 44" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -105,19 +98,11 @@ const DeliveryHeader = () => {
           </NavLink>
           <NavLink
             onClick={() => setIsMenuOpen(false)}
-            to="/delivery/past-orders"
+            to="/delivery/my-orders"
             end
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
-            Past Orders
-          </NavLink>
-          <NavLink
-            onClick={() => setIsMenuOpen(false)}
-            to="/delivery/current-orders"
-            end
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          Current orders
+          My orders
           </NavLink>
         </div>
       </div>

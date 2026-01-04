@@ -84,15 +84,10 @@ console.log('schedules: ',data);
         if (!dateString) {
             return "Unknown date";
         }
-        
-        // Handle different date formats from API
         let date;
-        
-        // If it's a number (timestamp), use it directly
         if (typeof dateString === 'number') {
             date = new Date(dateString);
         } else if (typeof dateString === 'string') {
-            // Check if it already has timezone info (ends with Z or has +/- after the time)
             const hasTimezone = dateString.endsWith('Z') || 
                               /[+-]\d{2}:\d{2}$/.test(dateString) ||
                               /[+-]\d{4}$/.test(dateString);
@@ -100,17 +95,14 @@ console.log('schedules: ',data);
             if (hasTimezone) {
                 date = new Date(dateString);
             } else if (dateString.includes('T')) {
-                // ISO format without timezone - treat as UTC by appending Z
                 date = new Date(dateString + 'Z');
             } else {
-                // Try parsing as-is
                 date = new Date(dateString);
             }
         } else {
             date = new Date(dateString);
         }
         
-        // Check if date is valid
         if (isNaN(date.getTime())) {
             return "Invalid date";
         }
@@ -138,7 +130,7 @@ console.log('schedules: ',data);
 
     useEffect(() => {
         fetchSchedules(pagination.currentPage, pagination.itemsPerPage);
-    }, [pagination.currentPage, pagination.itemsPerPage]);
+    }, [pagination.currentPage]);
 
     return (
          <>
@@ -168,7 +160,7 @@ console.log('schedules: ',data);
                                     <p className="text-sm text-gray-500 font-medium">{schedule.specialization}</p>
                                 </div>
                             </div>
-{schedule.status != "completed" ? 
+{schedule.status !== "completed" ? 
                             <button
                                 onClick={(e) => {
                                     e.preventDefault();
@@ -191,7 +183,7 @@ console.log('schedules: ',data);
                             <div className="flex items-center gap-2">
                                 <Clock size={18} className="text-[#39CCCC]" />
                                 <span className="text-sm font-medium">
-    {formatDateTime(schedule.scheduled_at)}
+    {new Date(schedule.scheduled_at).toLocaleString()}
 </span>
 
                             </div>

@@ -49,7 +49,7 @@ export const uploadFile = async (medicalFile) => {
   console.log("file uploaded: ", data);
   return data.file_id;
 };
-export default function MedicalReportModal({ open, onClose, onSubmit, initialValues,isEdit,children }) {
+export default function MedicalReportModal({ open, onClose, onSubmit, initialValues,isEdit,children, errorMessage }) {
   const modalRef = useRef();
   const [fields, setFields] = useState({
     diagnosis: '',
@@ -88,14 +88,14 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
     if (modalRef.current && e.target === modalRef.current) onClose();
   };
 
-  const handleLocalSubmit = (e) => {
+  const handleLocalSubmit = async (e) => {
     e.preventDefault();
-    onSubmit({
+    await onSubmit({
       ...fields,
       photoFile,
       medicalFile
     });
-    onClose();
+    // Don't auto-close - let parent component handle closing on success
   };
 
   return (
@@ -114,7 +114,6 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
             <input
               name="diagnosis"
               type="text"
-              required
               className="w-full border border-gray-300 rounded px-3 py-2 outline-blue-400 focus:border-blue-500 placeholder:text-gray-400"
               placeholder="Enter diagnosis..."
               value={fields.diagnosis}
@@ -217,9 +216,16 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
             {children}
           </div>
           <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-200">
-            <button type="submit" className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold transition-colors">
-              Save Report
-            </button>
+            <div className="flex items-center gap-2">
+              <button type="submit" className="flex-1 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold transition-colors">
+                Save Report
+              </button>
+              {errorMessage && (
+                <span className="text-red-600 text-sm font-medium whitespace-nowrap">
+                  {errorMessage}
+                </span>
+              )}
+            </div>
           </div>
         </form>
       </div>

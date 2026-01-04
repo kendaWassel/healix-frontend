@@ -9,6 +9,7 @@ export default function NewOrders() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [rejectLoading, setRejectLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -35,11 +36,11 @@ export default function NewOrders() {
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions?status=sent_to_pharmacy&page=${pageNumber}&per_page=3`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions?page=${pageNumber}&per_page=3`,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
             "ngrok-skip-browser-warning": "true",
           },
         }
@@ -63,9 +64,6 @@ export default function NewOrders() {
   useEffect(() => {
     fetchPrescriptions();
   }, []);
-
-  const formatSource = (source) =>
-    source === "doctor" ? "Source: Doctor" : "Source: Patient Upload";
 
   const handleAccept = async (order_id) => {
 
@@ -159,6 +157,7 @@ if(!response.ok) {
       alert("please enter your rejection reason")
       return;
     }
+    setRejectLoading(true);
     try {
     const response=  await fetch(
         `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${order_id}/reject`,
@@ -173,7 +172,7 @@ if(!response.ok) {
         }
       );
       const result = await response.json();
-
+console.log('reject response: ',result);
       if (!response.ok || result.status !== "success") {
         throw new Error(result.message || "Reject failed");
       }
@@ -191,6 +190,8 @@ if(!response.ok) {
     } catch (err){
       alert(err.message);
     }
+    setRejectLoading(false);
+    fetchPrescriptions();
   };
 
   
@@ -243,7 +244,7 @@ prescriptions.length > 0 ?
 
     <h2 className="font-semibold">{item.patient}</h2>
     <p className="text-sm text-gray-500">
-      {formatSource(item.source)}
+      Source: {item.source}
     </p>
 
     {item.medicines ? (
@@ -310,7 +311,7 @@ prescriptions.length > 0 ?
         <div className="flex justify-center gap-4 mt-8 ">
           <button
           onClick={handlePrevious}
-                    disabled={current_page === 1 || loading || error}
+                    disabled={page === 1 || loading || error}
                     className={`px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] cursor-not-allowed !disabled:cursor-pointer !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
           >
             Previous
@@ -320,7 +321,7 @@ prescriptions.length > 0 ?
 
           <button
           onClick={handleNext}
-                    disabled={current_page === totalPages || loading || error}
+                    disabled={page === totalPages || loading || error}
                     className={`px-5 py-2 rounded-lg border text-sm font-medium text-[#39CCCC] border-[#39CCCC] cursor-not-allowed !disabled:cursor-pointer !disabled:hover:bg-[#39cccc97] disabled:text-gray-400 disabled:border-gray-300`}
           >
             Next
@@ -448,14 +449,17 @@ prescriptions.length > 0 ?
 
       <div className="flex justify-end gap-3 mt-4">
         <button
+          disabled={rejectLoading}
           onClick={()=>handleReject(selectedItem.order_id)}
-          className="bg-red-600 px-4 py-2 text-white rounded"
+          className="bg-red-600 px-4 py-2 text-white rounded disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Reject
+          {rejectLoading ? "Rejecting..." : "Reject"}
         </button>
 
         <button
+        disabled={rejectLoading}
           onClick={() => setShowRejectPopup(false)}
+          className="disabled:cursor-not-allowed disabled:opacity-50"
         >
           Cancel
         </button>

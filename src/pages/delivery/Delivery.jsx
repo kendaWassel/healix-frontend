@@ -1,6 +1,6 @@
 import { Routes,Route } from "react-router-dom";
 import DeliveryHomePage from "./deliveryHomePage/DeliveryHomePage";
-import MyTasks from "../delivery/MyTasks/MyTasks";
+import MyOrders from "./myOrders/MyOrders";
 import NewOrders from "./newOrders/neworder";
 
 const Delivery =()=>{
@@ -8,8 +8,8 @@ const Delivery =()=>{
         <>
         <Routes>
          <Route index element={<DeliveryHomePage />} />
-         <Route path="my-tasks" element={<MyTasks />} />
-         <Route path="new-orders" element={<NewOrders/>}/>
+         <Route path="new-orders" element={<NewOrders />} />
+         <Route path="my-orders" element={<MyOrders />} />
         </Routes>
         
         </>
