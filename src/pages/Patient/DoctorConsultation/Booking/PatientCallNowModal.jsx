@@ -3,6 +3,7 @@ import { Phone } from "lucide-react";
 import PatientEndCallModal from "./PatientEndCallModal";
 import RatingModal from "./RatingModal";
 import DoneModal from "./DoneModal";
+import PaymentModal from "../../../../components/PaymentModal";
 
 export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfirm }) {
   const [isCreatingConsultation, setIsCreatingConsultation] = useState(false);
@@ -12,22 +13,22 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
   const [doctorPhone, setDoctorPhone] = useState(null);
   const [message, setMessage] = useState("");
   const [showEndCallModal, setShowEndCallModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showBookingDone, setShowBookingDone] = useState(false);
 
-  // Reset states when closed
   useEffect(() => {
     if (!isOpen) {
       setConsultationId(null);
       setError(null);
       setMessage("");
       setShowEndCallModal(false);
+      setShowPaymentModal(false);
       setShowRatingModal(false);
       setShowBookingDone(false);
     }
   }, [isOpen]);
 
-  // Create consultation on open
   useEffect(() => {
     if (!isOpen || !doctorId) return;
 
@@ -73,14 +74,13 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
     createConsultation();
   }, [isOpen, doctorId]);
 
-  // API call to log call attempt
   const triggerCallApi = async () => {
     if (!consultationId) return;
 
     const token = localStorage.getItem("token");
     try {
       await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/consultations/${consultationId}/call`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/consultations/${consultationId}/call`,
         {
           method: "POST",
           headers: {
@@ -95,7 +95,6 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
     }
   };
 
-  // MAIN CALL FUNCTION
   const handleCallClick = async () => {
     const phone = doctorPhone;
     if (!phone) {
@@ -105,24 +104,20 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
   
     setIsCalling(true);
   
-    // Trigger API
     triggerCallApi();
   
-    // Open phone dialer
     window.open(`tel:${phone}`, "_self");
   
-    // Detect returning from call
     let callWasOpened = false;
   
     window.onblur = () => {
-      callWasOpened = true; // User left browser
+      callWasOpened = true;
     };
   
     window.onfocus = () => {
       if (callWasOpened) {
         setTimeout(() => setShowEndCallModal(true), 300);
   
-        // Clean up
         callWasOpened = false;
         window.onblur = null;
         window.onfocus = null;
@@ -137,9 +132,23 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
   const handleEndCallSuccess = () => {
     setShowEndCallModal(false);
     setMessage("Call ended successfully.");
-    // Show rating modal after call ends
+    // Wait a bit longer to ensure end call modal is fully closed
+    setTimeout(() => {
+      setShowPaymentModal(true);
+    }, 600);
+  };
+
+  const handlePaymentSuccess = () => {
+    setShowPaymentModal(false);
     setTimeout(() => {
       setShowRatingModal(true);
+    }, 300);
+  };
+
+  const handleRatingSkip = () => {
+    setShowRatingModal(false);
+    setTimeout(() => {
+      setShowBookingDone(true);
     }, 300);
   };
 
@@ -188,9 +197,16 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
         consultationId={consultationId}
         onEndSuccess={handleEndCallSuccess}
       />
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        onPaymentSuccess={handlePaymentSuccess}
+        paymentType="doctor"
+        consultationId={consultationId}
+      />
       <RatingModal
         isOpen={showRatingModal}
-        onClose={() => setShowRatingModal(false)}
+        onClose={handleRatingSkip}
         consultationId={consultationId}
         doctor_id={doctorId}
         onRatingSuccess={() => {

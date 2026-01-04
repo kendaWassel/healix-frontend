@@ -349,9 +349,12 @@ console.log('my reciepts: ',data);
                 <div className={styles.DoctorText}>
                   <h3>{item.Name}</h3>
                   <p>{item.Date}</p>
+                  {item.status=== "rejected" && 
+                  <h4 className="text-white bg-red-400 rounded-md px-3 py-1 w-[fit-content] my-3">{item.status}</h4>
+                  }
                 </div>
               </div>
-{item.status === "created" ? 
+{item.status === "created" || item.status=== "rejected" ? 
               <button
                 className={styles.sendBtn}
                 onClick={(e) => {

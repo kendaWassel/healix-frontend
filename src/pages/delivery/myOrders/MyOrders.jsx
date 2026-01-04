@@ -31,7 +31,7 @@ const data = {
   },
 };
 */
-export default function MyTasks() {
+export default function MyOrders() {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -67,7 +67,7 @@ export default function MyTasks() {
          setPage(data.meta.current_page)
          setTotal(data.meta.last_page)
         } catch (err){
-          setError("failed to Load Tasks")
+          setError("failed to Load Orders")
         }
         finally{
           setIsLoading(false)
@@ -138,10 +138,9 @@ console.log("Updated Status :",data)
     return (
       <>
       <DeliveryHeader />
-
       <div className="p-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-6 text-[#024]">My Tasks</h1> 
+          <h1 className="text-4xl font-bold mb-6 text-[#024]">My Orders</h1> 
        <div className="flex gap-4 mb-6">
 
         <button 
@@ -152,7 +151,7 @@ console.log("Updated Status :",data)
           : "bg-white text-gray-700 border-gray-300"}`}
         
         >
-          All tasks
+          All orders
           </button>
           <button
            onClick={()=>setStatusFilter("delivered")}

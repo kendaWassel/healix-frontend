@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Clock, MapPin, ChevronDown } from "lucide-react";
 import Footer from "../../../components/footer/Footer";
-import NurseHeader from "../../../components/headers/NurseHeader";
+import PhysioHeader from "../../../components/headers/PhysioHeader";
 import PatientDetailsModal from "../../doctor/doctorSchedules/PatientDetailsModal";
 import CareProviderStartSession from "../../../components/careProviderModals/CareProviderStartSession";
 
-const Appointments = () => {
+const PhysioSchedules = () => {
     const [schedules, setSchedules] = useState([]);
     const [filterOpen, setFilterOpen] = useState(false);
     const [selectedFilter, setSelectedFilter] = useState("All");
-    const [viewDetails, setViewDetails] = useState(null);
+  const [viewDetails, setViewDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [pagination, setPagination] = useState({
@@ -22,14 +22,106 @@ const Appointments = () => {
     const [selectedPatientId, setSelectedPatientId] = useState(null);
     const [selectedSessionId, setSelectedSessionId] = useState(null);
     const [details, setDetails] = useState(null);
+    const [isLoadingDetails, setIsLoadingDetails] = useState(false);
     const [detailsError, setDetailsError] = useState(null);
     const token = localStorage.getItem("token");
+
+    // const mockData = {
+    //     1: [
+    //         {
+    //             id: 1,
+    //             name: "Hassan Al-Rifai",
+    //             desc: "High blood pressure follow-up",
+    //             time: "9:00 AM",
+    //             address: "Al-Mazzeh Street, Building 12, Apartment 4",
+    //         },
+    //         {
+    //             id: 2,
+    //             name: "Mariam Saleh",
+    //             desc: "Cold and sore throat check",
+    //             time: "9:45 AM",
+    //             address: "Al-Tejarah District, House 27 near City Park",
+    //         },
+    //         {
+    //             id: 3,
+    //             name: "Omar Nasser",
+    //             desc: "Follow-up after hand fracture",
+    //             time: "10:30 AM",
+    //             address: "Tishreen Street, Building 8, Floor 2",
+    //         },
+    //         {
+    //             id: 4,
+    //             name: "Lina Khalil",
+    //             desc: "Diabetes control review",
+    //             time: "11:15 AM",
+    //             address: "Al-Amal Neighborhood, House 15 next to bakery",
+    //         },
+    //         {
+    //             id: 5,
+    //             name: "Ahmad Barakat",
+    //             desc: "Post-surgery check for appendix removal",
+    //             time: "12:00 PM",
+    //             address: "Baghdad Street, near Green Pharmacy",
+    //         },
+    //         {
+    //             id: 6,
+    //             name: "Rania Issa",
+    //             desc: "Migraine and headache evaluation",
+    //             time: "1:00 PM",
+    //             address: "Al-Jalaa' City, Building 5B, 3rd Floor",
+    //         },
+    //     ],
+    //     2: [
+    //         {
+    //             id: 7,
+    //             name: "Tarek Mansour",
+    //             desc: "Back pain physical therapy session",
+    //             time: "2:00 PM",
+    //             address: " Old Damascus District, House 21 behind old mosque",
+    //         },
+    //         {
+    //             id: 8,
+    //             name: "Sara Hamdan",
+    //             desc: "Routine pregnancy checkup",
+    //             time: "2:45 PM",
+    //             address: "Al-Salam Street, Building 2, Apt. 6",
+    //         },
+    //         {
+    //             id: 9,
+    //             name: "Khaled Jaber",
+    //             desc: "Post-COVID breathing follow-up",
+    //             time: "3:30 PM",
+    //             address: "Al-Fayhaa Neighborhood, House 10",
+    //         },
+    //         {
+    //             id: 10,
+    //             name: "Nour Fares",
+    //             desc: "Allergy and skin rash evaluation",
+    //             time: "4:15 PM",
+    //             address: "Al-Tawfiq Street, next to grocery shop",
+    //         },
+    //         {
+    //             id: 11,
+    //             name: "Mahmoud Darwish",
+    //             desc: "Stomach pain diagnosis appointment",
+    //             time: "5:00 PM",
+    //             address: "New Horizon District, House 33",
+    //         },
+    //         {
+    //             id: 12,
+    //             name: "Reem Al-Hassan",
+    //             desc: "Postpartum recovery consultation",
+    //             time: "6:00 PM",
+    //             address: "Al-Nour Street, Building 7, Apartment 2",
+    //         },
+    //     ],
+    // };
 
     const fetchSchedules = (page=1, perPage=6) => {
         setIsLoading(true);
         setError(null);
 
-      let url = `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/nurse/schedules?page=${page}&per_page=${perPage}`;
+      let url = `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/physiotherapist/schedules?page=${page}&per_page=${perPage}`;
       if (selectedFilter !== "All") {
         url += `&status=${selectedFilter}`;
       }
@@ -53,7 +145,7 @@ const Appointments = () => {
             })
             .then((data) => {
                 setSchedules(data.data);
-                console.log('schedules: ',data);
+console.log('schedules: ',data);
                 const totalItems = data.meta?.total ;
                 const totalPages = Math.ceil(totalItems / (perPage || 3));
                 setPagination((prev) => ({
@@ -81,7 +173,6 @@ const Appointments = () => {
             setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
         }
     };
-    
     const handleViewDetails = async (e, patientId) => {
         e.preventDefault();
         setViewDetails(patientId);
@@ -121,11 +212,11 @@ const Appointments = () => {
     
     useEffect(() => {
         fetchSchedules(pagination.currentPage, pagination.itemsPerPage);
-    }, [pagination.currentPage, showSessionModal, selectedFilter]);
+    }, [pagination.currentPage,showSessionModal,selectedFilter]);
 
     return (
        <>
-            <NurseHeader />
+            <PhysioHeader />
             <div className="p-10 bg-gray-50 min-h-screen">
                 <div className="mb-10">
                     <div className="flex items-center justify-between mb-2">
@@ -151,12 +242,6 @@ const Appointments = () => {
                                         className={`px-4 py-2 cursor-pointer transition-colors hover:bg-[#f3fafa] ${selectedFilter === "accepted" ? "bg-[#ebfafa] font-semibold" : ""}`}
                                     >
                                         Accepted
-                                    </p>
-                                    <p
-                                        onClick={() => handleSelectFilter("in-progress")}
-                                        className={`px-4 py-2 cursor-pointer transition-colors hover:bg-[#f3fafa] ${selectedFilter === "completed" ? "bg-[#ebfafa] font-semibold" : ""}`}
-                                    >
-                                        In Progress
                                     </p>
                                     <p
                                         onClick={() => handleSelectFilter("completed")}
@@ -281,7 +366,7 @@ const Appointments = () => {
         }}
         patientId={selectedPatientId}
         sessionId={selectedSessionId}
-        providerType="nurse"
+        providerType="physiotherapist"
       />
 
       {details && (
@@ -299,4 +384,4 @@ const Appointments = () => {
     );
 };
 
-export default Appointments;
+export default PhysioSchedules;

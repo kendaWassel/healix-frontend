@@ -47,10 +47,7 @@ export default function DoctorSchedules() {
     setIsLoading(true);
     setError(null);
     try {
-      // Build URL with pagination and filter
       let url = `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/my-schedules?page=${page}&per_page=${perPage}`;
-      
-      // Add status filter only if not "All"
       if (selectedFilter !== "All") {
         url += `&status=${selectedFilter}`;
       }
@@ -112,7 +109,7 @@ const handleFilterClick = () => setFilterOpen(!filterOpen);
 const handleSelectFilter = (filter) => {
   setSelectedFilter(filter);
   setFilterOpen(false);
-  // Reset to first page when filter changes
+
   setPagination((prev) => ({ ...prev, currentPage: 1 }));
 };
 

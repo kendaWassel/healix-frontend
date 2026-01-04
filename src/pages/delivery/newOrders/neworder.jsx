@@ -32,6 +32,7 @@ const NewOrders = () => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   
     
@@ -123,24 +124,32 @@ const token = localStorage.getItem("token")
   };
 
   const sendPrice = async (task_id) => {
-    const response = await fetch(
-      `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/delivery/tasks/${task_id}/set-delivery-fee`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ delivery_fee: Number(price) }),
-      }
-    );
-  const result = await response.json()
-  if(!response.ok) 
-  throw new Error (result.message||"Failed to Add Price")
-  alert ("Price Added Successfully !")
-  }
+    setSaveLoading(true);
+    try{
+      const response = await fetch(
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/delivery/tasks/${task_id}/set-delivery-fee`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ delivery_fee: Number(price) }),
+        }
+      );
+    const result = await response.json()
+    console.log('sending price: ',result);
+    if(!response.ok) 
+    throw new Error (result.message||"Failed to Add Price")
+    alert ("Price Added Successfully !")
+    } catch (error) {
+      console.error("Error sending price:", error);
+    }finally{
+      setSaveLoading(false);
+    }
+  };
   
   useEffect(() => {
     fetchOrders(page);
@@ -187,7 +196,7 @@ const token = localStorage.getItem("token")
                 setShowAcceptPopup(true)
             
                 }}
-              className="w-full py-2 rounded-xl bg-[#39CCCC] text-white font-medium hover:bg-[#2fa9a9] transition"
+              className="w-full py-2 rounded-xl bg-[var(--dark-blue)] text-white font-medium hover:bg-[var(--card-border)] hover:text-[var(--dark-blue)]  transition"
             >
               Accept
             </button>
@@ -233,14 +242,14 @@ const token = localStorage.getItem("token")
       <div className="flex justify-end gap-3 mt-4">
         <button
           onClick={handleAccept}
-          disabled={isSaveDisabled()}
+          disabled={isSaveDisabled() || saveLoading}
           className={`px-4 py-2 rounded text-white ${
             isSaveDisabled()
               ? "bg-gray-400"
               : "bg-[#39CCCC] hover:bg-[#2bb3b3]"
           }`}
         >
-          Save
+          {saveLoading ?  "Saving..." : "Save"}
         </button>
 
         <button onClick={() => setShowAcceptPopup(false)}>

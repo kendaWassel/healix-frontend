@@ -199,7 +199,7 @@ Loading orders...
                   {item.patient_name}
                 </h2>
                 <div className="flex items-center gap-2">
-                <p className="text-md my-5">Service:</p>
+                <p className="text-md my-5 text-[var(--cyan)]">Service:</p>
                 <span className="text-[var(--text-color)] font-bold">{item.service}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[var(--dark-blue)] text-[13px] font-medium mt-2">
@@ -208,11 +208,11 @@ Loading orders...
                 </div>
               </div>
               <button
-                onClick={() => handleAccept(item.id)}
-                disabled={acceptingOrderId === item.id || (acceptingOrderId && acceptingOrderId != item.id)}
+                onClick={() => handleAccept(item.session_id)}
+                disabled={acceptingOrderId === item.session_id || (acceptingOrderId && acceptingOrderId != item.session_id)}
                 className={`font-semibold transition duration-300 ease-in-out text-green-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
               >
-                {acceptingOrderId === item.id ? "Accepting" : "Accept"}
+                {acceptingOrderId === item.session_id ? "Accepting" : "Accept"}
               </button>
             </div>
 

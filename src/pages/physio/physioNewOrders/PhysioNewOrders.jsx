@@ -142,10 +142,10 @@ const PhysioNewOrders = () => {
   const handlePrevious = () => {
     if (current_page > 1) fetchOrders(current_page - 1);
   };
-  const handleAccept = async (id) => {
-    setAcceptingOrderId(id);
+  const handleAccept = async (session_id) => {
+    setAcceptingOrderId(session_id);
     try {
-      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/physiotherapist/orders/${id}/accept`, {
+      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/provider/physiotherapist/orders/${session_id}/accept`, {
         method: "POST", 
         headers: {
           "Content-Type": "application/json",
@@ -180,8 +180,8 @@ const PhysioNewOrders = () => {
     <PhysioHeader/>
     <div className="p-10 bg-gray-50 min-h-screen">
       <div className="mb-10 text-left">
-        <h1 className="text-[#0a3460] text-3xl font-bold">My Orders</h1>
-        <p className="text-gray-600 text-lg mt-2">Check your Orders here</p>
+        <h1 className="text-[#0a3460] text-3xl font-bold">My New Orders</h1>
+        <p className="text-gray-600 text-lg mt-2">Check your new orders here</p>
       </div>
         {isLoading ?
         <p className="text-center text-gray-500 text-lg font-medium animate-pulse my-4">
@@ -192,7 +192,7 @@ const PhysioNewOrders = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
         {orders.map((item) => (
           <div
-            key={item.id}
+            key={item.session_id}
             className="bg-white shadow-md rounded-2xl p-5 hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
@@ -201,20 +201,20 @@ const PhysioNewOrders = () => {
                   {item.patient_name}
                 </h2>
                 <div className="flex items-center gap-2">
-                <p className="text-md my-5">Service:</p>
-                <span className="text-[var(--text-color)] font-bold">{item.service || item.reason}</span>
+                <p className="text-md my-5 text-[var(--cyan)] font-medium">Service:</p>
+                <span className="text-[var(--text-color)] font-bold">{item.service}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[var(--dark-blue)] text-[13px] font-medium mt-2">
-                <MapPin size={16} />
+                <MapPin size={16} className="text-[var(--cyan)]"/>
                   {item.address}
                 </div>
               </div>
               <button
-                onClick={() => handleAccept(item.id)}
-                disabled={acceptingOrderId === item.id || (acceptingOrderId && acceptingOrderId !=item.id)}
+                onClick={() => handleAccept(item.session_id)}
+                disabled={acceptingOrderId === item.session_id || acceptingOrderId}
                 className={`font-semibold transition duration-300 ease-in-out text-green-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
               >
-                {acceptingOrderId === item.id ? "Accepting" : "Accept"}
+                {acceptingOrderId === item.session_id ? "Accepting" : "Accept"}
               </button>
             </div>
 
