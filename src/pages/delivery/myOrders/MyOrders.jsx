@@ -46,8 +46,11 @@ export default function MyOrders() {
          setError(null);
      
          try {
-           const response = 
-            await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/delivery/tasks?page=${pageNumber}`,
+           let url = `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/delivery/tasks?page=${pageNumber}`;
+           if(statusFilter!=="all"){
+            url+=`&status=${statusFilter}`;
+           }
+         const response = await fetch(url,
            {
              headers : {
                Accept : "application/json",
@@ -61,7 +64,7 @@ export default function MyOrders() {
           if(!response.ok)  throw new Error("Request failed")
 
          const data = await response.json()
-         console.log("Tasks",data)
+         console.log("Orders :",data)
 
          setTasks(data.data || [])
          setPage(data.meta.current_page)
@@ -74,8 +77,8 @@ export default function MyOrders() {
         }
       }
     useEffect(()=>{
-      fetchMyTasks()
-    },[])
+      fetchMyTasks(1)
+    },[statusFilter])
 
 
 
@@ -94,8 +97,8 @@ export default function MyOrders() {
         }
       )
       if(!response.ok) throw new Error("Request Failed")
-const data = await response.json()
-console.log("Updated Status :",data)
+     const data = await response.json()
+     console.log("Updated Status :",data)
       alert("Status Updated Successfully")
       fetchMyTasks(page)
 
@@ -129,12 +132,7 @@ console.log("Updated Status :",data)
           if (page > 1) fetchMyTasks(page - 1);
         };
 
-        const FilteredTasks = tasks.filter(task=>{
-          if (statusFilter==="delivered"){
-            return task.status==="delivered"
-          }
-          return true;
-        })
+   
     return (
       <>
       <DeliveryHeader />
@@ -145,17 +143,17 @@ console.log("Updated Status :",data)
 
         <button 
         onClick={()=> setStatusFilter("all")}
-        className={`px-4 py-2 rounded-lg font-semibold border
+        className={`px-4 py-2 rounded-lg font-semibold border hover:border-cyan-300 transition duration-300
         ${statusFilter === "all"
-          ? "bg-cyan-600 text-white"
+          ? "bg-cyan-600 text-white "
           : "bg-white text-gray-700 border-gray-300"}`}
         
         >
-          All orders
+          All Orders
           </button>
           <button
            onClick={()=>setStatusFilter("delivered")}
-          className={`px-4 py-2 rounded-lg font-semibold border
+          className={`px-4 py-2 rounded-lg font-semibold border hover:border-cyan-300 transition duration-300
           ${statusFilter==="delivered"
          ? "bg-cyan-600 text-white"
          : "bg-white text-gray-700 border-gray-300"
@@ -174,7 +172,7 @@ console.log("Updated Status :",data)
         {error && <p className="text-center text-red-500">{error}</p>}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {FilteredTasks.map((task) => (
+          {tasks.map((task) => (
             <div
               key={task.task_id}
               className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md hover:border-cyan-300 transition-all max-w-2xl"
