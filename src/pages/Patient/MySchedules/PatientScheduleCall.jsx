@@ -167,8 +167,7 @@ export default function PatientScheduleCall({ isOpen, onClose, consultationId, d
           setShowRatingModal(false);
           setShowBookingDone(true);
         }}
-        consultationId={consultationId}
-        doctor_id={doctorId}
+        url={`consultations/${consultationId}/rate/${doctorId}`}
         onRatingSuccess={handleRatingSuccess}
       />
       <DoneModal
