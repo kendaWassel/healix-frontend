@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
 
-export default function RatingModal({ isOpen, onClose, consultationId, doctor_id,onRatingSuccess}) {
-  const [rating, setRating] = useState(0);
+export default function RatingModal({ isOpen, onClose, url,onRatingSuccess}) {
+  const [rating, setRating] = useState(0); 
   const [hoveredRating, setHoveredRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -33,7 +33,7 @@ export default function RatingModal({ isOpen, onClose, consultationId, doctor_id
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/ratings/doctors/${doctor_id}`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/${url}`,
         {
           method: "POST",
           headers: {
@@ -43,7 +43,6 @@ export default function RatingModal({ isOpen, onClose, consultationId, doctor_id
           },
           body: JSON.stringify({
             stars: rating,
-            consultation_id: consultationId
           }),
         }
       );

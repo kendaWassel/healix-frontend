@@ -207,8 +207,7 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
       <RatingModal
         isOpen={showRatingModal}
         onClose={handleRatingSkip}
-        consultationId={consultationId}
-        doctor_id={doctorId}
+        url={`consultations/${consultationId}/rate/${doctorId}`}
         onRatingSuccess={() => {
           setShowRatingModal(false);
           setTimeout(() => {

@@ -34,10 +34,12 @@ const data = {
 export default function MyOrders() {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1)
   const [total,setTotal]=useState(0);
   const [statusFilter,setStatusFilter]= useState("all");
+  const [orderId,setOrderId]= useState(null);
   
        const token=localStorage.getItem("token")
      
@@ -46,7 +48,7 @@ export default function MyOrders() {
          setError(null);
      
          try {
-           let url = `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/delivery/tasks?page=${pageNumber}`;
+           let url = `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/delivery/tasks?page=${pageNumber}&per_page=3`;
            if(statusFilter!=="all"){
             url+=`&status=${statusFilter}`;
            }
@@ -83,14 +85,15 @@ export default function MyOrders() {
 
 
         const setAsDelivered = async (task_id,CurrentStatus) => {
-        
+          setOrderId(task_id);
+        setLoadingStatus(true);
       try {
         const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/delivery/tasks/${task_id}/update-status`,
         {
           method:"PUT",
           headers: {
             "Content-type" : "application/json",
-            Authorization: `Bearer ${token}` ,
+            "Authorization": `Bearer ${token}` ,
             "ngrok-skip-browser-warning": "true",
           },
       body: JSON.stringify({ status: getNextStatus(CurrentStatus) })
@@ -104,11 +107,15 @@ export default function MyOrders() {
 
       } catch(err){
        setError("failed to Update status")
+      }finally{
+        setLoadingStatus(false);
+        setOrderId(null);
       }
         }
       
         const getNextStatus = (status) => {
-          if (status === "picked_up_the_order") return "on_the_way";
+          if (status === "pending") return "picking_up_the_order";
+          if (status === "picking_up_the_order") return "on_the_way";
           if (status === "on_the_way") return "delivered";
           return status;
         };
@@ -116,7 +123,7 @@ export default function MyOrders() {
         const formatStatus = (status) => {
           switch(status) {
             case "pending": return "Pending";
-            case "picked_up_the_order": return "Picked Up";
+            case "picking_up_the_order": return "Picking Up";
             case "on_the_way": return "On The Way";
             case "delivered": return "Delivered";
             default: return status;
@@ -143,22 +150,22 @@ export default function MyOrders() {
 
         <button 
         onClick={()=> setStatusFilter("all")}
-        className={`px-4 py-2 rounded-lg font-semibold border hover:border-cyan-300 transition duration-300
+        className={`px-4 py-2 rounded-lg font-semibold border hover:border-cyan-300 transition duration-300 disabled:cursor-not-allowed disabled:opacity-50
         ${statusFilter === "all"
-          ? "bg-cyan-600 text-white "
+          ? "bg-[var(--dark-blue)] text-white "
           : "bg-white text-gray-700 border-gray-300"}`}
-        
+        disabled={isLoading || error}
         >
           All Orders
           </button>
           <button
            onClick={()=>setStatusFilter("delivered")}
-          className={`px-4 py-2 rounded-lg font-semibold border hover:border-cyan-300 transition duration-300
+          className={`px-4 py-2 rounded-lg font-semibold border hover:border-cyan-300 transition duration-300 disabled:cursor-not-allowed disabled:opacity-50
           ${statusFilter==="delivered"
-         ? "bg-cyan-600 text-white"
+         ? "bg-[var(--dark-blue)] text-white"
          : "bg-white text-gray-700 border-gray-300"
         }`}
-          
+        disabled={isLoading || error}
           >
             Delivered
           </button>
@@ -168,9 +175,14 @@ export default function MyOrders() {
 
         </div>
 
-        {isLoading && <p className="text-center text-gray-500">Loading...</p>}
         {error && <p className="text-center text-red-500">{error}</p>}
-
+{isLoading ?
+  <p className="text-center text-gray-500">Loading...</p>
+  :
+  error?
+  <p className="text-center text-red-500">{error}</p>
+  :
+  tasks.length > 0 ?
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {tasks.map((task) => (
             <div
@@ -178,44 +190,44 @@ export default function MyOrders() {
               className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md hover:border-cyan-300 transition-all max-w-2xl"
             >
               
-              <h3 className="text-2xl font-semibold text-gray-900 mb-1">
-                <span className=" text-cyan-500 "> Pharmacy: </span>
-             <span className="text-gray-500"> {task.pharmacy_name } </span>
+              <h3 className="text-[25px] text-[var(--dark-blue)] font-bold mb-1">
+                <span> Pharmacy: </span>
+             <span> {task.pharmacy_name } </span>
               </h3>
-              <p className="text-sm font-medium">
-              <span className=" text-cyan-500 ">Pharmacist Phone :</span>
-              <span className="text-gray-500">{task.pharmacy_phone}</span>
+              <p className="text-lg font-bold">
+              <span className=" text-[var(--cyan)] ">Pharmacist Phone :</span>
+              <span className="text-[var(--text-color)]">{task.pharmacy_phone}</span>
               
               </p>
 
-             <p className="text-sm font-medium">
-               <span className="text-cyan-500">Address:</span>{" "}
-               <span className="text-gray-500">{task.pharmacy_address}</span>
+             <p className="text-lg font-bold">
+               <span className="text-[var(--cyan)]">Address:</span>{" "}
+               <span className="text-[var(--text-color)]">{task.pharmacy_address}</span>
              </p>
               
               <div className="w-30 h-[1px] bg-gray-300 my-4" />
 
              
-              <p className="text-2xl font-semibold text-gray-900">
-              <span className="text-cyan-500">  Patient:  </span>
-              <span className="text-gray-500">{task.patient_name}</span>
+              <p className="text-[25px] text-[var(--dark-blue)] font-bold mb-1">
+              <span>Patient:  </span>
+              <span>{task.patient_name}</span>
               </p>
               
-              <p className="text-sm font-medium">
-                <span className="text-cyan-500">Phone:</span>{" "}
-                <span className="text-gray-600">{task.patient_phone}</span>
+              <p className="text-lg font-bold">
+                <span className="text-[var(--cyan)]">Phone:</span>{" "}
+                <span className="text-[var(--text-color)]">{task.patient_phone}</span>
              </p>
              
-              <p className="text-sm font-medium">
-                <span className="text-cyan-500">Patient Address:</span>{" "}
-                <span className="text-gray-600">{task.patient_address}</span>
+              <p className="text-lg font-bold">
+                <span className="text-[var(--cyan)]">Patient Address:</span>{" "}
+                <span className="text-[var(--text-color)]">{task.patient_address}</span>
              </p>
   
                        <div className="mt-4 p-1">
             {/* Status */}
          
-              <span className="text-md font-semibold text-cyan-800">
-                {formatStatus(task.status)}
+              <span className="text-md font-semibold text-cyan-800 mb-2">
+                Status: {formatStatus(task.status)}
               </span>
             
 
@@ -224,15 +236,32 @@ export default function MyOrders() {
             
           </div>
           
-                      {task.status === "picked_up_the_order" && (
-          <button className="bg-[#052443] text-white px-4 py-2 rounded-lg font-semibold text-md flex items-center gap-3 hover:bg-[#031f36]  "  onClick={() => setAsDelivered(task.task_id, task.status)}>
-            Set as On The Way
+          {task.status === "pending" && (
+          <button 
+          className="bg-[#052443] text-white px-4 py-2 rounded-lg font-semibold text-md flex items-center gap-3 hover:bg-[#031f36] disabled:cursor-not-allowed disabled:opacity-50"  
+          onClick={() => setAsDelivered(task.task_id, task.status)}
+          disabled={loadingStatus}
+          >
+            {loadingStatus && orderId === task.task_id? "Setting as Picking up..." : "Set as Picking Up"}
+          </button>
+        )}
+          {task.status === "picking_up_the_order" && (
+          <button 
+          className="bg-[#052443] text-white px-4 py-2 rounded-lg font-semibold text-md flex items-center gap-3 hover:bg-[#031f36] disabled:cursor-not-allowed disabled:opacity-50"  
+          onClick={() => setAsDelivered(task.task_id, task.status)}
+          disabled={loadingStatus}
+          >
+            {loadingStatus && orderId === task.task_id ? "Setting as On The Way..." : "Set as On The Way"}
           </button>
         )}
 
         {task.status === "on_the_way" && (
-          <button className="bg-[#052443] text-white px-4 py-2 rounded-lg font-semibold text-md flex items-center gap-3 hover:bg-[#031f36]" onClick={() => setAsDelivered(task.task_id, task.status)}>
-            Set as Delivered
+          <button 
+          className="bg-[#052443] text-white px-4 py-2 rounded-lg font-semibold text-md flex items-center gap-3 hover:bg-[#031f36] disabled:cursor-not-allowed disabled:opacity-50" 
+          onClick={() => setAsDelivered(task.task_id, task.status)}
+          disabled={loadingStatus}
+          >
+            {loadingStatus && orderId === task.task_id ? "Setting as Delivered..." : "Set as Delivered"}
           </button>
         )}
 
@@ -240,6 +269,9 @@ export default function MyOrders() {
             </div>
           ))}
         </div>
+:
+<p className="text-center text-gray-800">No Orders Found</p>
+}
 
         <div className="flex justify-center items-center gap-4 mt-8">
           <button
