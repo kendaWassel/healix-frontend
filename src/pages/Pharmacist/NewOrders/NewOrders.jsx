@@ -226,7 +226,7 @@ console.log('reject response: ',result);
     <>
       <PharmacistHeader />
 
-      <div className="p-10 bg-gray-50 min-h-screen">
+      <div className="p-10 bg-gray-50">
 
         <h1 className="text-3xl font-bold text-[#0a3460] mb-2">
           Prescription Orders

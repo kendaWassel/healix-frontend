@@ -8,7 +8,7 @@ const Nurse =()=>{
         <Routes>
         <Route index element={<NurseHomePage />} />
             <Route path='new-orders'  element={<NewOrders/>}/>
-            <Route path="appointment" element={<Appointments />} /> 
+            <Route path="my-schedules" element={<Appointments />} /> 
         </Routes>
         
         </>

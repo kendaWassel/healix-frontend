@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
 import LogoImage from "../../../components/logoImage/LogoImage";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../doctorRegister/DoctorRegister.module.css";
 const CareProviderRegister = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -162,7 +162,7 @@ const CareProviderRegister = () => {
     <div className="relative flex">
       <div className={`contentCol h-[100%]`}>
         <div className="flex items-start md:py-[2rem] py-[1rem] md:ps-[2rem] ps-[1rem]">
-          <button>
+          <Link to="/register">
             <svg
               width="44"
               height="36"
@@ -175,7 +175,7 @@ const CareProviderRegister = () => {
                 fill="black"
               />
             </svg>
-          </button>
+          </Link>
           {/* form  */}
           <div className="flex-grow-1 flex flex-col items-center">
             <div className={`${styles.formHeading} text-center`}>

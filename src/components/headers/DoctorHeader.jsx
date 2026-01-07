@@ -35,14 +35,6 @@ const DoctorHeader = () => {
         >
           My Schedules
         </NavLink>
-
-        <NavLink
-          to="/doctor/receipts"
-          end
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          My Receipts
-        </NavLink>
         <div className="flex items-center gap-1">
         <svg width="40" height="44" viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_1_20468)">
@@ -96,14 +88,6 @@ const DoctorHeader = () => {
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           My Schedules 
-          </NavLink>
-          <NavLink
-            onClick={() => setIsMenuOpen(false)}
-            to="/doctor/receipts"
-            end
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          My receipts
           </NavLink>
         </div>
       </div>

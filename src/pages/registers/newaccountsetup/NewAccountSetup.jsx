@@ -21,7 +21,7 @@ const accountTypes = [
     title: "For Pharmacists",
     desc: "Receive and process medications orders",
     icon: faPills,
-    dest:"/pharmacist-register"
+    dest:"pharmacist-register"
   
   },
   {
@@ -29,14 +29,14 @@ const accountTypes = [
     title: "For Doctors",
     desc: "Provide online consultations",
     icon: faUserDoctor,
-    dest: "/doctor-register"
+    dest: "doctor-register"
   },
   {
     key: "patient",
     title: "For Patients",
     desc: "Access a network of trusted healthcare professionals",
     icon: faUser,
-    dest:"/patient-register"
+    dest:"patient-register"
 
   },
   {
@@ -44,21 +44,21 @@ const accountTypes = [
     title: "For Delivery Agents",
     desc: "Get assigned to deliver medications or transport care providers safely to patients",
     icon: faTruckMedical,
-    dest: "/delivery-register"
+    dest: "delivery-register"
   },
   {
     key: "nurse",
     title: "For Nurses",
     desc: "Provide at-home medical care",
     icon: faUserNurse,
-    dest: "/care-provider-register"
+    dest: "care-provider-register"
   },
   {
     key: "physiotherapist",
     title: "For Physiotherapists",
     desc: "Provide at-home physical care",
     icon: faPersonWalking,
-    dest:"/care-provider-register"
+    dest:"care-provider-register"
   },
 ];
 
