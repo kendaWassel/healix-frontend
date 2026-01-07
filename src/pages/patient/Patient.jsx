@@ -1,6 +1,5 @@
-import { BrowserRouter } from "react-router-dom";
 import { Routes,Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import DoctorConsultation from "./DoctorConsultation/DoctorConsultation";
 import PickDoctor from "./DoctorConsultation/pickDoctor/PickDoctor";
 import PatientHomePage from "./patientHomePage/PatientHomePage";

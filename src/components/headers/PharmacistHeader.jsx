@@ -43,13 +43,6 @@ const PharmacistHeader = () => {
         >
           New Orders
         </NavLink>
-        <NavLink
-          to="/pharmacist/receipts"
-          end
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          Receipts
-        </NavLink>
         <div className="flex items-center gap-1">
         <svg width="43" height="45" viewBox="0 0 43 45" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_d_1_20474)">
@@ -111,14 +104,6 @@ const PharmacistHeader = () => {
           className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
         >
           New Orders
-          </NavLink>
-          <NavLink
-            onClick={() => setIsMenuOpen(false)}
-            to="/pharmacist/receipts"
-            end
-          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
-        >
-          Receipts
           </NavLink>
         </div>
       </div>

@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
 import Footer from '../../../components/footer/Footer';
 import NurseHeader from '../../../components/headers/NurseHeader';
+import { useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import styles from '../../registers/doctorRegister/DoctorRegister.module.css'
 
 const NurseHomePage = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -18,6 +19,7 @@ const NurseHomePage = () => {
     available_time: "",
     session_fee: "100",
     type: "nurse",
+    gender: "female",
     license_file: null,
   });
   const [licenseFile, setLicenseFile] = useState(null);
@@ -170,12 +172,15 @@ const NurseHomePage = () => {
   return (
     <>
       <NurseHeader />
-        <div className="">
-          <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+          <div className="p-6 md:p-8">
             <div className="flex justify-between items-center mb-6">
+            <div>
               <h1 className="text-2xl md:text-3xl font-bold text-[#0a3460]">
                 Account Information
               </h1>
+              <p className="text-[var(--text-color)] font-medium mt-3 text-lg">View or update your information</p>
+              </div>
+              
               <button
                 onClick={handleSubmit}
                 disabled={isUpdating || isLoading}
@@ -202,6 +207,59 @@ const NurseHomePage = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+              {/* photo */}
+              <div
+                className={`${styles.hiddenFileInput}  flex flex-col justify-center md:w-[100px] md:h-[100px] w-[80px] h-[80px] border-1 border-[var(--card-border)] rounded-[50%] overflow-hidden`}
+              >
+                <label
+                  htmlFor="photo"
+                  className="flex flex-col items-center cursor-pointer w-full h-full justify-center"
+                >
+                  {/* {photoPreview ? ( */}
+                    <img
+                      src='./gallery-7.png'
+                      alt="Care Provider photo preview"
+                      className="w-full h-full object-cover rounded-[50%]"
+                    />
+                  {/* ) : (
+                    <>
+                      <svg
+                        width="47"
+                        height="42"
+                        viewBox="0 0 47 42"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M39.5413 12.0416V7.45825H34.958V5.16659H39.5413V0.583252H41.833V5.16659H46.4163V7.45825H41.833V12.0416H39.5413ZM21.208 34.3395C23.602 34.3395 25.6256 33.5137 27.2786 31.8622C28.9317 30.2107 29.7582 28.1871 29.7582 25.7916C29.7582 23.396 28.9317 21.3725 27.2786 19.721C25.6256 18.0694 23.602 17.2429 21.208 17.2414C18.814 17.2398 16.7904 18.0664 15.1374 19.721C13.4843 21.3755 12.6578 23.3991 12.6578 25.7916C12.6578 28.1841 13.4843 30.2076 15.1374 31.8622C16.7904 33.5168 18.814 34.3433 21.208 34.3418M21.208 32.0501C19.4282 32.0501 17.9401 31.452 16.7438 30.2558C15.5476 29.0595 14.9495 27.5714 14.9495 25.7916C14.9495 24.0117 15.5476 22.5237 16.7438 21.3274C17.9401 20.1312 19.4282 19.533 21.208 19.533C22.9879 19.533 24.4759 20.1312 25.6722 21.3274C26.8684 22.5237 27.4666 24.0117 27.4666 25.7916C27.4666 27.5714 26.8684 29.0595 25.6722 30.2558C24.4759 31.452 22.9879 32.0501 21.208 32.0501ZM4.28634 41.8333C3.23065 41.8333 2.34988 41.4803 1.64405 40.7745C0.938216 40.0687 0.584536 39.1871 0.583008 38.1299V13.4533C0.583008 12.3976 0.936689 11.5168 1.64405 10.811C2.35141 10.1051 3.23217 9.75145 4.28634 9.74992H11.0628L15.3024 5.16659H29.4947V12.9239H34.078V17.5072H41.833V38.1322C41.833 39.1864 41.4801 40.0671 40.7743 40.7745C40.0684 41.4819 39.1869 41.8348 38.1297 41.8333H4.28634Z"
+                          fill="#39CCCC"
+                        />
+                      </svg>
+                      <h3 className="text-[var(--text-color)] text-xs">
+                        Add Photo
+                      </h3>
+                    </>
+                  )} */}
+                </label>
+                <input
+                  type="file"
+                  name="photo"
+                  id="photo"
+                  accept="image/*"
+                  // onChange={(e) => {
+                  //   const file = e.target.files[0];
+                  //   if (file) {
+                  //     const reader = new FileReader();
+                  //     reader.onload = (e) => {
+                  //       setPhotoPreview(e.target.result);
+                  //     };
+                  //     reader.readAsDataURL(file);
+                  //   }
+                  //   setPhotoFile(file);
+                  // }}
+                  disabled
+                />
+              </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -264,7 +322,7 @@ const NurseHomePage = () => {
                       onChange={(e) =>
                         setNurseData({ ...nurseData, email: e.target.value })
                       }
-                      className="ms-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full ms-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled
                     />
                     </div>
@@ -303,7 +361,7 @@ const NurseHomePage = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Password
                     </label>
-                    <div className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#39CCCC] focus:border-transparent">
+                    <div className="flex items-center w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#39CCCC] focus:border-transparent">
                     <svg
                       width="30"
                       height="31"
@@ -339,7 +397,46 @@ const NurseHomePage = () => {
                     </div>
                     </div>
                   </div>
-
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Gender
+                    </label>
+                    <div className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#39CCCC] focus:border-transparent">
+                    <svg
+                      width="37"
+                      height="36"
+                      viewBox="0 0 37 36"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M29 4.5L21.5 12M29 4.5H23M29 4.5V10.5M17 24V33M12.5 28.5H21.5M11 16.5C11 18.0913 11.6321 19.6174 12.7574 20.7426C13.8826 21.8679 15.4087 22.5 17 22.5C18.5913 22.5 20.1174 21.8679 21.2426 20.7426C22.3679 19.6174 23 18.0913 23 16.5C23 14.9087 22.3679 13.3826 21.2426 12.2574C20.1174 11.1321 18.5913 10.5 17 10.5C15.4087 10.5 13.8826 11.1321 12.7574 12.2574C11.6321 13.3826 11 14.9087 11 16.5Z"
+                        stroke="#39CCCC"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <select
+                    name="gender"
+                    id="gender"
+                    value={nurseData.gender}
+                    onChange={(e) =>
+                      setNurseData({
+                        ...nurseData,
+                        gender: e.target.value,
+                      })
+                    }
+                    required
+                    disabled
+                    className="text-[var(--text-color)] disabled:cursor-not-allowed"
+                  >
+                    <option value="">Gender</option>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                  </select>
+                    </div>
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Session Fee
@@ -379,7 +476,7 @@ const NurseHomePage = () => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       License File
                     </label>
@@ -419,7 +516,7 @@ const NurseHomePage = () => {
                           className="hidden disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         <span className="text-sm text-gray-600 ms-2">
-                          {licenseFileName || "Choose File"}
+                          {licenseFileName || "View File"}
                         </span>
                       </label>
                       {licenseFilePreview && !licenseFile && (
@@ -438,7 +535,6 @@ const NurseHomePage = () => {
               </form>
             )}
           </div>
-        </div>
       <Footer />
     </>
   );

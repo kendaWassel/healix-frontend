@@ -167,7 +167,7 @@ export default function PatientRegister() {
               id="name"
               type="text"
               ref={inputRef}
-              placeholder="Type username"
+              placeholder="Type full name"
               value={newUser.full_name}
               onChange={(e) =>
                 setNewUser({ ...newUser, full_name: e.target.value })

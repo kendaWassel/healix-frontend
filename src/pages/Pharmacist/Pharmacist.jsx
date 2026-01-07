@@ -8,8 +8,8 @@ const  Pharmacist=()=>{
         <>
         <Routes>
 <Route index element={<PharmacistHomePage/>}/>
-<Route path="NewOrders" element={<NewOrders/>}/>
 <Route path="MyOrders" element={<MyOrders />} />
+<Route path="NewOrders" element={<NewOrders/>}/>
         </Routes>
         </>
     )
