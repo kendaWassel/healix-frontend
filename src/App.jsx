@@ -27,6 +27,8 @@ export default function App() {
     <Route path="/physio/*" element={<Physio/>}/>
     <Route path="/pharmacist/*" element={<Pharmacist/>}/>
     <Route path="/delivery/*" element={<Delivery/>}/>
+    <Route path="/admin-dashboard/*" element={<AdminDashboard/>}/>
+
     </Routes>
     </BrowserRouter>
   
