@@ -534,7 +534,7 @@ const NurseHomePage = () => {
                 </div>
               </form>
             )}
-          </div>
+          </div> 
       <Footer />
     </>
   );

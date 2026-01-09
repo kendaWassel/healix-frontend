@@ -3,6 +3,7 @@ import Footer from "../../../components/footer/Footer";
 import { Clock } from "lucide-react";
 
 
+
 import { useState, useEffect } from "react";
 /*
 const mockData = {
@@ -37,48 +38,19 @@ export default function MyOrders() {
   const [loadingId, setLoadingId] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [deliveryOrders, setDeliveryOrders] = useState([]);
-  const [deliveryPage, setDeliveryPage] = useState(1);
-  const [deliveryTotalPages, setDeliveryTotalPages] = useState(1);
-  const [deliveryLoading, setDeliveryLoading] = useState(false);
-  const [deliveryError, setDeliveryError] = useState(null);
-  const [deliveryLoadBtn, setDeliveryLoadBtn] = useState(false);
-  const [showMedsModal, setShowMedsModal] = useState(false);
-const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
 
 
-  const [pastOrders, setPastOrders] = useState([]);
-  const [pastPage, setPastPage] = useState(1);
-  const [pastTotalPages, setPastTotalPages] = useState(1);
-  const [pastLoading, setPastLoading] = useState(false);
-  const [pastError, setPastError] = useState(null);
-  const [pastLoadBtn, setPastLoadBtn] = useState(false);
-  
-
-  
+  const itemsPerPage = 6;
   const token = localStorage.getItem("token");
 
-  const fetchOrders = async (pageNumber = 1) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/my-orders?page=${pageNumber}&per_page=3`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            "ngrok-skip-browser-warning": "true",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const serverError = await response.json().catch(() => ({}));
-        throw new Error(serverError.message || "Request failed");
-      }
-
+  /*
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const response = await fetch("", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
       console.log("Request Accepted: ", data);
       setOrders(data.data || []);
@@ -89,100 +61,28 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
       console.error("Failed fetching orders:", err);
       setError(err?.message || "Failed to load orders.");
     } finally {
-      setIsLoading(false);
-    }
-  };
-  const fetchDeliveryOrders = async () => {
-    if(deliveryLoadBtn === false){
-      return;
-    }
-    setDeliveryLoading(true);
-    setDeliveryError(null);
-  
-    try {
-      const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/orders/track?page=${deliveryPage}&per_page=3`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            "ngrok-skip-browser-warning": "true",
-          },
-        }
-      );
-  
-      if (!response.ok) {
-        const serverError = await response.json().catch(() => ({}));
-        throw new Error(serverError.message || "Request failed");
-      }
-  
-      const data = await response.json();
-  console.log('accepted by delivery: ',data);
-      setDeliveryOrders(data.data || []);
-      setDeliveryPage(data.meta?.current_page || 1);
-      setDeliveryTotalPages(data.meta?.last_page || 1);
-    } catch (err) {
-      setDeliveryError(err.message || "Failed to load delivery orders");
-    } finally {
-      setDeliveryLoading(false);
-    }
-  };
-  const fetchPastOrders = async () => {
-    if (!pastLoadBtn) return;
-  
-    setPastLoading(true);
-    setPastError(null);
-  
-    try {
-      const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/orders/history?page=${pastPage}&per_page=3`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            "ngrok-skip-browser-warning": "true",
-          },
-        }
-      );
-  
-      if (!response.ok) {
-        const serverError = await response.json().catch(() => ({}));
-        throw new Error(serverError.message || "Request failed");
-      }
-  
-      const data = await response.json();
-      console.log("past orders:", data);
-  
-      setPastOrders(data.data || []);
-      setPastPage(data.meta?.current_page || 1);
-      setPastTotalPages(data.meta?.last_page || 1);
-    } catch (err) {
-      setPastError(err.message || "Failed to load past orders");
-    } finally {
-      setPastLoading(false);
-    }
-  };  
+       setIsLoading(false);
+    };
+   
     useEffect(() => {
-      if (pastLoadBtn) {
-        fetchPastOrders();
-      }
-    }, [pastLoadBtn, pastPage]);
-  useEffect(() => {
-    if (deliveryLoadBtn) {
-      fetchDeliveryOrders();
-    }
-  }, [deliveryLoadBtn, deliveryPage]);
+     fetchOrders();
+  }, []); */
 
   useEffect(() => {
-    fetchOrders(page);
-  }, [page]);
+    setTotalPages(Math.ceil(orders.length / itemsPerPage));
+  }, [orders]);
+
+  const displayedOrders = orders.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   
-  const handleDeliverOrder = async (order_id) => {
+  const handleDeliverOrder = async (orderId) => {
     try {
-      setLoadingId(order_id);
+      setLoadingId(orderId);
 
-      const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/orders/${order_id}/ready`,
+      const response = await fetch("",
         {
           method: "POST",
           headers: {
@@ -190,7 +90,10 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
           },
-     
+          body: JSON.stringify({
+            delivered: true,
+            delivery_method: "pickup",
+          }),
         }
       );
 
