@@ -57,17 +57,18 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
 
         const data = await response.json();
         console.log('consultation data: ',data);
-        setDoctorPhone(data.doctor_phone);
         if (!response.ok || data.status !== "success") {
           throw new Error(data.message || "Failed to create consultation");
         }
 
         setConsultationId(data.data.consultation_id);
+        setDoctorPhone(data.data.doctor_phone);
         setMessage(data.message || "You can call the doctor Now");
       } catch (err) {
         setError(err.message || "Failed to create consultation");
       } finally {
         setIsCreatingConsultation(false);
+        console.log('doctor phone: ', doctorPhone);
       }
     };
 
@@ -202,7 +203,6 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
         onClose={() => setShowPaymentModal(false)}
         onPaymentSuccess={handlePaymentSuccess}
         paymentType="doctor"
-        consultationId={consultationId}
       />
       <RatingModal
         isOpen={showRatingModal}

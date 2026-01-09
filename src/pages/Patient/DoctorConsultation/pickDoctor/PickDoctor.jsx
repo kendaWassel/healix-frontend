@@ -216,7 +216,7 @@ const PickDoctor = () => {
         //   }, [pagination.currentPage, pagination.itemsPerPage]);
     
   return (
-    <div className="bg-[#fafbfc]">
+    <div className="bg-[#fafbfc] min-h-[60vh]">
         <div className="md:px-[4rem] px-[2rem] py-[2rem]">
         <Link to="/patient/consultation" className="text-[30px]">
         <FontAwesomeIcon icon={faArrowLeft} />

@@ -159,7 +159,7 @@ const token = localStorage.getItem("token")
   return (
     <>
     <DeliveryHeader/>
-    <div className="p-10 bg-gray-50 min-h-screen">
+    <div className="p-10 bg-gray-50 min-h-[60vh]">
       <div className="mb-10">
         <h1 className="text-[#0a3460] text-3xl font-bold">New Orders</h1>
         <p className="text-gray-600 mt-2">Orders ready for delivery</p>
