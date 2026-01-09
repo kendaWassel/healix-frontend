@@ -169,6 +169,7 @@ export default function PatientScheduleCall({ isOpen, onClose, consultationId, d
         }}
         url={`consultations/${consultationId}/rate/${doctorId}`}
         onRatingSuccess={handleRatingSuccess}
+        message="Rate the doctor"
       />
       <DoneModal
         isOpen={showBookingDone}

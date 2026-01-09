@@ -20,13 +20,17 @@ export default function Receipts() {
   const [isLoadingPharmacist, setIsLoadingPharmacist] = useState(false);
   const [error, setError] = useState(null);
   const [errorPharmacist, setErrorPharmacist] = useState(null);
-  const [selectedSessionId, setSelectedSessionId] = useState(null);
 
   const [sendPharmacy, setSendPharmacy] = useState(false);
   const [done, setDone] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showBookingDone, setShowBookingDone] = useState(false);
+  const [ratingStep, setRatingStep] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [selectedDeliveryId, setSelectedDeliveryId] = useState(null);
+  const [selectedPharmacistId, setSelectedPharmacistId] = useState(null);
 
   const [uploadDisabled, setUploadDisabled] = useState(false);
   const [selectedReceiptId, setSelectedReceiptId] = useState(null);
@@ -115,30 +119,33 @@ console.log('my reciepts: ',data);
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
           },
         }
       );
 
       const data = await response.json();
       console.log('pharmacist receipts: ', data);
-      
-      // Handle response structure: {data: [...], meta: {...}} or {status: "success", data: [...], meta: {...}}
+
       const receiptData = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
       const meta = data?.meta || data.meta;
       
       if (Array.isArray(receiptData)) {
         const formatted = receiptData.map((p) => ({
           id: p.order_id,
-          name: p.pharmacy?.name || "Unknown Pharmacy",
-          source: p.source || "Unknown",
-          date: p.priced_at ? new Date(p.priced_at).toLocaleDateString() : "",
-          status: p.status || "Unknown",
-          pharmacy: p.pharmacy,
+          task_id: p.task_id,
+          delivery_id: p.delivery_id,
           items: p.items || [],
-          total_quantity: p.total_quantity || 0,
-          total_price: p.total_price || 0,
+          name: p.pharmacy?.name || "Unknown Pharmacy",
+          pharmacy: p.pharmacy,
+          prescription_id :p.prescription_id,
+          date: p.priced_at ? new Date(p.priced_at).toLocaleDateString() : "",
+          source: p.source || "Unknown",
+          order_status: p.order_status || "Unknown",
+          prescription_status: p.prescription_status || "Unknown",
           total_amount: p.total_amount || 0,
+          total_price: p.total_price || 0,
+          total_quantity: p.total_quantity || 0,
         }));
 
         setPharmacistReceipts(formatted);
@@ -184,6 +191,13 @@ console.log('my reciepts: ',data);
   
       if (data.status === "success") {
         setDeliveryData(data.data);
+  
+        // 👇 KEY FIX
+        if (!data.data?.delivery) {
+          setDeliveryMessage(
+            data.data?.message || "No delivery agent assigned yet"
+          );
+        }
       } else {
         setDeliveryMessage(data.message || "No delivery assigned yet");
       }
@@ -192,9 +206,9 @@ console.log('my reciepts: ',data);
       setDeliveryMessage("Failed to load delivery info");
     } finally {
       setDeliveryLoading(false);
-      console.log("delivery data:", deliveryData);
     }
   };
+  
   
 
   useEffect(() => {
@@ -208,19 +222,55 @@ console.log('my reciepts: ',data);
       fetchPharmacistReceipts();
   }, [phLoadBtn,pharmacistPagination.currentPage]);
 
+  const handlePayAndRate = async (item) => {
+    // Store order_id and pharmacist_id
+    setSelectedOrderId(item.id);
+    setSelectedTaskId(item.task_id);
+    setSelectedPharmacistId(item.pharmacy?.id);
+    setSelectedDeliveryId(item.delivery_id);
+    // Show payment modal
+    setShowPaymentModal(true);
+  };
+
   const handlePaymentSuccess = () => {
     setShowPaymentModal(false);
+    setRatingStep('delivery');
     setTimeout(() => {
       setShowRatingModal(true);
     }, 300);
   };
 
-  const handleRatingSkip = () => {
-    setSelectedSessionId(null);
+  const handleDeliveryRatingSuccess = () => {
     setShowRatingModal(false);
+    setRatingStep('pharmacist');
+    setTimeout(() => {
+      setShowRatingModal(true);
+    }, 300);
+  };
+
+  const handlePharmacistRatingSuccess = () => {
+    setShowRatingModal(false);
+    setRatingStep(null);
     setTimeout(() => {
       setShowBookingDone(true);
     }, 300);
+  };
+
+  const handleRatingSkip = () => {
+    setShowRatingModal(false);
+    if (ratingStep === 'delivery') {
+      // Skip delivery rating, go to pharmacist rating
+      setRatingStep('pharmacist');
+      setTimeout(() => {
+        setShowRatingModal(true);
+      }, 300);
+    } else if (ratingStep === 'pharmacist') {
+      // Skip pharmacist rating, go to done modal
+      setRatingStep(null);
+      setTimeout(() => {
+        setShowBookingDone(true);
+      }, 300);
+    }
   };
   const handleUpload = () => {
     setUploadDisabled(true);
@@ -472,19 +522,20 @@ receipts.length > 0 ?
               className={styles.Cardbtn}
             >
                 <div className={styles.DoctorText}>
-                  <h3 className="text-[22px]">{item.name}</h3>
-                  <p className="font-medium my-2 text-[var(--cyan)]">Source: {item.source}</p>
+                  <h3 className="">{item.name}</h3>
+                  <p className="font-medium mt-2 text-lg"><span className="text-[var(--cyan)] font-bold">Source:</span> {item.source}</p>
+                  <p className="font-medium my-1 text-lg"><span className="text-[var(--cyan)] font-bold">Status:</span> {item.order_status}</p>
                   {item.items && item.items.length > 0 && (
                     <div className="border-b py-3">
                       <h4 className="text-[19px] font-medium">Medicines:</h4>
                       <div className="my-1">
                         {item.items.map((medicine, index) => (
                           <div key={index} className="flex justify-between items-center text-sm">
-                            <div className="flex-1 my-1">
+                            <div className="flex-1 my-1 text-[17px]">
                               <p className="font-medium">{medicine.medicine_name}</p>
-                              <p className="text-gray-500">Quantity: {medicine.quantity}</p>
+                              <p className="text-gray-600 font-medium">Quantity: {medicine.quantity}</p>
                             </div>
-                            <p className="font-semibold text-[var(--text-color)]">${medicine.price?.toFixed(2) || '0.00'}</p>
+                            <p className="font-medium text-[var(--text-color)]">${medicine.price?.toFixed(2) || '0.00'}</p>
                           </div>
                         ))}
                       </div>
@@ -500,21 +551,19 @@ receipts.length > 0 ?
     console.log('order_id : ',item.id);
     fetchDeliveryInfo(item.id);
   }}
-  className="px-6 py-2 my-5 rounded-lg text-white text-[18px] bg-[var(--dark-blue)] hover:opacity-90 transition"
+  className="px-3 py-1 my-5 rounded-lg text-[var(--dark-blue)]  bg-[var(--card-border)] hover:opacity-90 transition"
 >
   Delivery info
 </button>
+<p className="text-lg text-gray-600 font-semibold">Total Price with delivery fee: $ {item.total_amount.toFixed(2)}</p>
+{item.order_status === "delivered" &&
 <button
-  onClick={() => {
-    setSelectedSessionId(item.id);
-    setShowPaymentModal(true);
-    console.log('pay and rate modal ');
-  }}
-  className="px-6 py-2 my-5 rounded-lg text-white text-[18px] bg-[var(--dark-blue)] hover:opacity-90 transition"
+  onClick={() => handlePayAndRate(item)}
+  className="px-6 py-2 my-5 text-lg font-medium rounded-lg text-white block mx-[auto] bg-[var(--dark-blue)] hover:opacity-90 transition"
 >
   Pay and Rate
 </button>
-<p className="text-lg text-gray-600 font-semibold">Total Price with delivery fee: $ {item.total_amount.toFixed(2)}</p>
+}
                 </div>
             </div>
           ))}
@@ -547,39 +596,41 @@ receipts.length > 0 ?
       </div>
     </div>
       </div>
-    <Modal open={showDeliveryModal} onClose={() => setShowDeliveryModal(false)}>
+      <Modal open={showDeliveryModal} onClose={() => setShowDeliveryModal(false)}>
   <h2 className="text-2xl font-bold text-[#0a3460] mb-4">
     Delivery Information
   </h2>
 
   {deliveryLoading ? (
     <p className="text-center text-gray-500">Loading delivery info...</p>
-  ) : deliveryData ? (
+  ) : deliveryData?.delivery ? (
     <div className="flex items-center gap-4">
       <img
-        src={deliveryData.delivery.image || "/no-photo.png"}
-        alt={deliveryData.delivery.name}
+        src={deliveryData.delivery?.image || "/no-photo.png"}
+        alt={deliveryData.delivery?.name}
         className="w-20 h-20 rounded-full object-cover border-2 border-[var(--cyan)]"
       />
 
       <div className="space-y-1">
-        <p className="text-lg font-bold">{deliveryData.delivery.name}</p>
+        <p className="text-lg font-bold">
+          {deliveryData.delivery?.name}
+        </p>
+
         <p>
           <span className="text-[var(--cyan)] font-medium">Phone:</span>{" "}
-          {deliveryData.delivery.phone}
+          {deliveryData.delivery?.phone}
         </p>
+
         <p>
           <span className="text-[var(--cyan)] font-medium">Vehicle:</span>{" "}
-          {deliveryData.delivery.vehicle_type}
+          {deliveryData.delivery?.vehicle_type}
         </p>
+
         <p>
           <span className="text-[var(--cyan)] font-medium">Plate Number:</span>{" "}
-          {deliveryData.delivery.plate_number}
+          {deliveryData.delivery?.plate_number}
         </p>
-        <p>
-          <span className="text-[var(--cyan)] font-medium">Delivery Fee:</span>{" "}
-          {deliveryData.delivery.delivery_fee}$
-        </p>
+
         <p>
           <span className="text-[var(--cyan)] font-medium">Status:</span>{" "}
           {deliveryData.order_status}
@@ -588,21 +639,30 @@ receipts.length > 0 ?
     </div>
   ) : (
     <p className="text-center text-gray-600 font-medium">
-      {deliveryMessage}
+      {deliveryMessage || "No delivery information available"}
     </p>
   )}
 </Modal>
 
+
 <RatingModal
         isOpen={showRatingModal}
         onClose={handleRatingSkip}
-        url={`consultations/${selectedSessionId}/rate/`}
-        onRatingSuccess={() => {
-          setShowRatingModal(false);
-          setTimeout(() => {
-            setShowBookingDone(true);
-          }, 300);
-        }}
+        url={ratingStep === 'delivery' 
+          ? `task/${selectedTaskId}/rate/${selectedDeliveryId}`
+          : ratingStep === 'pharmacist'
+          ? `order/${selectedOrderId}/rate/${selectedPharmacistId}`
+          : ''}
+        onRatingSuccess={ratingStep === 'delivery' 
+          ? handleDeliveryRatingSuccess
+          : ratingStep === 'pharmacist'
+          ? handlePharmacistRatingSuccess
+          : () => {}}
+          message={ratingStep === 'delivery' 
+          ? 'Rate Delivery service'
+          : ratingStep === 'pharmacist'
+          ? 'Rate Pharmacist service'
+          : ''}
       />
 <PaymentModal
         isOpen={showPaymentModal}
@@ -614,7 +674,7 @@ receipts.length > 0 ?
         isOpen={showBookingDone}
         onHome={() => {
           setShowBookingDone(false);
-          onClose();
+          fetchPharmacistReceipts();
         }}
         message="Thank you for your feedback!"
       />
