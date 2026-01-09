@@ -143,7 +143,7 @@ export default function MyOrders() {
     return (
       <>
       <DeliveryHeader />
-      <div className="p-8">
+      <div className="p-8 min-h-[60vh]">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-6 text-[#024]">My Orders</h1> 
        <div className="flex gap-4 mb-6">
@@ -174,8 +174,6 @@ export default function MyOrders() {
           <p className="text-lg font-semibold text-gray-600">Orders you accepted and need to deliver</p>
 
         </div>
-
-        {error && <p className="text-center text-red-500">{error}</p>}
 {isLoading ?
   <p className="text-center text-gray-500">Loading...</p>
   :

@@ -178,7 +178,7 @@ const PhysioNewOrders = () => {
   return (
     <>
     <PhysioHeader/>
-    <div className="p-10 bg-gray-50 min-h-screen">
+    <div className="p-10 bg-gray-50 min-h-[60vh]">
       <div className="mb-10 text-left">
         <h1 className="text-[#0a3460] text-3xl font-bold">My New Orders</h1>
         <p className="text-gray-600 text-lg mt-2">Check your new orders here</p>

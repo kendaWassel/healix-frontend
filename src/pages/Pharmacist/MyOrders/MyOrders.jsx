@@ -1,8 +1,5 @@
 import PharmacistHeader from "../../../components/headers/PharmacistHeader";
 import Footer from "../../../components/footer/Footer";
-import { Clock } from "lucide-react";
-
-
 import { useState, useEffect } from "react";
 /*
 const mockData = {
@@ -222,7 +219,7 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
   return (
     <>
       <PharmacistHeader />
-      <div className="bg-gray-50 py-7">
+      <div className="bg-gray-50 py-7 min-h-[60vh]">
 {/* pharmacist accepted orders  */}
       <div className="px-10">
         {/* HEADER */}
@@ -463,7 +460,7 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
         </button>
       </div>
       </>
-      }
+}
 </div>
 {/* past orders  */}
 <div className="px-10">

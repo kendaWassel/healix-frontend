@@ -13,9 +13,8 @@ export default function PaymentModal({
   const getPaymentTypeLabel = () => {
     const labels = {
       doctor: "Doctor Consultation",
-      pharmacist: "Pharmacy Order",
-      delivery: "Delivery Service",
-      nurse: "Nurse Service",
+      delivery: "Delivery and Pharmacy Order",
+      nurse: "Nurse Session",
       physiotherapist: "Physiotherapy Session",
     };
     
@@ -89,11 +88,6 @@ export default function PaymentModal({
             <CheckCircle2 className="mx-auto mb-4 text-green-500" size={64} />
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">Payment Successful!</h2>
             <p className="text-gray-600 mb-4">Your payment has been processed successfully.</p>
-            <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-              <p className="text-sm text-green-800">
-                Amount paid: <span className="font-semibold">${getDefaultAmount().toFixed(2)}</span>
-              </p>
-            </div>
           </div>
         )}
       </div>

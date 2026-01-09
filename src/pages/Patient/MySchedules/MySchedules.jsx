@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import RatingModal from "../DoctorConsultation/Booking/RatingModal";
 import DoneModal from "../DoctorConsultation/Booking/DoneModal";
+import PatientScheduleSession from "./PatientScheduleSession";
 const MySchedules = () => {
   const [schedules, setSchedules] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,10 +20,12 @@ const MySchedules = () => {
   const [cpIsLoading, setCpIsLoading] = useState(false);
   const [cpError, setCpError] = useState(null);
   const [showRateModal, setShowRateModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [selectedCpId, setSelectedCpId] = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showBookingDone, setShowBookingDone] = useState(false);
+  const [cpLoadBtn, setCpLoadBtn] = useState(false);
   const token = localStorage.getItem("token");
 
   const [pagination, setPagination] = useState({
@@ -80,6 +83,7 @@ const MySchedules = () => {
       });
   };
   const fetchCpSchedules = () => {
+    if(!cpLoadBtn) return;
     setCpIsLoading(true);
     setCpError(null);
 
@@ -206,13 +210,15 @@ const MySchedules = () => {
     fetchSchedules();
   }, [pagination.currentPage]);
   useEffect(() => {
-    fetchCpSchedules();
-  }, [cpPagination.currentPage]);
+    if (cpLoadBtn) {
+      fetchCpSchedules();
+    }
+  }, [cpLoadBtn, cpPagination.currentPage]);
 
   return (
     <>
       <PatientHeader />
-      <div className="bg-gray-50">
+      <div className="bg-gray-50 min-h-[60vh]">
         <div className="doctor-schedules px-10 pt-[2rem] pb-0">
           <div className="mb-10 text-left">
             <h1 className="text-[#0a3460] text-3xl font-bold">
@@ -311,7 +317,7 @@ const MySchedules = () => {
                 className={`px-5 py-2 rounded-lg border text-sm font-medium ${
                   pagination.currentPage === 1
                     ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                    : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                    : "text-[var(--cyan)] border-[var(--cyan)] hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition duration-300"
                 }`}
               >
                 Previous
@@ -327,7 +333,7 @@ const MySchedules = () => {
                 className={`px-5 py-2 rounded-lg border text-sm font-medium ${
                   pagination.currentPage === pagination.totalPages
                     ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                    : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                    : "text-[var(--cyan)] border-[var(--cyan)] hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition duration-300"
                 }`}
               >
                 Next
@@ -343,7 +349,17 @@ const MySchedules = () => {
               Check your Schedules here
             </p>
           </div>
-        {cpIsLoading?
+          {cpLoadBtn === false ? 
+  <div className="text-center">
+    <button
+  onClick={() => setCpLoadBtn(true)}
+  className="px-6 py-2 my-5 rounded-lg text-white text-[18px] bg-[var(--dark-blue)] hover:opacity-90 transition"
+>
+  Load Orders
+</button>
+    </div> :
+
+        cpIsLoading?
         <p className="col-span-full text-center text-gray-600 my-5">
         Loading schedules...
       </p>
@@ -352,7 +368,7 @@ const MySchedules = () => {
 :
 cpSchedules.length > 0 ? 
 
-    
+    <div> 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
             {cpSchedules.map((schedule) => (
                 <div
@@ -362,7 +378,7 @@ cpSchedules.length > 0 ?
                   <div className="flex items-center justify-between pb-[1rem] mb-[1rem] border-b-[2px] border-[var(--card-border)]">
                     <div className="flex items-start gap-4">
                       <img
-                        src={fixImageUrl(schedule.image)}
+                        src={fixImageUrl(schedule.care_provider_image)}
                         alt="doctor's photo"
                         className="w-[40px] h-[40px] rounded-full object-cover border border-blue-400"
                       />
@@ -376,7 +392,20 @@ cpSchedules.length > 0 ?
                         </p>
                       </div>
                     </div>
-
+{schedule.session_status === "canceled" ?
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSelectedSessionId(schedule.session_id);
+                        setSelectedCpId(schedule.care_provider_id);
+                        setShowScheduleModal(true);
+                      }}
+                      className="bg-[#ecf8f6] text-[var(--dark-blue)] px-3 py-2 rounded-xl hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition"
+                    >
+                      <span>Choose New Date</span>
+                    </button>
+                    :
+                    schedule.status === "completed" &&
                     <button
                       onClick={(e) => {
                         e.preventDefault();
@@ -384,7 +413,7 @@ cpSchedules.length > 0 ?
                         setSelectedCpId(schedule.care_provider_id);
                         setShowRateModal(true);
                       }}
-                      className="flex items-center gap-2 bg-[#ecf8f6] text-[#0a3460] px-3 py-2 rounded-xl hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition"
+                      className="flex items-center gap-2 bg-[#ecf8f6] text-[var(--dark-blue)] px-3 py-2 rounded-xl hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition"
                     >
                       <FontAwesomeIcon
                         icon={faStar}
@@ -392,6 +421,7 @@ cpSchedules.length > 0 ?
                       />
                       <span>Rate</span>
                     </button>
+}
                   </div>
                     <div className="flex items-center gap-4 text-gray-700 mb-[1rem] text-lg">
                       <div className="flex items-center gap-2">
@@ -427,26 +457,27 @@ cpSchedules.length > 0 ?
                   <span className="text-[var(--cyan)] font-bold pe-2">
                      Status:
                     </span>
+                    {schedule.
+session_status === "canceled" ? 
+                  <span className="text-white bg-red-400 rounded-md px-3 py-1 w-[fit-content] my-3">Canceled</span>
+                  :
                   <span className="text-[var(--text-color)] font-medium">
-                    {schedule.status || "Unknown"}
+                    {schedule.
+session_status || "Unknown"}
                   </span>
+                  }
                   </div>
                 </div>
           )) }
           </div>
-          :
-              <p className="col-span-full text-center text-gray-600">
-                No schedules found.
-              </p>
-             }
-            <div className="flex justify-center items-center gap-4">
+          <div className="flex justify-center items-center gap-4">
               <button
                 onClick={handleCpPrevPage}
                 disabled={cpPagination.currentPage === 1}
                 className={`px-5 py-2 rounded-lg border text-sm font-medium ${
                   cpPagination.currentPage === 1
                     ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                    : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                    : "text-[var(--cyan)] border-[var(--cyan)] hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition duration-300"
                 }`}
               >
                 Previous
@@ -462,12 +493,19 @@ cpSchedules.length > 0 ?
                 className={`px-5 py-2 rounded-lg border text-sm font-medium ${
                   cpPagination.currentPage === cpPagination.totalPages
                     ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                    : "text-[#39CCCC] border-[#39CCCC] hover:bg-[#39cccc97]"
+                    : "text-[var(--cyan)] border-[var(--cyan)] hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition duration-300"
                 }`}
               >
                 Next
               </button>
             </div>
+    </div>
+          :
+              <p className="col-span-full text-center text-gray-600">
+                No schedules found.
+              </p>
+             }
+
         </div>
       </div>
       <Footer />
@@ -502,6 +540,18 @@ cpSchedules.length > 0 ?
           fetchCpSchedules();
         }}
         message="Thank you for your feedback!"
+      />
+      <PatientScheduleSession
+        isOpen={showScheduleModal}
+        onClose={() => setShowScheduleModal(false)}
+        cpId={selectedCpId}
+        onConfirm={() => {
+          setShowScheduleModal(false);
+          setTimeout(() => {
+            setShowBookingDone(true);
+          }, 300);
+        }}
+        sessionId={selectedSessionId}
       />
     </>
   );
