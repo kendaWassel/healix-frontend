@@ -65,13 +65,13 @@ export default function NewOrders() {
     fetchPrescriptions();
   }, []);
 
-  const handleAccept = async (order_id) => {
+  const handleAccept = async (prescription_id) => {
 
 
     try {
       
      const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${order_id}/accept`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${prescription_id}/accept`,
         {
           method: "POST",
           headers: {
@@ -89,13 +89,13 @@ export default function NewOrders() {
     
 
       if (result.data?.status === "accepted") {
-        await sendPrice(order_id);
+        await sendPrice(prescription_id);
       }
       
 
       
       setPrescriptions((prev) =>
-      prev.filter((p) => p.order_id !== order_id)
+      prev.filter((p) => p.prescription_id !== prescription_id)
     );
     
       setShowAcceptPopup(false)
@@ -152,7 +152,7 @@ if(!response.ok) {
 
 
 
-  const handleReject = async (order_id) => {
+  const handleReject = async (prescription_id) => {
     if(!RejectReason){
       alert("please enter your rejection reason")
       return;
@@ -160,7 +160,7 @@ if(!response.ok) {
     setRejectLoading(true);
     try {
     const response=  await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${order_id}/reject`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${prescription_id}/reject`,
         {
           method: "POST",
           headers: {
@@ -176,11 +176,11 @@ console.log('reject response: ',result);
       if (!response.ok || result.status !== "success") {
         throw new Error(result.message || "Reject failed");
       }
-      const rejectedId = result.data.order_id;
+      const rejectedId = result.data.prescription_id;
 
       
       setPrescriptions((prev) =>
-        prev.filter((p) => p.order_id !== rejectedId)
+        prev.filter((p) => p.prescription_id !== rejectedId)
       );
       setRejectReason('');
       setShowRejectPopup(false);
@@ -189,9 +189,12 @@ console.log('reject response: ',result);
       
     } catch (err){
       alert(err.message);
+    }finally{
+      setRejectLoading(false);
+      setShowRejectPopup(false);
+      fetchPrescriptions();
+
     }
-    setRejectLoading(false);
-    fetchPrescriptions();
   };
 
   
@@ -216,17 +219,17 @@ console.log('reject response: ',result);
   };
   
   const handleNext = () => {
-    if (current_page < total) fetchOrders(current_page + 1);
+    if (page < totalPages) fetchPrescriptions(page + 1);
   };
 
   const handlePrevious = () => {
-    if (current_page > 1) fetchOrders(current_page - 1);
+    if (page > 1) fetchPrescriptions(page - 1);
   };
   return (
     <>
       <PharmacistHeader />
 
-      <div className="p-10 bg-gray-50">
+      <div className="p-10 bg-gray-50 min-h-[60vh]">
 
         <h1 className="text-3xl font-bold text-[#0a3460] mb-2">
           Prescription Orders
@@ -414,7 +417,7 @@ prescriptions.length > 0 ?
  
             <div className="flex justify-end gap-3 mt-4">
               <button
-                onClick={() => handleAccept(selectedItem.order_id)}
+                onClick={() => handleAccept(selectedItem.prescription_id)}
                 className={`px-4 py-2 rounded text-white ${
                   isSaveDisabled()
                     ? "bg-gray-400 cursor-not-allowed"
@@ -450,7 +453,7 @@ prescriptions.length > 0 ?
       <div className="flex justify-end gap-3 mt-4">
         <button
           disabled={rejectLoading}
-          onClick={()=>handleReject(selectedItem.order_id)}
+          onClick={()=>handleReject(selectedItem.prescription_id)}
           className="bg-red-600 px-4 py-2 text-white rounded disabled:cursor-not-allowed disabled:opacity-50"
         >
           {rejectLoading ? "Rejecting..." : "Reject"}

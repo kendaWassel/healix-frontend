@@ -126,7 +126,7 @@ const Appointments = () => {
     return (
        <>
             <NurseHeader />
-            <div className="p-10 bg-gray-50 min-h-screen">
+            <div className="p-10 bg-gray-50 min-h-[60vh]">
                 <div className="mb-10">
                     <div className="flex items-center justify-between mb-2">
                         <h1 className="text-[#0a3460] text-3xl font-bold">My Schedules</h1>

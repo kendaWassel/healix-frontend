@@ -143,7 +143,7 @@ const OurServices = () => {
 
       ,
       for: "For Delivery Agents",
-      desc: "Get assigned to deliver medications or transport care providers safely to patients",
+      desc: "Get assigned to deliver medications to patients",
     },
   ];
   return (
