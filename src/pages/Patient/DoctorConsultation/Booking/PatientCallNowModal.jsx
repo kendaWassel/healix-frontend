@@ -214,6 +214,7 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
             setShowBookingDone(true);
           }, 300);
         }}
+        message="Rate the doctor"
       />
       <DoneModal
         isOpen={showBookingDone}

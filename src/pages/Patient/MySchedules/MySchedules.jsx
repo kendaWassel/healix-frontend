@@ -532,6 +532,7 @@ session_status || "Unknown"}
             setShowBookingDone(true);
           }, 300);
         }}
+        message="Rate the care provider"
       />
       <DoneModal
         isOpen={showBookingDone}
