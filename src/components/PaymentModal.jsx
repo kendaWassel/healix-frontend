@@ -14,8 +14,7 @@ export default function PaymentModal({
     const labels = {
       doctor: "Doctor Consultation",
       delivery: "Delivery and Pharmacy Order",
-      nurse: "Nurse Session",
-      physiotherapist: "Physiotherapy Session",
+      careprovider: "Care Provider Session",
     };
     
     return labels[paymentType] ;
