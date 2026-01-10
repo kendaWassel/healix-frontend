@@ -8,6 +8,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import RatingModal from "../DoctorConsultation/Booking/RatingModal";
 import DoneModal from "../DoctorConsultation/Booking/DoneModal";
 import PatientScheduleSession from "./PatientScheduleSession";
+import PaymentModal from "../../../components/PaymentModal";
 const MySchedules = () => {
   const [schedules, setSchedules] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,10 +21,10 @@ const MySchedules = () => {
   const [cpIsLoading, setCpIsLoading] = useState(false);
   const [cpError, setCpError] = useState(null);
   const [showRateModal, setShowRateModal] = useState(false);
+  const [showPayModal, setShowPayModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [selectedCpId, setSelectedCpId] = useState(null);
-  const [showRatingModal, setShowRatingModal] = useState(false);
   const [showBookingDone, setShowBookingDone] = useState(false);
   const [cpLoadBtn, setCpLoadBtn] = useState(false);
   const token = localStorage.getItem("token");
@@ -154,58 +155,27 @@ const MySchedules = () => {
     }
   };
 
-  const formatDateTime = (dateString) => {
-    if (!dateString) {
-      return "Unknown date";
-    }
-    let date;
-    if (typeof dateString === "number") {
-      date = new Date(dateString);
-    } else if (typeof dateString === "string") {
-      const hasTimezone =
-        dateString.endsWith("Z") ||
-        /[+-]\d{2}:\d{2}$/.test(dateString) ||
-        /[+-]\d{4}$/.test(dateString);
-
-      if (hasTimezone) {
-        date = new Date(dateString);
-      } else if (dateString.includes("T")) {
-        date = new Date(dateString + "Z");
-      } else {
-        date = new Date(dateString);
-      }
-    } else {
-      date = new Date(dateString);
-    }
-
-    if (isNaN(date.getTime())) {
-      return "Invalid date";
-    }
-
-    const formattedDate = date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "UTC",
-    });
-
-    const formattedTime = date.toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "UTC",
-    });
-
-    return `${formattedDate} at ${formattedTime}`;
-  };
   const fixImageUrl = (url) => {
     if (!url) return "/no-photo.png";
     return url;
   };
 
+  const handlePaymentSuccess = () => {
+    setShowPayModal(false);
+  
+    setTimeout(() => {
+      setShowRateModal(true);
+    }, 300);
+  };
+  
   const handleRatingSkip = () => {
     setShowRateModal(false);
-    fetchCpSchedules();
+  
+    setTimeout(() => {
+      setShowBookingDone(true);
+    }, 300);
   };
+  
   useEffect(() => {
     fetchSchedules();
   }, [pagination.currentPage]);
@@ -397,7 +367,7 @@ cpSchedules.length > 0 ?
                       onClick={(e) => {
                         e.preventDefault();
                         setSelectedSessionId(schedule.session_id);
-                        setSelectedCpId(schedule.care_provider_id);
+                        setSelectedCpId(schedule.id);
                         setShowScheduleModal(true);
                       }}
                       className="bg-[#ecf8f6] text-[var(--dark-blue)] px-3 py-2 rounded-xl hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition"
@@ -405,29 +375,27 @@ cpSchedules.length > 0 ?
                       <span>Choose New Date</span>
                     </button>
                     :
-                    schedule.status === "completed" &&
+                    schedule.session_status === "completed" &&
                     <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setSelectedSessionId(schedule.session_id);
-                        setSelectedCpId(schedule.care_provider_id);
-                        setShowRateModal(true);
-                      }}
-                      className="flex items-center gap-2 bg-[#ecf8f6] text-[var(--dark-blue)] px-3 py-2 rounded-xl hover:bg-[var(--dark-blue)] hover:text-[white_!important] transition"
-                    >
-                      <FontAwesomeIcon
-                        icon={faStar}
-                        className="text-[var(--cyan)]"
-                      />
-                      <span>Rate</span>
-                    </button>
+  onClick={(e) => {
+    e.preventDefault();
+    setSelectedSessionId(schedule.session_id);
+    setSelectedCpId(schedule.id);
+    setShowPayModal(true);
+  }}
+  className="flex items-center gap-2 bg-[#ecf8f6] text-[var(--dark-blue)] px-3 py-2 rounded-xl hover:bg-[var(--dark-blue)] hover:text-white transition"
+>
+  <FontAwesomeIcon icon={faStar} className="text-[var(--cyan)]" />
+  <span>Pay and Rate</span>
+</button>
+
 }
                   </div>
                     <div className="flex items-center gap-4 text-gray-700 mb-[1rem] text-lg">
                       <div className="flex items-center gap-2">
                         <Clock size={18} className="text-[#39CCCC]" />
                         <span className="font-medium">
-                          {new Date(schedule.scheduled_at).toLocaleString()}
+                          {new Date(schedule.session_scheduled_at).toLocaleString()}
                         </span>
                       </div>
                       <div className="flex items-center">
@@ -522,26 +490,40 @@ session_status || "Unknown"}
         doctorId={selectedDoctorId}
         doctorPhone={selectedDoctorPhone}
       />
-      <RatingModal
-        isOpen={showRateModal}
-        onClose={handleRatingSkip}
-        url={`session/${selectedSessionId}/rate/${selectedCpId}`}
-        onRatingSuccess={() => {
-          setShowRatingModal(false);
-          setTimeout(() => {
-            setShowBookingDone(true);
-          }, 300);
-        }}
-        message="Rate the care provider"
+      <PaymentModal
+        isOpen={showPayModal}
+        onClose={() => setShowPayModal(false)}
+        onPaymentSuccess={handlePaymentSuccess}
+        paymentType="careprovider"
       />
-      <DoneModal
-        isOpen={showBookingDone}
-        onHome={() => {
-          setShowBookingDone(false);
-          fetchCpSchedules();
-        }}
-        message="Thank you for your feedback!"
-      />
+<RatingModal
+  isOpen={showRateModal}
+  onClose={handleRatingSkip}
+  url={`session/${selectedSessionId}/rate/${selectedCpId}`}
+  onRatingSuccess={() => {
+    setShowRateModal(false);
+
+    setTimeout(() => {
+      setShowBookingDone(true);
+    }, 300);
+  }}
+  message="Rate the care provider"
+/>
+
+<DoneModal
+  isOpen={showBookingDone}
+  onHome={() => {
+    setShowBookingDone(false);
+    setSelectedSessionId(null);
+    setSelectedCpId(null);
+    setShowPayModal(false);
+    setShowRateModal(false);
+
+    fetchCpSchedules();
+  }}
+  message="Thank you for your feedback!"
+/>
+
       <PatientScheduleSession
         isOpen={showScheduleModal}
         onClose={() => setShowScheduleModal(false)}

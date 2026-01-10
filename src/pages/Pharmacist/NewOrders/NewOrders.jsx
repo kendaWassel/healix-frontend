@@ -182,7 +182,6 @@ if(!response.ok) {
 
   
   const isSaveDisabled = () => {
-    // إذا هناك أدوية موجودة في prescription
     if (selectedItem?.medicines && selectedItem.medicines.length > 0) {
       if (Object.keys(prices).length !== selectedItem.medicines.length) return true;
       return Object.values(prices).some((price) => !price || Number(price) <= 0);
@@ -353,7 +352,7 @@ prescriptions.length > 0 ?
        ))} </>
       ) : (
         <>
-          <h2 className="font-semibold mb-2">Add Dosage</h2>
+          <h2 className="font-semibold mb-2">Add Medicine</h2>
           
           <button
             type="button"
@@ -365,14 +364,14 @@ prescriptions.length > 0 ?
             }
             className="text-[#39CCCC] font-semibold mb-3"
           >
-            Add Dosage Name
+            Add Medicine Name
           </button>
 
           {dosages.map((item, index) => (
             <div key={index} className="mb-3 border-b pb-2">
               <input
                 type="text"
-                placeholder="Add Dosage Name"
+                placeholder="Add Medicine Name"
                 value={item.dosageName}
                 onChange={(e) => {
                   const newDosages = [...dosages];
