@@ -1,46 +1,42 @@
-/*import React from "react";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faPhone } from "@fortawesome/free-solid-svg-icons";
 
-const ContactModal = ({ show, onClose, service }) => {
-  if (!show || !service) return null;
+
+
+export default function ContactModal({ isOpen, onClose, patient }) {
+  if (!isOpen || !patient) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-96">
-        <h2 className="text-xl font-bold text-indigo-900 mb-4">
-          Contact {service.patient}
-        </h2>
-        <p className="mb-2">
-            <span className="font-semibold">Service:
-                </span> {service.service}</p>
+    <div className="fixed inset-0 bg-gray-300 bg-opacity-70 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-lg w-96 p-6 relative">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+        >
+          X
+        </button>
 
-        <p className="mb-2">
-            <span className="font-semibold">Provider:
-                </span> {service.provider}</p>
+        <h2 className="text-2xl font-semibold mb-4">Contact Patient</h2>
+        <p className="mb-2 flex items-center gap-2">
+          <FontAwesomeIcon icon={faUser} className="text-cyan-500" />
+          <span className="font-medium text-gray-500">Name:</span> {patient.patient}
+        </p>
 
-        <p className="mb-4">
-            <span className="font-semibold">Date:
-                </span> {service.date}</p>
 
-        <div className="flex justify-end gap-3 mt-4">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => {
-              console.log(`Contacting ${service.patient} for ${service.service}`);
-              onClose();
-            }}
-            className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors"
-          >
-            Send Message
-          </button>
-        </div>
+        <p className="mb-4 flex items-center gap-2">
+          <FontAwesomeIcon icon={faPhone} className="text-cyan-500" />
+          <span className="font-medium text-gray-500">Phone:</span> {patient.phone || "+963xxxxxx"}
+        </p>
+
+        <button
+          onClick={onClose}
+          className="mt-2 px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600"
+        >
+          Close
+        </button>
       </div>
     </div>
   );
-};
-
-export default ContactModal;*/
+}
