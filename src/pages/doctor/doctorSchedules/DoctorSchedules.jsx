@@ -118,13 +118,14 @@ const handleSelectFilter = (filter) => {
   const handleViewDetails = async (e, patientId) => {
     e.preventDefault();
     console.log("patient id: ",patientId);
+    setSelectedPatientId(patientId);
     setIsLoadingDetails(true);
     setError(null);
     setDetails(null);
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/patients/${patientId}/view-details`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patients/${patientId}/view-details`,
         {
           method: "GET",
           headers: {
@@ -139,7 +140,6 @@ const handleSelectFilter = (filter) => {
 
       const data = await response.json();
       console.log("Patient details:", data);
-      // Most APIs wrap payload in data; fall back to raw if not
       setDetails(data.data || data);
       setSuccessMsg("Details loaded successfully.");
     } catch (err) {
@@ -147,6 +147,7 @@ const handleSelectFilter = (filter) => {
         setError(err.message||"Failed to load Details");
       }
      finally {
+      setSelectedPatientId(null);
       setIsLoadingDetails(false);
     }
   };
@@ -225,12 +226,16 @@ const handleSelectFilter = (filter) => {
                 </span>
   <button
     type="button"
-    onClick={(e) => handleViewDetails(e, item.patient_id)}
+    onClick={(e) => {
+      handleViewDetails(e, item.patient_id)}
+    }
+    disabled={isLoadingDetails}
     className={`${styles.detailsButton} bg-[#f4f4f4]`}
   >
-    {isLoadingDetails ? <>Loading Details ...</> : error ? <div className={styles.errorMsg}>{error} ,Try again</div> : <>View Details</>}
+{selectedPatientId === item.patient_id
+                      ? "Loading..."
+                      : "View details"}
   </button>
-          {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
               </div>
             </div>
           )) : isLoading ? <p className={styles.loading}>Loading schedules...</p> : <p className={styles.loading}>No schedules found.</p>}

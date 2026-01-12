@@ -38,16 +38,14 @@ export default function ModifyMedicalReport({
   const handleLocalSubmit = async (formFields) => {
     const token = localStorage.getItem("token");
     try {
-      // Merge treatment_plan from fields state since MedicalReportModal doesn't include it
       const dataToSubmit = {
         ...formFields,
         treatment_plan: fields.treatment_plan,
         consultation_id: consultationId,
       };
       
-      // Replace with actual API endpoint
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/patients/${patientId}/medical-record`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patients/${patientId}/medical-record/update`,
         {
           method: "PUT",
           headers: {

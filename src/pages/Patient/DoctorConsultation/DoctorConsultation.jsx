@@ -102,7 +102,7 @@ export default function DoctorConsultation() {
 
   return (
     <>
-      <div className={`md:p-[5rem] p-[2.5rem_2rem] ${styles.CardContainer}`}>
+      <div className={`md:p-[4rem] md:pb-[2.5rem] p-[2.5rem_2rem] ${styles.CardContainer} min-h-[60vh_!important]`}>
           <span className={styles.backArrow}>
             <Link to="/patient">
             <FontAwesomeIcon icon={faArrowLeft} />

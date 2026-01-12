@@ -37,7 +37,7 @@ export default function DoctorEndCallModal({ isOpen, onClose, consultationId, pa
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/patients/${patientId}/view-details`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patients/${patientId}/view-details`,
         {
           method: "GET",
           headers: {
@@ -87,7 +87,7 @@ export default function DoctorEndCallModal({ isOpen, onClose, consultationId, pa
         const token = localStorage.getItem("token");
         try {
           const response = await fetch(
-            `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/patients/${patientId}/view-details`,
+            `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patients/${patientId}/view-details`,
             {
               method: "GET",
               headers: {
