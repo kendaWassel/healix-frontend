@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
 
-export default function RatingModal({ isOpen, onClose, url,onRatingSuccess}) {
+export default function RatingModal({ isOpen, onClose, url,message,onRatingSuccess}) {
   const [rating, setRating] = useState(0); 
   const [hoveredRating, setHoveredRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,8 +74,7 @@ export default function RatingModal({ isOpen, onClose, url,onRatingSuccess}) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] backdrop-blur-sm z-50">
       <div className="bg-white rounded-2xl shadow-lg p-6 w-[90%] max-w-md text-center animate-fadeIn border border-gray-100">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Consultation Ended Successfully</h2>
-        <p className="text-gray-700 mb-4">Rate the service</p>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4">{message}</h2>
 
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">

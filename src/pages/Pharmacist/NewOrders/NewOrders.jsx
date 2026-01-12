@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export default function NewOrders() {
 
   const [prescriptions, setPrescriptions] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
@@ -21,12 +21,8 @@ export default function NewOrders() {
   const [selectedItem, setSelectedItem] = useState(null);
   
   const [prices, setPrices] = useState({});
-  const [singlePrice, setSinglePrice] = useState("");
 
-  const [ShowImageInputs,setShowImageInputs]=useState(false);
-  const [dosageName,setdosageName]=useState("");
-
-  const [dosage,setDosage]=useState("")
+  const [dosages, setDosages] = useState([]);
 
   const token = localStorage.getItem("token");
 
@@ -62,8 +58,8 @@ export default function NewOrders() {
   };
 
   useEffect(() => {
-    fetchPrescriptions();
-  }, []);
+    fetchPrescriptions(page);
+  }, [page]);
 
   const handleAccept = async (prescription_id) => {
 
@@ -92,17 +88,17 @@ export default function NewOrders() {
         await sendPrice(prescription_id);
       }
       
-
+      console.log("Accepted response : ",result)
       
       setPrescriptions((prev) =>
       prev.filter((p) => p.prescription_id !== prescription_id)
     );
     
-      setShowAcceptPopup(false)
+
       setPrices({});
-      setSinglePrice("")
-      setdosageName("")
-      setDosage("")
+      setDosages([])
+
+      setShowAcceptPopup(false);
 
     } catch (err) {
       alert(err.message);
@@ -112,24 +108,11 @@ export default function NewOrders() {
 
 const sendPrice= async (order_id)=>{
 
-  let items = [];
-  if (selectedItem?.medicines && selectedItem.medicines.length > 0) {
-  
-    items = selectedItem.medicines.map((med, index) => ({
-      medicine_name: med.name ,
-      dosage: med.dosage,
-      price: Number(prices[index]),
-    }));
-  } else {
-
-    items = [
-      {
-        medicine_name: dosageName,
-        dosage: dosage ,
-        price: Number(singlePrice),
-      },
-    ];
-  }
+  const items = dosages.map((d) => ({
+    medicine_name: d.dosageName,
+    dosage: d.dosage,
+    price: Number(d.price),
+  }));
 
   const response = await fetch(`https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${order_id}/add-price`,
   {
@@ -172,7 +155,7 @@ if(!response.ok) {
         }
       );
       const result = await response.json();
-console.log('reject response: ',result);
+      console.log('reject response: ',result);
       if (!response.ok || result.status !== "success") {
         throw new Error(result.message || "Reject failed");
       }
@@ -199,31 +182,24 @@ console.log('reject response: ',result);
 
   
   const isSaveDisabled = () => {
-    // حالة medicines
     if (selectedItem?.medicines && selectedItem.medicines.length > 0) {
       if (Object.keys(prices).length !== selectedItem.medicines.length) return true;
-  
-      return Object.values(prices).some(
-        (price) => !price || Number(price) <= 0
-      );
+      return Object.values(prices).some((price) => !price || Number(price) <= 0);
     }
   
-    // حالة صورة
-    if (ShowImageInputs) {
-      return !singlePrice || Number(singlePrice) <= 0 || !dosageName.trim();
-    }
-  
-    return true; // قبل إدخال أي شيء
 
-
-  };
+    if (dosages.length === 0) return true;
+  return dosages.some(
+    (d) => !d.dosageName.trim() || !d.dosage.trim() || !d.price || Number(d.price) <= 0
+  );
+};
   
   const handleNext = () => {
-    if (page < totalPages) fetchPrescriptions(page + 1);
+    if (page < totalPages) setPage(page + 1);
   };
 
   const handlePrevious = () => {
-    if (page > 1) fetchPrescriptions(page - 1);
+    if (page > 1) setPage(page - 1);
   };
   return (
     <>
@@ -241,7 +217,7 @@ prescriptions.length > 0 ?
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   {prescriptions.map((item) => (
   <div
-    key={item.id}
+    key={item.prescription_id}
     className="bg-white p-5 rounded-xl shadow"
   >
 
@@ -249,12 +225,12 @@ prescriptions.length > 0 ?
     <p className="text-sm text-gray-500">
       Source: {item.source}
     </p>
-
-    {item.medicines ? (
+    
+    {item.medicines && item.medicines.length>0 ? (
       <ul className="mt-2 text-sm">
         {item.medicines.map((m, i) => (
           <li key={i}>
-            {m.name} - {m.dosage} x {m.boxes}
+            {m.name} - {m.dosage} x {m.boxes} - {m.instructions}
           </li>
         ))}
       </ul>
@@ -271,11 +247,10 @@ prescriptions.length > 0 ?
         onClick={() => {
           setSelectedItem(item);
           setPrices({})
-          setSinglePrice('')
           setShowAcceptPopup(true)
-          setdosageName('')
-          setShowImageInputs(false)
-          setDosage('')
+   
+  
+     
         }}
        
         className="text-green-600 font-semibold"
@@ -285,9 +260,10 @@ prescriptions.length > 0 ?
 
       <button
         onClick={() => { 
+  
          setSelectedItem(item)
         setShowRejectPopup(true);
-        setRejectReason('')
+           setRejectReason('')
         } 
       }
    
@@ -376,93 +352,83 @@ prescriptions.length > 0 ?
        ))} </>
       ) : (
         <>
-        {!ShowImageInputs && (
-          <button type="button"
-           onClick={()=>setShowImageInputs(true)}
-           className="text-[#39CCCC] font-semibold mb-3"
-           >
-            Add Dosage Name
-             </button>
-        )}
-       
-     {ShowImageInputs&& (
-      <> 
-      <input
-       type="text"
-      placeholder="Add Dosage Name"
-      value={dosageName}
-      onChange={(e)=>setdosageName(e.target.value)}
-      className="border w-full p-2 rounded mb-2"
-      />
-      <input
-      type="text"
-      placeholder="Ad Dosage"
-      value={dosage}
-      onChange={(e)=>setDosage(e.target.value)}
-      className="border w-full p-2 rounded mb-2"
-      />
-      <input
-      type="number"
-      min='1'
-      placeholder="Add price"
-      value={singlePrice}
-      onChange={(e)=>setSinglePrice(e.target.value)}
-      className="border w-full p-2 rounded"
-      />
-      </>
-     )}
-     </>
-      )}
-    
- 
-            <div className="flex justify-end gap-3 mt-4">
-              <button
-                onClick={() => handleAccept(selectedItem.prescription_id)}
-                className={`px-4 py-2 rounded text-white ${
-                  isSaveDisabled()
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[#39CCCC] hover:bg-[#2bb3b3] transition-colors duration-300"
-                }`}
-                disabled={isSaveDisabled()}
-              >
-                Save
-              </button>
+          <h2 className="font-semibold mb-2">Add Medicine</h2>
+          
+          <button
+            type="button"
+            onClick={() =>
+              setDosages((prev) => [
+                ...prev,
+                { dosageName: "", dosage: "", price: "" },
+              ])
+            }
+            className="text-[#39CCCC] font-semibold mb-3"
+          >
+            Add Medicine Name
+          </button>
 
-              <button
-                onClick={() => setShowAcceptPopup(false)}
-              >
-                Cancel
-              </button>
+          {dosages.map((item, index) => (
+            <div key={index} className="mb-3 border-b pb-2">
+              <input
+                type="text"
+                placeholder="Add Medicine Name"
+                value={item.dosageName}
+                onChange={(e) => {
+                  const newDosages = [...dosages];
+                  newDosages[index].dosageName = e.target.value;
+                  setDosages(newDosages);
+                }}
+                className="border w-full p-2 rounded mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Add Dosage"
+                value={item.dosage}
+                onChange={(e) => {
+                  const newDosages = [...dosages];
+                  newDosages[index].dosage = e.target.value;
+                  setDosages(newDosages);
+                }}
+                className="border w-full p-2 rounded mb-2"
+              />
+              <input
+                type="number"
+                min="1"
+                placeholder="Add price"
+                value={item.price}
+                onChange={(e) => {
+                  const newDosages = [...dosages];
+                  newDosages[index].price = e.target.value;
+                  setDosages(newDosages);
+                }}
+                className="border w-full p-2 rounded mb-2"
+              />
             </div>
-
-          </div>
-        </div>
+          ))}
+        </>
       )}
-      {showRejectPopup && selectedItem && (
-  <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
-    <div className="bg-white p-6 rounded w-[400px]">
-      <h2 className="font-semibold mb-4">Reject Reason</h2>
-
-      <textarea
-        value={RejectReason}
-        onChange={(e) => setRejectReason(e.target.value)}
-        className="border w-full p-2 rounded"
-        placeholder="Medicine not available..."
-      />
 
       <div className="flex justify-end gap-3 mt-4">
         <button
-          disabled={rejectLoading}
-          onClick={()=>handleReject(selectedItem.prescription_id)}
-          className="bg-red-600 px-4 py-2 text-white rounded disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => {
+            handleAccept(selectedItem.prescription_id);
+            setDosages([]); 
+          }}
+          className={`px-4 py-2 rounded text-white ${
+            isSaveDisabled()
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#39CCCC] hover:bg-[#2bb3b3] transition-colors duration-300"
+          }`}
+          disabled={isSaveDisabled()}
         >
-          {rejectLoading ? "Rejecting..." : "Reject"}
+          Save
         </button>
 
         <button
-        disabled={rejectLoading}
-          onClick={() => setShowRejectPopup(false)}
-          className="disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => {
+            setShowAcceptPopup(false);
+            setDosages([]); 
+          }}
         >
           Cancel
         </button>
@@ -470,7 +436,34 @@ prescriptions.length > 0 ?
     </div>
   </div>
 )}
+{showRejectPopup && selectedItem && (
+   <div className="fixed inset-0 bg-black/40 flex justify-center items-center"> 
+   <div className="bg-white p-6 rounded w-[400px]">
+     <h2 className="font-semibold mb-4">Reject Reason</h2>
+      <textarea
+       value={RejectReason}
+        onChange={(e) => setRejectReason(e.target.value)}
+         className="border w-full p-2 rounded"
+          placeholder="Medicine not available..."
+           /> 
+          <div className="flex justify-end gap-3 mt-4"> 
+          <button disabled={rejectLoading} 
 
+          onClick={()=>handleReject(selectedItem.prescription_id)}
+
+           className="bg-red-600 px-4 py-2 text-white rounded disabled:cursor-not-allowed disabled:opacity-50" >
+             {rejectLoading ? "Rejecting..." : "Reject"} 
+
+             </button> 
+             <button disabled={rejectLoading}
+              onClick={() => setShowRejectPopup(false)}
+               className="disabled:cursor-not-allowed disabled:opacity-50" > 
+               Cancel
+                </button> 
+                </div> 
+                </div> 
+                </div> 
+              )}
       <Footer />
     </>
   );
