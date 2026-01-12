@@ -22,7 +22,6 @@ const PickDoctor = () => {
       const [selected, setSelected] = useState(null);
       const [isLoading, setIsLoading] = useState(false);
       const [error, setError] = useState(null);
-      const [successMsg, setSuccessMsg] = useState(null);
       const [doctors, setDoctors] = useState([]);
    const [pagination, setPagination] = useState({
     currentPage: 1,
