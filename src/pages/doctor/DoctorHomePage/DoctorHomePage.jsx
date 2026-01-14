@@ -3,7 +3,8 @@ import Footer from '../../../components/footer/Footer'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye, 
-  faEyeSlash
+  faEyeSlash,
+  faStar
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import styles from '../../registers/doctorRegister/DoctorRegister.module.css'
@@ -22,6 +23,7 @@ const DoctorHomePage = () => {
     session_fee: "100",
     type: "physio",
     gender: "female",
+    rating: 3,
     license_file: null,
   });
   const [licenseFile, setLicenseFile] = useState(null);
@@ -66,6 +68,7 @@ const DoctorHomePage = () => {
           session_fee: profile.session_fee || "",
           type: profile.type || "",
           license_file: null,
+          rating: profile.rating
         });
         if (profile.license_file_url) {
           setLicenseFilePreview(profile.license_file_url);
@@ -207,7 +210,8 @@ const DoctorHomePage = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-{/* photo */}
+{/* photo and rating*/}
+                <div className='flex items-start'>
 <div
                 className={`${styles.hiddenFileInput}  flex flex-col justify-center md:w-[100px] md:h-[100px] w-[80px] h-[80px] border-1 border-[var(--card-border)] rounded-[50%] overflow-hidden`}
               >
@@ -260,6 +264,11 @@ const DoctorHomePage = () => {
                   disabled
                 />
               </div>
+              <div className="bg-[#ebfafa] flex items-center p-[0.3rem_0.5rem] rounded-[10px] gap-1">
+        <FontAwesomeIcon icon={faStar} className="text-[var(--cyan)]"/>
+        {physioData.rating}
+        </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">

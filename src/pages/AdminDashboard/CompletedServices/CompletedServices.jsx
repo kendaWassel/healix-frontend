@@ -165,7 +165,7 @@ export default function CompletedServices() {
 
   
   
-    <div className="p-8">
+    <div>
       {/* ===== Page Title ===== */}
       <h1 className="text-2xl font-bold text-[#052443] mb-6">
         Completed Services

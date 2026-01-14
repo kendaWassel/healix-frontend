@@ -53,18 +53,20 @@ import { Link,useNavigate } from "react-router-dom";
           email: "",
           password: "",
         });
-        if(data.role === "patient")
-          navigate('/patient');
-        else if(data.role === "doctor")
-          navigate('/doctor');
-        else if(data.role === "pharmacist")
-          navigate('/pharmacist');
-        else if(data.role === "nurse")
-          navigate('/nurse');
-        else if(data.role === "physiotherapist")
-          navigate('/physio');
-        else{
-          navigate('/delivery');
+        if(data.email_verified){
+          if(data.role === "patient")
+            navigate('/patient');
+          else if(data.role === "doctor")
+            navigate('/doctor');
+          else if(data.role === "pharmacist")
+            navigate('/pharmacist');
+          else if(data.role === "nurse")
+            navigate('/nurse');
+          else if(data.role === "physiotherapist")
+            navigate('/physio');
+          else{
+            navigate('/delivery');
+          }
         }
 
       })

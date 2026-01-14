@@ -209,10 +209,6 @@ const PickDoctor = () => {
           setOpenModalDone(false);
           navigate("/patient"); 
         };
-        
-        //   useEffect(() => {
-        //     fetchDoctors();
-        //   }, [pagination.currentPage, pagination.itemsPerPage]);
     
   return (
     <div className="bg-[#fafbfc] min-h-[60vh]">
@@ -237,7 +233,7 @@ const PickDoctor = () => {
               }
             }}
             >
-                Next
+                Book
             </button>
         </div>
         </div>

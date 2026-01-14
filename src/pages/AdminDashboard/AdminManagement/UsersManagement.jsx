@@ -37,8 +37,12 @@ const UsersManagement = () => {
   }, [page]);
 
   return (
-    <AdminLayout>
+    <>
+      <h1 className="text-2xl font-bold text-[#052443] mb-6">
+        Users Management
+      </h1>    
       <div className="bg-white rounded-xl shadow">
+        
         <table className="w-full text-sm text-left">
           <thead className="bg-[#eaf7f7] text-gray-700">
             <tr>
@@ -120,7 +124,7 @@ const UsersManagement = () => {
           </button>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 };
 
