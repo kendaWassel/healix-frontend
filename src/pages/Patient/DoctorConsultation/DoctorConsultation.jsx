@@ -98,7 +98,7 @@ export default function DoctorConsultation() {
     fetchSpecializations(pagination.currentPage, pagination.itemsPerPage);
   }, [pagination.currentPage, pagination.itemsPerPage]);
 
-  
+
 
   return (
     <>

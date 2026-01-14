@@ -307,6 +307,7 @@ const PickDoctor = () => {
           console.log("Scheduled later:", { date, time });
           setOpenScheduleLater(false);
           setTimeout(() => setOpenModalDone(true), 300);
+          
         }}
       />
       <DoneModal
