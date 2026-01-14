@@ -24,6 +24,7 @@ export default function CompletedServices() {
   });
 
   /* Mock Data */
+  /*
   const mockData = [
     {
       id: 101,
@@ -74,7 +75,7 @@ export default function CompletedServices() {
       date: "2022-12-07",
     },
   ];
-
+*/
   const openModal = (service) => {
     setSelectedPatient(service);
     setIsModalOpen(true);
@@ -85,6 +86,8 @@ export default function CompletedServices() {
     setIsModalOpen(false);
   };
 
+  const token = localStorage.getItem('token')
+
   const fetchCompletedServices = async () => {
     setIsLoading(true);
     setError(null);
@@ -92,41 +95,45 @@ export default function CompletedServices() {
 
 
     try {
-      // const params = new URLSearchParams({
-      //   service_type: "home_visit",
-      //   page: pagination.currentPage,
-      //   per_page: pagination.itemsPerPage,
-      // });
-      //
-      // const response = await fetch(
-      //   `http://localhost:8080/api/admin/services?${params.toString()}`
-      // );
-      //
-      // if (!response.ok) {
-      //   throw new Error("Failed to fetch completed services");
-      // }
-      //
-      // const result = await response.json();
-      // const formatted = result.data.map((item) => ({
-      //   id: item.id,
-      //   patientName: item.patient_name,
-      //   patientPhone: item.patient_phone,
-      //   serviceName: item.service_name,
-      //   providerName: item.service_provider,
-      //   providerType: item.provider_type,
-      //   rating: item.rating,
-      //   date: item.date,
-      // }));
-      //
-      // setServices(formatted);
-      // setPagination((prev) => ({
-      //   ...prev,
-      //   totalPages: result.meta.last_page,
-      // }));
+        const params = new URLSearchParams({
+         service_type: "consultation",
+         page: pagination.currentPage,
+         per_page: pagination.itemsPerPage,
+       });
+      
+       const response = await fetch(
+         `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/admin/services?${params.toString()}`,{
+          method : "GET",
+          headers: {
+          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`,
+          }
+         }
+       );
+      
+       if (!response.ok) {
+         throw new Error("Failed to fetch completed services");
+       }
+      
+       const result = await response.json();
+       const formatted = result.data.map((item) => ({
+         id: item.id,
+         patientName: item.patient_name,
+         patientPhone: item.patient_phone,
+         serviceName: item.service_name,
+         providerName: item.service_provider,
+         providerType: item.provider_type,
+         rating: item.rating,
+         date: item.date
+     }));
+      console.log("Completed :",result)
+       setServices(formatted);
+       setPagination((prev) => ({
+         ...prev,
+        totalPages: result.meta.last_page,
+       }));
 
     
-      setServices(mockData);
-      setPagination((prev) => ({ ...prev, totalPages: 1 }));
     } catch (err) {
       console.error(err);
       setError("Failed to load completed services");
@@ -135,7 +142,7 @@ export default function CompletedServices() {
     }
   };
   
- 
+
   useEffect(() => {
     fetchCompletedServices();
   }, [pagination.currentPage]);
@@ -160,6 +167,7 @@ export default function CompletedServices() {
   if (isLoading) {
     return <p className="text-center mt-10 text-gray-500">Loading...</p>;
   }
+
 
       return (
 
@@ -200,13 +208,13 @@ export default function CompletedServices() {
                   {item.id}
                 </td>
                 <td className="p-4 text-gray-700">
-                  {item.patient}
+                  {item.patientName}
                 </td>
                 <td className="p-4 text-gray-700">
-                  {item.service}
+                  {item.serviceName}
                 </td>
                 <td className="p-4 text-gray-700">
-                  {item.provider}
+                  {item.providerName}
                 </td>
 
                 {/* Rating */}
@@ -258,7 +266,10 @@ export default function CompletedServices() {
 
         {/* ===== Pagination ===== */}
         <div className="flex justify-center items-center gap-4 py-4">
-          <button className="flex items-center gap-1 px-3 py-1.5
+          <button 
+          onClick={prevPage}
+          disabled={pagination.currentPage === 1}
+          className="flex items-center gap-1 px-3 py-1.5
                              border border-gray-300 rounded-md text-gray-500">
             <FontAwesomeIcon icon={faChevronLeft} />
             Previous
@@ -269,7 +280,10 @@ export default function CompletedServices() {
            {pagination.currentPage} of {pagination.totalPages}
           </span>
 
-          <button className="flex items-center gap-1 px-3 py-1.5
+          <button 
+          onClick={nextPage}
+          disabled={pagination.currentPage === pagination.totalPages}
+          className="flex items-center gap-1 px-3 py-1.5
                              border border-cyan-400 text-cyan-500
                              rounded-md hover:bg-cyan-50">
             Next

@@ -21,13 +21,13 @@ export default function ContactModal({ isOpen, onClose, patient }) {
         <h2 className="text-2xl font-semibold mb-4">Contact Patient</h2>
         <p className="mb-2 flex items-center gap-2">
           <FontAwesomeIcon icon={faUser} className="text-cyan-500" />
-          <span className="font-medium text-gray-500">Name:</span> {patient.patient}
+          <span className="font-medium text-gray-500">Name:</span> {patient.patientName}
         </p>
 
 
         <p className="mb-4 flex items-center gap-2">
           <FontAwesomeIcon icon={faPhone} className="text-cyan-500" />
-          <span className="font-medium text-gray-500">Phone:</span> {patient.phone || "+963xxxxxx"}
+          <span className="font-medium text-gray-500">Phone:</span> {patient.patientPhone || "+963xxxxxx"}
         </p>
 
         <button

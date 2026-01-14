@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye,faArrowLeft,  faEnvelope,
   faLock, } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import styles from "./AdminLogin.module.css";
 const AdminLogin = () => {
@@ -15,7 +15,7 @@ const AdminLogin = () => {
     password: "",
   });
   const inputRef = useRef(null);
-
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -46,14 +46,18 @@ const AdminLogin = () => {
         console.log("success sending user's data ");
         return response.json();
       })
+  
       .then((data) => {
         console.log("message from api: ", data.message);
+        localStorage.setItem("token",data.token)
+        navigate('/admin-dashboard')
         setSuccessMsg("Logged in successeully!!");
         setNewUser({
           email: "",
           password: "",
         });
       })
+    
       .catch((error) => {
         setError(error.message || "Failed to login. Please try again.");
       })
@@ -66,12 +70,8 @@ const AdminLogin = () => {
     inputRef.current.focus();
   }, []);
 
-  //     useEffect(()=>{
-  //     inputRef.current.focus();
-  //     if(userData.isAuthorized) {
-  //       navigate('/logged');
-  //     }
-  //   },[navigate]);
+
+  
 
   return (
     <div className="relative flex h-screen">
