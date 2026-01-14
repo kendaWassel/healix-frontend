@@ -67,21 +67,36 @@ export default function PatientDetailsModal({ details, onClose }) {
 
           <div className={styles.detailsGroup}>
             <span className={styles.detailsLabel}>Attachments:</span>
-            <ul>
-              {(details.attachments || []).length > 0
-                ? details.attachments.map((file) => (
-                    <li key={file.id}>
+              <h3>Images:</h3>
+              {details.medical_record?.images?.length > 0
+                ? details.medical_record?.images.map((image) => (
+                    <>
+                    <div key={image.id}>
+                      <img src={image.file_url || '../../../pubdivc/no-photo.png'} className="w-full h-full object-cover" alt={image.file_name} />
+                    </div>
+                    </>
+                  ))
+                : <span>No images</span>}
+                  <h3>Files:</h3>
+              {details.medical_record?.files?.length > 0
+                ? details.medical_record?.files.map((file) => (
+                  <>
+                    <div key={file.id}>
                       <a
                         href={file.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="text-[blue]"
                       >
                         {file.file_name || file.file_url}
                       </a>
-                    </li>
+                      {!file.file_url && 
+                      <span>link is not available!</span>
+                      }
+                    </div>
+                  </>
                   ))
-                : <li>No attachments</li>}
-            </ul>
+                : <span>No files</span>}
           </div>
         </div>
 

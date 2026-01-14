@@ -40,6 +40,7 @@ export default function DoctorSchedules() {
   const [patientPhone, setPatientPhone] = useState(null);
   const [showCallModal, setShowCallModal] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [selectedCardId, setSelectedCardId] = useState(null);
   const [selectedConsultationId, setSelectedConsultationId] = useState(null);
   const token = localStorage.getItem("token");
 
@@ -115,16 +116,18 @@ const handleSelectFilter = (filter) => {
 
 
 
-  const handleViewDetails = async (e, patientId) => {
+  const handleViewDetails = async (e, patientId,consultation_id) => {
     e.preventDefault();
     console.log("patient id: ",patientId);
+    setSelectedCardId(consultation_id);
+    setSelectedPatientId(patientId);
     setIsLoadingDetails(true);
     setError(null);
     setDetails(null);
 
     try {
       const response = await fetch(
-        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/doctor/patients/${patientId}/view-details`,
+        `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patients/${patientId}/view-details`,
         {
           method: "GET",
           headers: {
@@ -139,7 +142,6 @@ const handleSelectFilter = (filter) => {
 
       const data = await response.json();
       console.log("Patient details:", data);
-      // Most APIs wrap payload in data; fall back to raw if not
       setDetails(data.data || data);
       setSuccessMsg("Details loaded successfully.");
     } catch (err) {
@@ -147,6 +149,8 @@ const handleSelectFilter = (filter) => {
         setError(err.message||"Failed to load Details");
       }
      finally {
+      setSelectedPatientId(null);
+      setSelectedCardId(null);
       setIsLoadingDetails(false);
     }
   };
@@ -180,7 +184,7 @@ const handleSelectFilter = (filter) => {
           </div>
           <p>Check your schedules here</p>
         </div>
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p className="text-[red] text-lg text-center ">{error}</p>}
 
         <div className={styles.CardForm}>
           {schedules && schedules.length > 0 ? schedules.map((item) => (
@@ -201,7 +205,7 @@ const handleSelectFilter = (filter) => {
                   </span>
                 </div>
               </div>
-
+{item.status !== "completed" &&
               <button 
                 className={styles.callButton}
                 onClick={(e) => {
@@ -215,6 +219,7 @@ const handleSelectFilter = (filter) => {
                 <FontAwesomeIcon icon={faPhone} />
                 Call
               </button>
+}
 
               <div className={styles.divider}></div>
 
@@ -225,12 +230,16 @@ const handleSelectFilter = (filter) => {
                 </span>
   <button
     type="button"
-    onClick={(e) => handleViewDetails(e, item.patient_id)}
-    className={`${styles.detailsButton} bg-[#f4f4f4]`}
+    onClick={(e) => {
+      handleViewDetails(e, item.patient_id,item.consultation_id)}
+    }
+    disabled={isLoadingDetails}
+    className={`${styles.detailsButton} bg-[#f4f4f4] disabled:cursor-not-allowed disabled:opacity-50`}
   >
-    {isLoadingDetails ? <>Loading Details ...</> : error ? <div className={styles.errorMsg}>{error} ,Try again</div> : <>View Details</>}
+{selectedCardId === item.consultation_id
+                      ? "Loading..."
+                      : "View details"}
   </button>
-          {successMsg && <div className={styles.successMsg}>{successMsg}</div>}
               </div>
             </div>
           )) : isLoading ? <p className={styles.loading}>Loading schedules...</p> : <p className={styles.loading}>No schedules found.</p>}
@@ -280,6 +289,7 @@ const handleSelectFilter = (filter) => {
             setSelectedPatientId(null);
             setPatientPhone(null);
             setSelectedConsultationId(null);
+            fetchSchedules();
           }}
           patientId={selectedPatientId}
           patient_phone={patientPhone}

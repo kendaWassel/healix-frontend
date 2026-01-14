@@ -22,7 +22,6 @@ const PickDoctor = () => {
       const [selected, setSelected] = useState(null);
       const [isLoading, setIsLoading] = useState(false);
       const [error, setError] = useState(null);
-      const [successMsg, setSuccessMsg] = useState(null);
       const [doctors, setDoctors] = useState([]);
    const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -210,10 +209,6 @@ const PickDoctor = () => {
           setOpenModalDone(false);
           navigate("/patient"); 
         };
-        
-        //   useEffect(() => {
-        //     fetchDoctors();
-        //   }, [pagination.currentPage, pagination.itemsPerPage]);
     
   return (
     <div className="bg-[#fafbfc] min-h-[60vh]">
@@ -238,7 +233,7 @@ const PickDoctor = () => {
               }
             }}
             >
-                Next
+                Book
             </button>
         </div>
         </div>
