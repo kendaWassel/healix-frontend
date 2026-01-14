@@ -1,9 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPhone,
-  faFilter,
-  faChevronLeft,
-  faChevronRight,
   faTag,
   faClock,
   faStar
@@ -39,7 +35,7 @@ const DoctorCard = ({
       <div className="flex items-start gap-[0.5rem]">
         {/* doctor's image  */}
         <div className="w-[50px] h-[50px] overflow-hidden rounded-[50%] flex-shrink-0">
-          <img src={doctor_image || '../no-photo.png'} className="w-full h-full object-cover" alt="doctor's image" />
+          <img src={doctor_image || '../../../public/no-photo.png'} className="w-full h-full object-cover" alt="doctor's image" />
         </div>
         {/* name and spec  */}
         <div>

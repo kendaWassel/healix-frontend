@@ -9,6 +9,7 @@ import {
   faEyeSlash
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import FAID from './Faid/FAID';
 const PatientHomePage = () => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -497,7 +498,8 @@ const PatientHomePage = () => {
                 </div>
               </form>
             )}
-          </div>
+      </div>
+      <FAID />
       <Footer />
     </div>
   )

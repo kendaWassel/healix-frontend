@@ -40,6 +40,7 @@ export default function DoctorSchedules() {
   const [patientPhone, setPatientPhone] = useState(null);
   const [showCallModal, setShowCallModal] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [selectedCardId, setSelectedCardId] = useState(null);
   const [selectedConsultationId, setSelectedConsultationId] = useState(null);
   const token = localStorage.getItem("token");
 
@@ -115,9 +116,10 @@ const handleSelectFilter = (filter) => {
 
 
 
-  const handleViewDetails = async (e, patientId) => {
+  const handleViewDetails = async (e, patientId,consultation_id) => {
     e.preventDefault();
     console.log("patient id: ",patientId);
+    setSelectedCardId(consultation_id);
     setSelectedPatientId(patientId);
     setIsLoadingDetails(true);
     setError(null);
@@ -148,6 +150,7 @@ const handleSelectFilter = (filter) => {
       }
      finally {
       setSelectedPatientId(null);
+      setSelectedCardId(null);
       setIsLoadingDetails(false);
     }
   };
@@ -181,7 +184,7 @@ const handleSelectFilter = (filter) => {
           </div>
           <p>Check your schedules here</p>
         </div>
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p className="text-[red] text-lg text-center ">{error}</p>}
 
         <div className={styles.CardForm}>
           {schedules && schedules.length > 0 ? schedules.map((item) => (
@@ -202,7 +205,7 @@ const handleSelectFilter = (filter) => {
                   </span>
                 </div>
               </div>
-
+{item.status !== "completed" &&
               <button 
                 className={styles.callButton}
                 onClick={(e) => {
@@ -216,6 +219,7 @@ const handleSelectFilter = (filter) => {
                 <FontAwesomeIcon icon={faPhone} />
                 Call
               </button>
+}
 
               <div className={styles.divider}></div>
 
@@ -227,12 +231,12 @@ const handleSelectFilter = (filter) => {
   <button
     type="button"
     onClick={(e) => {
-      handleViewDetails(e, item.patient_id)}
+      handleViewDetails(e, item.patient_id,item.consultation_id)}
     }
     disabled={isLoadingDetails}
-    className={`${styles.detailsButton} bg-[#f4f4f4]`}
+    className={`${styles.detailsButton} bg-[#f4f4f4] disabled:cursor-not-allowed disabled:opacity-50`}
   >
-{selectedPatientId === item.patient_id
+{selectedCardId === item.consultation_id
                       ? "Loading..."
                       : "View details"}
   </button>
@@ -285,6 +289,7 @@ const handleSelectFilter = (filter) => {
             setSelectedPatientId(null);
             setPatientPhone(null);
             setSelectedConsultationId(null);
+            fetchSchedules();
           }}
           patientId={selectedPatientId}
           patient_phone={patientPhone}

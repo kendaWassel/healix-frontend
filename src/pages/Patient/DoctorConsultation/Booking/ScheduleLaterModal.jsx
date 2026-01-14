@@ -111,13 +111,15 @@ export default function ScheduleLaterModal({
         return res.json();
       })
       .then((data) => {
-        const list = data.available_slotes || data.available_slots || [];
+        console.log('slots: ',data);
+        const list = data.available_slots;
         const normalized = Array.isArray(list) ? list : [];
-        setSlots(normalized);
-        const availableTimes = normalized
-          .filter((s) => s && s.is_available && typeof s.time === "string")
-          .map((s) => s.time);
-        setTimes(availableTimes);
+        // setSlots(normalized);
+        // const availableTimes = normalized
+        //   .filter((s) => s && s.is_available && typeof s.time === "string")
+        //   .map((s) => s.time);
+        // setTimes(availableTimes);
+        setTimes(normalized);
         setDoctor(data.doctor_id);
       })
       .catch((e) => setError(e.message || "Failed to load slots"))
