@@ -10,6 +10,8 @@ import Physio from "./pages/physio/Physio";
 import Pharmacist from "./pages/Pharmacist/pharmacist";
 import Delivery from "./pages/delivery/Delivery";
 import Registers from "./pages/registers/Registers";
+import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
+
 import "./App.css";
 export default function App() {
   return (
