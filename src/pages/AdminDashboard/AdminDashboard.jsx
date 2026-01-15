@@ -13,6 +13,7 @@ export default function AdminDashboard() {
       <AdminSidebar />
 <AdminLayout >
         <Routes>
+          <Route index element={<Statistics/>}/>
           <Route path="completed-services" element={<CompletedServices />}/>
           <Route path="management" element={<AdminManagement />}/>
           <Route path="statistics" element={<Statistics />}/>
