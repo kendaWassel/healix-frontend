@@ -218,11 +218,10 @@ const MySchedules = () => {
                   <div className="flex items-center justify-between pb-[1rem] mb-[1rem] border-b-[2px] border-[var(--card-border)]">
                     <div className="flex items-start gap-4">
                       <img
-                        src={fixImageUrl(schedule.doctor_image)}
+                        src={schedule.doctor_image || '../../../public/no-photo.png'}
                         alt="doctor's photo"
                         className="w-[40px] h-[40px] rounded-full object-cover border border-blue-400"
                       />
-
                       <div>
                         <h2 className="text-lg font-semibold text-gray-800">
                           {schedule.doctor_name}
@@ -380,7 +379,7 @@ cpSchedules.length > 0 ?
   onClick={(e) => {
     e.preventDefault();
     setSelectedSessionId(schedule.session_id);
-    setSelectedCpId(schedule.id);
+    setSelectedCpId(schedule.care_provider_id);
     setShowPayModal(true);
   }}
   className="flex items-center gap-2 bg-[#ecf8f6] text-[var(--dark-blue)] px-3 py-2 rounded-xl hover:bg-[var(--dark-blue)] hover:text-white transition"
