@@ -38,7 +38,7 @@ export default function PatientScheduleCall({ isOpen, onClose, consultationId, d
 
       try {
         const response = await fetch(
-          `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/patient/consultations/${consultationId}/call`,
+          `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/consultations/${consultationId}/call`,
           {
             method: "POST",
             headers: {
@@ -79,10 +79,8 @@ export default function PatientScheduleCall({ isOpen, onClose, consultationId, d
   
     setIsCalling(true);
   
-    // Open phone dialer
     window.open(`tel:${phone}`, "_self");
   
-    // Detect returning from call
     let callWasOpened = false;
   
     window.onblur = () => {

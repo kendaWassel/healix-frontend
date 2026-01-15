@@ -233,7 +233,7 @@ const PickDoctor = () => {
               }
             }}
             >
-                Book
+                Next
             </button>
         </div>
         </div>
