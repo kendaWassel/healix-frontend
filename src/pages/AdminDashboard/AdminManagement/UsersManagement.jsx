@@ -92,9 +92,10 @@ const Approve = async (id)=>{
       alert("Account Activated Successfully !")
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user.id === id ? { ...user, status: "activated" } : user
+          user.id === id ? { ...user, status: "approved" } : user
         )
       );
+
     
   }
   } catch(err){
@@ -240,7 +241,7 @@ const Delete = async (id)=> {
 
 
                 <td className="flex gap-2 py-3">
-                  {user.status!=="activated" ? (
+                  {user.status!=="approved" ? (
                     <>
                       <button 
                       onClick={()=>Approve(user.id)}
