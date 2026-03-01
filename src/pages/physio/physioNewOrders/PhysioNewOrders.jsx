@@ -12,83 +12,6 @@ const PhysioNewOrders = () => {
   const [total, setTotal] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("Order Accepted Successfully");
-
-  // بيانات افتراضية
-  /*
-  const mockData = {
-    1: [
-      {
-        id: 1,
-        patient_name: "patient Ahmad Youssef",
-        service: "Insulin injection + blood pressure check",
-        address:"Damascus,AL Mazzeh",
-        scheduled_at: "2025-11-05T10:30:00Z",
-        
-      },
-      {
-        id: 2,
-        patient_name: "patient Lina H.",
-        service: "Insulin injection + blood pressure check",
-        address:"Homs, AL Khaldieh",
-        scheduled_at: "2025-11-05T10:30:00Z",
-        
-      },
-      {
-        id: 3,
-        patient_name: "patient  Rami S.",
-        service: "Insulin injection + blood pressure check",
-        address:"Damascus,Kudsaya",
-        scheduled_at: "2025-11-05T10:30:00Z",
-        
-      },
-      {
-        id: 4,
-        patient_name: "patient  Sara Khaled",
-        service: "IV Therapy",
-        address:"Daraa,Izraa",
-        scheduled_at: "2025-11-05T10:30:00Z",
-        
-      },
-      {
-        id: 5,
-        patient_name: "patient  Omar Ali",
-        service: "IV Therapy",
-        address:"Tartous,AL Sheikh Bader",
-        scheduled_at: "2025-11-05T10:30:00Z",
-      
-      },
-      {
-        id: 6,
-        patient_name: "patient  Hiba N.",
-        service: "Insulin injection + blood pressure check",
-        address:"Lattakia,AL Sleiba",
-        scheduled_at: "2025-11-05T10:30:00Z",
-        
-      },
-    ],
-    2: [
-      {
-        id: 7,
-        patient_name: "patient  Maher K.",
-        service: "IV Therapy",
-        address:"Hama, AL Ashrafiah",
-        scheduled_at: "2025-11-05T10:30:00Z",
-        
-      },
-      {
-        id: 8,
-        patient_name: "patient  Noor A.",
-        service: "Insulin injection + blood pressure check",
-        address:"Homs,Bab Sabaa",
-        scheduled_at: "2025-11-05T10:30:00Z",
-        
-      },
-
-
-    ],
-  };
-  
-*/
   const token = localStorage.getItem("token");
 
   const fetchOrders = async (pageNumber = 1) => {
@@ -130,10 +53,7 @@ const PhysioNewOrders = () => {
 
   useEffect(() => {
    fetchOrders()
-  },[]) /*
-  setOrders(mockData[current_page]||[])
-  }, [current_page]);
-*/
+  },[]) 
 
   const handleNext = () => {
     if (current_page < total) fetchOrders(current_page + 1);
@@ -156,10 +76,9 @@ const PhysioNewOrders = () => {
 
       const data = await response.json();
       if (data.status==="success"){
-        // Show modal with message from response
         setModalMessage(data.message);
         setIsModalOpen(true);
-        // Trigger refetch
+
         fetchOrders();
       } else {
         console.error(" Failed to accept order",data.message);

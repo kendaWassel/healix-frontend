@@ -13,7 +13,6 @@ const NewOrders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("Order Accepted Successfully");
 
-  // بيانات افتراضية
   /*
   const mockData = {
     1: [
@@ -154,10 +153,8 @@ const NewOrders = () => {
 
       const data = await response.json();
       if (data.status==="success"){
-        // Show modal with message from response
         setModalMessage(data.message);
         setIsModalOpen(true);
-        // Trigger refetch
         fetchOrders();
       } else {
         console.error(" Failed to accept order",data.message);

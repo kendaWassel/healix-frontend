@@ -25,7 +25,6 @@ export default function PatientScheduleCall({ isOpen, onClose, consultationId, d
     }
   }, [isOpen]);
 
-  // Initiate call on open
   useEffect(() => {
     if (!isOpen || !consultationId) return;
 

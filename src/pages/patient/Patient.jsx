@@ -1,5 +1,4 @@
 import { Routes,Route } from "react-router-dom";
-import { useState} from "react";
 import DoctorConsultation from "./DoctorConsultation/DoctorConsultation";
 import PickDoctor from "./DoctorConsultation/pickDoctor/PickDoctor";
 import PatientHomePage from "./patientHomePage/PatientHomePage";
@@ -7,7 +6,6 @@ import MySchedules from "./MySchedules/MySchedules";
 import Receipts from "./Receipts/Receipts";
 
 const Patient = () => {
-  const [userInfo, setUserInfo] = useState(null);
 
   return (
     <>

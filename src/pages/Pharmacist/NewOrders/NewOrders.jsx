@@ -17,11 +17,8 @@ export default function NewOrders() {
   const [showRejectPopup,setShowRejectPopup]= useState(false);
 
   const [RejectReason,setRejectReason]=useState("");
-
   const [selectedItem, setSelectedItem] = useState(null);
-  
   const [prices, setPrices] = useState({});
-
   const [dosages, setDosages] = useState([]);
 
   const token = localStorage.getItem("token");
@@ -62,11 +59,9 @@ export default function NewOrders() {
   }, [page]);
 
   const handleAccept = async (prescription_id) => {
-
-
     try {
       
-     const response = await fetch(
+    const response = await fetch(
         `https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/pharmacist/prescriptions/${prescription_id}/accept`,
         {
           method: "POST",
@@ -75,31 +70,21 @@ export default function NewOrders() {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true",
           },
-       
         }
       );
-      
       const result = await response.json()
       if (!response.ok) throw new Error(result.message)
-  
-    
 
       if (result.data?.status === "accepted") {
         await sendPrice(prescription_id);
       }
-      
       console.log("Accepted response : ",result)
-      
       setPrescriptions((prev) =>
       prev.filter((p) => p.prescription_id !== prescription_id)
     );
-    
-
       setPrices({});
       setDosages([])
-
       setShowAcceptPopup(false);
-
     } catch (err) {
       alert(err.message);
     }
@@ -107,7 +92,6 @@ export default function NewOrders() {
 
 
 const sendPrice= async (order_id)=>{
-
   const items = dosages.map((d) => ({
     medicine_name: d.dosageName,
     dosage: d.dosage,
@@ -131,10 +115,6 @@ if(!response.ok) {
 }
  alert("Medicine Prices Added successfully")
 }
-
-
-
-
   const handleReject = async (prescription_id) => {
     if(!RejectReason){
       alert("please enter your rejection reason")
@@ -160,34 +140,24 @@ if(!response.ok) {
         throw new Error(result.message || "Reject failed");
       }
       const rejectedId = result.data.prescription_id;
-
-      
       setPrescriptions((prev) =>
         prev.filter((p) => p.prescription_id !== rejectedId)
       );
       setRejectReason('');
       setShowRejectPopup(false);
-    
-
-      
     } catch (err){
       alert(err.message);
     }finally{
       setRejectLoading(false);
       setShowRejectPopup(false);
       fetchPrescriptions();
-
     }
   };
-
-  
   const isSaveDisabled = () => {
     if (selectedItem?.medicines && selectedItem.medicines.length > 0) {
       if (Object.keys(prices).length !== selectedItem.medicines.length) return true;
       return Object.values(prices).some((price) => !price || Number(price) <= 0);
     }
-  
-
     if (dosages.length === 0) return true;
   return dosages.some(
     (d) => !d.dosageName.trim() || !d.dosage.trim() || !d.price || Number(d.price) <= 0
@@ -206,7 +176,6 @@ if(!response.ok) {
       <PharmacistHeader />
 
       <div className="p-10 bg-gray-50 min-h-[60vh]">
-
         <h1 className="text-3xl font-bold text-[#0a3460] mb-2">
           Prescription Orders
         </h1>
@@ -220,7 +189,6 @@ prescriptions.length > 0 ?
     key={item.prescription_id}
     className="bg-white p-5 rounded-xl shadow"
   >
-
     <h2 className="font-semibold">{item.patient}</h2>
     <p className="text-sm text-gray-500">
       Source: {item.source}
@@ -248,9 +216,6 @@ prescriptions.length > 0 ?
           setSelectedItem(item);
           setPrices({})
           setShowAcceptPopup(true)
-   
-  
-     
         }}
        
         className="text-green-600 font-semibold"
@@ -266,7 +231,6 @@ prescriptions.length > 0 ?
            setRejectReason('')
         } 
       }
-   
         className="text-red-600 font-semibold disabled:opacity-50"
       >
         Reject
@@ -320,10 +284,6 @@ prescriptions.length > 0 ?
       {showAcceptPopup && selectedItem && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
           <div className="bg-white p-6 rounded w-[400px]">
-    
-            
-
-
     {selectedItem.medicines && selectedItem.medicines.length > 0 ? (
       <>
             <h2 className="font-semibold mb-4">Enter Price</h2>
@@ -334,7 +294,7 @@ prescriptions.length > 0 ?
         {med.name} ({med.dosage})
         </label>
       
-         <input
+        <input
         type="number"
         min='1'
         placeholder="Enter price"
@@ -347,9 +307,8 @@ prescriptions.length > 0 ?
         }
         className="border w-full p-2 rounded"
       />
-   
-       </div>
-       ))} </>
+      </div>
+      ))} </>
       ) : (
         <>
           <h2 className="font-semibold mb-2">Add Medicine</h2>

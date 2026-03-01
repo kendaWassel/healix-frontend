@@ -151,12 +151,6 @@ const CareProviderRegister = () => {
     inputRef.current.focus();
   }, []);
 
-  //     useEffect(()=>{
-  //     inputRef.current.focus();
-  //     if(userData.isAuthorized) {
-  //       navigate('/logged');
-  //     }
-  //   },[navigate]);
 
   return (
     <div className="relative flex">

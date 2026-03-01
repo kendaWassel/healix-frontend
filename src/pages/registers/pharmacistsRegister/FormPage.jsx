@@ -139,13 +139,6 @@ const FormPage = () => {
     if (inputRef.current) inputRef.current.focus();
   }, []);
 
-  //     useEffect(()=>{
-  //     inputRef.current.focus();
-  //     if(userData.isAuthorized) {
-  //       navigate('/logged');
-  //     }
-  //   },[navigate]);
-
   return (
     <div className="form-page relative">
       <div className="contentCol h-[100%]">

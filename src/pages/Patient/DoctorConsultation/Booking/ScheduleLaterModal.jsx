@@ -63,7 +63,6 @@ export default function ScheduleLaterModal({
         return response.json();
       })
       .then((data) => {
-        // Success path – optionally trigger parent confirm
         if (onConfirm) onConfirm({ date: selectedDate, time });
       })
       .catch((error) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Phone, Clock, DollarSign } from "lucide-react";
 import Footer from "../../../components/footer/Footer";
 import PatientHeader from "../../../components/headers/PatientHeader";

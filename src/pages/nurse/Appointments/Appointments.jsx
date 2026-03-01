@@ -416,7 +416,6 @@ const Appointments = () => {
           }}
         />
       )}
-
       <Footer />
     </>
   );

@@ -306,7 +306,6 @@ export default function PatientRegister() {
           {isLoading ? "Registering..." : "Register"}
         </button>
       </form>
-      {/* -- MODAL RENDERED HERE, OUTSIDE FORM! -- */}
       <MedicalReportModal
         open={isMedicalModalOpen}
         onClose={() => setIsMedicalModalOpen(false)}

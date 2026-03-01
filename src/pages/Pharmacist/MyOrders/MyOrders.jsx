@@ -1,31 +1,7 @@
 import PharmacistHeader from "../../../components/headers/PharmacistHeader";
 import Footer from "../../../components/footer/Footer";
 import { useState, useEffect } from "react";
-/*
-const mockData = {
-    prescriptions: [
-  {
-    id: 1,
-    source: "Source: Doctor",
-    patient: "Patient: Fadi",
-    medicines: [
-      { name: "Panadol", dosage: "500mg", boxes: 2, instructions: "twice daily" },
-      { name: "Cetamol", dosage: "500mg", boxes: 1, instructions: "twice daily" },
-    ],
-    notes: "Take after meal",
-    status: "ready_to_deliver",
-    created_at: "2025-11-13T09:30:00Z",
-  },
-  {
-    id: 2,
-    source: "Source: Patient Upload",
-    patient: "Patient: Rola",
-    image_url: receipt,
-    status: "ready_to_deliver",
-    created_at: "2025-11-13T11:10:00Z",
-  },
-]};
-*/
+
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
@@ -222,14 +198,12 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
       <div className="bg-gray-50 py-7 min-h-[60vh]">
 {/* pharmacist accepted orders  */}
       <div className="px-10">
-        {/* HEADER */}
         <div className="mb-5">
           <h1 className="text-3xl font-bold text-[#0a3460]">Your Reciepts</h1>
           <p className="text-gray-600 mt-2">
             Make your orders ready for delivery or pickup
           </p>
         </div>
-        {/* CARDS */}
         {isLoading ?
           <p className="text-center text-gray-500">Loading orders...</p>
         :
@@ -244,7 +218,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
                 {order.patient}
               </h2>
               <p className="text-md text-gray-500 my-2"><span className="text-[var(--cyan)] font-bold">Source:</span> {order.source}</p>
-              {/* CONTENT */}
               <div className="my-4">
                 {order.medicines.length > 0 && (
                   order.medicines.map((med, index) => (
@@ -271,10 +244,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
               <p className="mt-2 text-[18px] text-[var(--dark-blue)] font-bold">
               Total: {order.total_quantity} items - {order.total_medicine_price} $
                  </p>
-
-        
-
-              {/* DELIVER BUTTON */}
               <button
                 onClick={() => handleDeliverOrder(order.id)}
                 disabled={order.status !== "accepted"}
@@ -303,8 +272,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
         :
 <p className="text-center text-lg my-5">No Orders Found</p>
       }
-
-        {/* PAGINATION */}
         <div className="flex justify-center items-center gap-4 mt-5">
           <button
             disabled={page === 1}
@@ -331,7 +298,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
       </div>
 {/* ORDERS ACCEPTED BY DELIVERY */}
 <div className="px-10">
-  {/* HEADER */}
   <div className="mb-5">
     <h1 className="text-3xl font-bold text-[#0a3460]">
       Orders Assigned to Delivery
@@ -404,8 +370,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
   View Medications
 </button>      
               }
-
-                {/* DELIVERY AGENT */}
                 {agent && (
                   <div className="mt-4 border-t pt-4">
                     <div className="flex items-center gap-3">
@@ -434,8 +398,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
       ) : (
         <p className="text-center text-lg my-5">No Delivery Orders Found</p>
       )}
-    
-      {/* PAGINATION */}
       <div className="flex justify-center items-center gap-4 mt-5">
         <button
           disabled={deliveryPage === 1}
@@ -464,7 +426,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
 </div>
 {/* past orders  */}
 <div className="px-10">
-  {/* HEADER */}
   <div className="mb-5">
     <h1 className="text-3xl font-bold text-[#0a3460]">
       Past Orders
@@ -502,8 +463,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
             <span className="text-[20px] text-[var(--dark-blue)] font-bold">Delivered at: </span>
             {new Date(order.delivered_at).toLocaleString()}
           </p>
-
-          {/* PATIENT */}
           {order.patient ?
           <>
           <h3 className="mt-2 font-bold text-[var(--dark-blue)] text-[20px]">Patient: </h3>
@@ -518,7 +477,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
         "Unknown patient"
         }
           <h3 className="font-bold text-[var(--dark-blue)] text-[20px] mt-2">Medications: </h3>
-          {/* MEDICATION */}
           {order.medications.length > 0 ? 
             order.medications.map((med, index) => (
               <div className="ms-3 mt-1"> 
@@ -538,8 +496,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
           <p className="mt-3 font-bold text-[var(--dark-blue)] text-[20px]">
             Total: ${order.total_medicine_price}
           </p>
-
-          {/* DELIVERY */}
           <h3 className="font-bold text-[var(--dark-blue)] text-[20px] mt-2">Delivered By: </h3>
           {order.delivery ? 
           <div className="ms-3 text-md text-gray-700">
@@ -557,8 +513,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
   ) : (
     <p className="text-center text-lg my-5">No Past Orders Found</p>
   )}
-
-  {/* PAGINATION */}
   <div className="flex justify-center items-center gap-4 mt-10">
     <button
       disabled={pastPage === 1}
@@ -590,13 +544,9 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
       {showMedsModal && (
   <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
     <div className="bg-white w-[90%] max-w-md rounded-2xl shadow-lg p-6 relative">
-      
-      {/* HEADER */}
       <h2 className="text-2xl font-bold text-[#0a3460] mb-4">
         Medications
       </h2>
-
-      {/* CONTENT */}
       {selectedOrderMeds.length > 0 ? (
         <div className="space-y-3">
           {selectedOrderMeds.map((med, index) => (
@@ -623,8 +573,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
           No medications found
         </p>
       )}
-
-      {/* CLOSE BUTTON */}
       <button
         onClick={() => setShowMedsModal(false)}
         className="mt-6 w-full py-2 rounded-lg bg-[#0a3460]
@@ -635,8 +583,6 @@ const [selectedOrderMeds, setSelectedOrderMeds] = useState([]);
     </div>
   </div>
 )}
-
-      {/* IMAGE POPUP */}
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm

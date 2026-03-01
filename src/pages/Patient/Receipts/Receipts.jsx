@@ -191,8 +191,6 @@ console.log('my reciepts: ',data);
   
       if (data.status === "success") {
         setDeliveryData(data.data);
-  
-        // 👇 KEY FIX
         if (!data.data?.delivery) {
           setDeliveryMessage(
             data.data?.message || "No delivery agent assigned yet"
@@ -223,12 +221,10 @@ console.log('my reciepts: ',data);
   }, [phLoadBtn,pharmacistPagination.currentPage]);
 
   const handlePayAndRate = async (item) => {
-    // Store order_id and pharmacist_id
     setSelectedOrderId(item.id);
     setSelectedTaskId(item.task_id);
     setSelectedPharmacistId(item.pharmacy?.id);
     setSelectedDeliveryId(item.delivery_id);
-    // Show payment modal
     setShowPaymentModal(true);
   };
 
@@ -259,13 +255,11 @@ console.log('my reciepts: ',data);
   const handleRatingSkip = () => {
     setShowRatingModal(false);
     if (ratingStep === 'delivery') {
-      // Skip delivery rating, go to pharmacist rating
       setRatingStep('pharmacist');
       setTimeout(() => {
         setShowRatingModal(true);
       }, 300);
     } else if (ratingStep === 'pharmacist') {
-      // Skip pharmacist rating, go to done modal
       setRatingStep(null);
       setTimeout(() => {
         setShowBookingDone(true);
