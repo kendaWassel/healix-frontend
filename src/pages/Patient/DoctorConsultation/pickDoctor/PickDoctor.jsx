@@ -263,7 +263,6 @@ const PickDoctor = () => {
                 );
             }) : <p>No doctors found.</p>}
         </div>
-        {/* Pagination Controls */}
         <div className="flex justify-center items-center gap-3 my-[2rem]">
           <button
             className={`bg-[var(--white)] border-[2px] p-[0.5rem_1.5rem] rounded-[10px] ${pagination.currentPage === 1 ? "border-[var(--card-border)] text-[var(--text-color)] opacity-50" : "border-[var(--cyan)] text-[var(--cyan)]"}`}
@@ -288,7 +287,6 @@ const PickDoctor = () => {
           </button>
         </div>
 
-      {/* Modals */}
       <BookingOption
         isOpen={openPickOption}
         onClose={() => setOpenPickOption(false)}

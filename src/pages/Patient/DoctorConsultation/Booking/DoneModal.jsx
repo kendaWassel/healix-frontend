@@ -1,30 +1,7 @@
-import React from "react";
 import { CheckCircle2 } from "lucide-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import styles from "./DoneModal.module.css";
 
 export default function DoneModal({ isOpen, onClose, onHome, message = "You Are Done" }) {
   if (!isOpen) return null;
-
-
- /* const handleSubmit = async () => {
-    try {
-      const res = await fetch("http://localhost:....api/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "done" }),
-      });
-
-      if (res.ok) {
-        setOpen(true); 
-      } else {
-        console.error("Request failed");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };*/
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#05244380] backdrop-blur-sm z-50">
@@ -45,7 +22,6 @@ export default function DoneModal({ isOpen, onClose, onHome, message = "You Are 
         >
           Go to Home Screen
         </button>
-         {/* <DoneModal isOpen={open} onClose={() => setOpen(false)} /> */}
       </div>
     </div>
   );

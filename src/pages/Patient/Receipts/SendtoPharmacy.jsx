@@ -26,7 +26,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
   const CITY = "Damascus";
   const ITEMS_PER_PAGE = 10;
 
-  /* ================= Fetch Pharmacies ================= */
   useEffect(() => {
     if (!open) return;
 
@@ -71,7 +70,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
     fetchPharmacies(pagination.currentPage);
   }, [open, pagination.currentPage]);
 
-  /* ================= Search ================= */
   const filtered = pharmacies.filter(
     (p) =>
       (p.name?.toLowerCase() || "").includes(search.toLowerCase()) ||
@@ -80,7 +78,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
       (p.area?.toLowerCase() || "").includes(search.toLowerCase())
   );
 
-  /* ================= Send Prescription ================= */
   const handleSend = async () => {
     if (!selectedPharmacy || !prescription_id) return;
   
@@ -119,7 +116,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
     }
   };
   
-  /* ================= Pagination Controls ================= */
   const handlePrevPage = () => {
     if (pagination.currentPage > 1) {
       setPagination((prev) => ({ ...prev, currentPage: prev.currentPage - 1 }));
@@ -137,8 +133,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
       <h1 className="text-xl font-semibold text-[#0A2A4A] mb-4">
         Send to pharmacy
       </h1>
-
-      {/* ================= Search Bar ================= */}
       <div className="flex items-center gap-3 w-full mb-4">
         <div className="border rounded-xl px-3 py-2 flex items-center gap-2 flex-1">
           <Search size={18} className="text-gray-500" />
@@ -155,8 +149,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
           {CITY} <ChevronDown size={18} />
         </button>
       </div>
-
-      {/* ================= Pharmacies List ================= */}
       <div className="overflow-y-auto max-h-[55vh] pr-2 space-y-4">
         {loading && (
           <p className="text-center text-gray-500">Loading pharmacies...</p>
@@ -220,8 +212,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
           </div>
         ))}
       </div>
-
-      {/* ================= Pagination Buttons ================= */}
       <div className="flex justify-between mt-4 items-center">
         <button
           onClick={handlePrevPage}
@@ -243,8 +233,6 @@ const SendToPharmacy = ({ open, onClose, onDone, prescription_id }) => {
           Next
         </button>
       </div>
-
-      {/* ================= Action Buttons ================= */}
       <div className="flex justify-between mt-6">
         <button
           onClick={() => {

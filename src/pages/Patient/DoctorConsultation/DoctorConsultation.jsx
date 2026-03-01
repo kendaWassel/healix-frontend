@@ -140,7 +140,6 @@ export default function DoctorConsultation() {
             </button>
           ))}
 
-          {/* Pagination Controls */}
           <div className={styles.paginationControls}>
             <button
               type="button"

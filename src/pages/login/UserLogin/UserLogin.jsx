@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faEnvelope, faLock,faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
+import {faEye } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
 import LogoImage from "../../../components/logoImage/LogoImage";
 import { Link,useNavigate } from "react-router-dom";

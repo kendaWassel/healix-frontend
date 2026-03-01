@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt, faImage, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-// Keep uploadImage/uploadFile as exported helpers (not called on Save)
 export const uploadImage = async (photoFile) => {
   console.log("uploading image: ", photoFile);
 
@@ -63,7 +62,6 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
   const handleSaveReport = (data) => {
     setMedicalReport(data);
   }
-  // Load initial values if editing
   useEffect(() => {
     if (open && initialValues) {
       setFields({
@@ -95,7 +93,7 @@ export default function MedicalReportModal({ open, onClose, onSubmit, initialVal
       photoFile,
       medicalFile
     });
-    // Don't auto-close - let parent component handle closing on success
+
   };
 
   return (

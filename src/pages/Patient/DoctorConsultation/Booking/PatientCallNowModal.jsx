@@ -133,7 +133,6 @@ export default function PatientCallNowModal({ isOpen, onClose, doctorId, onConfi
   const handleEndCallSuccess = () => {
     setShowEndCallModal(false);
     setMessage("Call ended successfully.");
-    // Wait a bit longer to ensure end call modal is fully closed
     setTimeout(() => {
       setShowPaymentModal(true);
     }, 600);

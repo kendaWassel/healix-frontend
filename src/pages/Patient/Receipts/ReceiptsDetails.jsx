@@ -74,7 +74,6 @@ console.log('receipt details: ',data)
               <p className="text-sm text-gray-500">Uploaded prescription image</p>
             </div>
            ) : (
-            /* ===== CASE 2: DIGITAL PRESCRIPTION ===== */
             <>
               <div>
                 <p><strong>Doctor:</strong> {receipt.doctor_name}</p>
