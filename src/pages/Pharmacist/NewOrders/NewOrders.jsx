@@ -21,6 +21,11 @@ export default function NewOrders() {
   const [prices, setPrices] = useState({});
   const [dosages, setDosages] = useState([]);
 
+
+const [safetyWarnings, setSafetyWarnings] = useState(null);
+const [showSafetyPopup, setShowSafetyPopup] = useState(false);
+const [safetyChecking, setSafetyChecking] = useState(false);
+
   const token = localStorage.getItem("token");
 
     const fetchPrescriptions = async (pageNumber = 1) => {
@@ -57,6 +62,73 @@ export default function NewOrders() {
   useEffect(() => {
     fetchPrescriptions(page);
   }, [page]);
+
+
+const DDI_URL = "http://localhost:8000";
+
+
+const runSafetyCheck = async (medicines) => {
+
+  const drugNames = (medicines || [])
+    .map((m) => (m.name || "").trim())
+    .filter((n) => n !== "");
+
+  const result = { interactions: [], pregnancy: [], hasWarning: false };
+
+  if (drugNames.length === 0) return result;
+
+  try {
+
+    if (drugNames.length >= 2) {
+      const res = await fetch(`${DDI_URL}/screen`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+        body: JSON.stringify({ drugs: drugNames }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+          console.log("Screen result:", data); 
+        result.interactions = (data.findings || []).filter(
+          (f) => f.severity === "Major" || f.severity === "Moderate"
+        );
+         } else {
+    console.log("Screen failed:", res.status);  
+  }
+      
+    }
+
+
+    for (const drug of drugNames) {
+      const res = await fetch(
+        `${DDI_URL}/pregnancy?drug_a=${encodeURIComponent(drug)}`,
+        { headers: { "ngrok-skip-browser-warning": "true" } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+     
+        if (["X", "D", "D*"].includes(data.category)) {
+          result.pregnancy.push({
+            drug: drug,
+            category: data.category,
+            warning: data.warning,
+          });
+        }
+      }
+    }
+
+    result.hasWarning =
+      result.interactions.length > 0 || result.pregnancy.length > 0;
+
+    return result;
+  } catch (err) {
+    console.error("Safety check failed:", err);
+    return result; 
+  }
+};
+
 
   const handleAccept = async (prescription_id) => {
     try {
@@ -211,17 +283,25 @@ prescriptions.length > 0 ?
     )}
 
     <div className="flex justify-between mt-4">
-      <button
-        onClick={() => {
-          setSelectedItem(item);
-          setPrices({})
-          setShowAcceptPopup(true)
-        }}
-       
-        className="text-green-600 font-semibold"
-      >
-        Accept
-      </button>
+  <button
+    onClick={async () => {
+    setSelectedItem(item);
+    setPrices({});
+    setSafetyChecking(true);
+    const safety = await runSafetyCheck(item.medicines);
+    setSafetyChecking(false);
+
+    if (safety.hasWarning) {
+      setSafetyWarnings(safety);
+      setShowSafetyPopup(true);  
+    } else {
+      setShowAcceptPopup(true);   
+    }
+  }}
+  className="text-green-600 font-semibold"
+>
+  Accept
+</button>
 
       <button
         onClick={() => { 
@@ -423,6 +503,92 @@ prescriptions.length > 0 ?
                 </div> 
                 </div> 
               )}
+
+
+              {showSafetyPopup && safetyWarnings && (
+  <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[70]">
+    <div className="bg-white p-6 rounded-xl w-[90%] max-w-md max-h-[85vh] overflow-y-auto">
+      <h2 className="text-xl font-bold text-red-600 mb-3 text-center">
+        ⚠️ Safety Warnings
+      </h2>
+
+  
+      {safetyWarnings.interactions.length > 0 && (
+        <div className="mb-4">
+          <h3 className="font-semibold text-gray-800 mb-2">
+            🔴 Drug Interactions
+          </h3>
+          {safetyWarnings.interactions.map((w, i) => (
+            <div
+              key={i}
+              className={`p-2 rounded-lg border-2 mb-2 ${
+                w.severity === "Major"
+                  ? "border-red-500 bg-red-50"
+                  : "border-yellow-500 bg-yellow-50"
+              }`}
+            >
+              <div className="font-medium text-sm">
+                {w.drug_a} + {w.drug_b}
+              </div>
+              <div
+                className={`text-xs font-bold ${
+                  w.severity === "Major" ? "text-red-600" : "text-yellow-700"
+                }`}
+              >
+                {w.severity === "Major" ? "Major 🔴" : "Moderate 🟠"}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+   
+      {safetyWarnings.pregnancy.length > 0 && (
+        <div className="mb-4">
+          <h3 className="font-semibold text-gray-800 mb-2">
+            🤰 Pregnancy Risk
+          </h3>
+          {safetyWarnings.pregnancy.map((p, i) => (
+            <div
+              key={i}
+              className="p-2 rounded-lg border-2 border-purple-400 bg-purple-50 mb-2"
+            >
+              <div className="font-medium text-sm">
+                {p.drug} — Category {p.category}
+              </div>
+              <div className="text-xs text-gray-600">{p.warning}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="text-[11px] text-gray-400 mb-4 text-center">
+        Review carefully before dispensing. Consult the patient if needed.
+      </div>
+
+   
+      <div className="flex flex-col gap-2">
+        <button
+          onClick={() => {
+            setShowSafetyPopup(false);
+            setShowAcceptPopup(true);
+          }}
+          className="w-full bg-[#39CCCC] text-white py-2 rounded-lg font-medium"
+        >
+          Reviewed — Continue to Pricing
+        </button>
+        <button
+          onClick={() => setShowSafetyPopup(false)}
+          className="w-full bg-red-600 text-white py-2 rounded-lg font-medium"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
       <Footer />
     </>
   );
