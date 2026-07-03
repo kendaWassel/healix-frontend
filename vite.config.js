@@ -12,6 +12,7 @@ export default defineConfig({
       '/api': {
         target: 'https://unjuicy-schizogenous-gibson.ngrok-free.dev',
         changeOrigin: true,
+        headers: { 'ngrok-skip-browser-warning': 'true' },
         secure: false,
       }
     }
