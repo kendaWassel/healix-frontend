@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import DoctorSchedules from "./doctorSchedules/DoctorSchedules";
 import DoctorHomePage from "./DoctorHomePage/DoctorHomePage";
 import ModifyMedicalReport from "./doctorSchedules/ModifyMedicalReports";
+
 const Doctor = () => {
   return (
     <>

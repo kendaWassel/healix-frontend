@@ -14,6 +14,39 @@
   font-weight: bold;
   font-size: 30px
 }
+
+.HeaderButtons {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-right: 50px;
+  margin-top: 10px;
+}
+
+.AddButton {
+  color: #FFFFFF;
+  background: #052443;
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  min-width: 180px;
+  font-size: 18px;
+  white-space: nowrap;
+  transition: 0.3s ease;
+  border: none;
+}
+
+.AddButton:hover {
+  background-color: lightgray;
+  color: #052443;
+}
+
+.AddButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
 .CardHeader button{
     color: #FFFFFF;
     background: #052443;

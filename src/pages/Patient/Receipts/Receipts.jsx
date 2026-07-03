@@ -32,6 +32,16 @@ export default function Receipts() {
   const [selectedDeliveryId, setSelectedDeliveryId] = useState(null);
   const [selectedPharmacistId, setSelectedPharmacistId] = useState(null);
 
+
+  
+  const [showDrugChecker, setShowDrugChecker] = useState(false);
+  const [drugA, setDrugA] = useState("");
+  const [drugB, setDrugB] = useState("");
+  const [checkResult, setCheckResult] = useState(null);
+  const [checkLoading, setCheckLoading] = useState(false);
+  const [checkError, setCheckError] = useState("");
+
+
   const [uploadDisabled, setUploadDisabled] = useState(false);
   const [selectedReceiptId, setSelectedReceiptId] = useState(null);
   const [sendPharmacyReceiptId, setSendPharmacyReceiptId] = useState(null);
@@ -351,6 +361,35 @@ console.log('my reciepts: ',data);
     }
   };
 
+  const DDI_URL = "http://localhost:8000";
+
+  const handleCheckInteraction = async () => {
+    if (!drugA.trim() || !drugB.trim()) {
+      setCheckError("Please enter both drug names");
+      return;
+    }
+    setCheckLoading(true);
+    setCheckError("");
+    setCheckResult(null);
+
+    try {
+      const res = await fetch(
+        `${DDI_URL}/interaction?drug_a=${encodeURIComponent(drugA)}&drug_b=${encodeURIComponent(drugB)}`,
+        { headers: { "ngrok-skip-browser-warning": "true" } }
+      );
+      const data = await res.json();
+
+      if (!res.ok) {
+        setCheckError(data.detail || "Drug not found");
+        return;
+      }
+      setCheckResult(data);
+    } catch (err) {
+      setCheckError("Connection failed. Try again.");
+    } finally {
+      setCheckLoading(false);
+    }
+  };
   return (
     <>
       <PatientHeader />
@@ -360,13 +399,28 @@ console.log('my reciepts: ',data);
         <div className={styles.CardHeader}>
           <h1>My Receipts</h1>
 
-          <button
-            className={styles.AddButton}
-            onClick={handleUpload}
-            disabled={uploadDisabled}
-          >
-            Upload Receipt
-          </button>
+              <div className={styles.HeaderButtons}>
+            <button
+              className={styles.AddButton}
+              onClick={handleUpload}
+              disabled={uploadDisabled}
+            >
+              Upload Receipt
+            </button>
+
+            <button
+              className={styles.AddButton}
+              onClick={() => {
+                setShowDrugChecker(true);
+                setDrugA("");
+                setDrugB("");
+                setCheckResult(null);
+                setCheckError("");
+              }}
+            >
+              Check Interaction
+            </button>
+          </div>
 
           <input
             type="file"
@@ -672,6 +726,106 @@ receipts.length > 0 ?
         }}
         message="Thank you for your feedback!"
       />
+
+        {showDrugChecker && (
+          <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-[80]">
+            <div className="bg-white p-6 rounded-xl w-[90%] max-w-md max-h-[85vh] overflow-y-auto">
+              <h2 className="text-xl font-bold text-[#0a3460] mb-4 text-center">
+                Check Drug Interaction
+              </h2>
+        
+              {/* inputs */}
+              <div className="mb-3">
+                <label className="block text-sm font-medium mb-1">First Drug</label>
+                <input
+                  type="text"
+                  value={drugA}
+                  onChange={(e) => setDrugA(e.target.value)}
+                  placeholder="e.g. Warfarin"
+                  className="border w-full p-2 rounded-lg"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Second Drug</label>
+                <input
+                  type="text"
+                  value={drugB}
+                  onChange={(e) => setDrugB(e.target.value)}
+                  placeholder="e.g. Aspirin"
+                  className="border w-full p-2 rounded-lg"
+                />
+              </div>
+        
+              <button
+                onClick={handleCheckInteraction}
+                disabled={checkLoading}
+                className="w-full bg-[var(--dark-blue)] text-white py-2 rounded-lg font-medium disabled:opacity-50 mb-3"
+              >
+                {checkLoading ? "Checking..." : "Check"}
+              </button>
+        
+              {/* error */}
+              {checkError && (
+                <div className="text-red-600 text-sm text-center mb-3">
+                  {checkError}
+                </div>
+              )}
+
+              {/* output */}
+              {checkResult && (
+                <div className="mb-3">
+                  {checkResult.prediction === "Interaction likely" ? (
+                    <div
+                      className={`p-4 rounded-lg border-2 ${
+                        checkResult.severity === "Major"
+                          ? "border-red-500 bg-red-50"
+                          : checkResult.severity === "Moderate"
+                          ? "border-yellow-500 bg-yellow-50"
+                          : "border-green-500 bg-green-50"
+                      }`}
+                    >
+                      <div className="font-bold text-center mb-2">
+                        ⚠️ Interaction Detected
+                      </div>
+                      <div className="text-center text-lg font-bold mb-1">
+                        {checkResult.severity === "Major"
+                          ? "🔴 Major"
+                          : checkResult.severity === "Moderate"
+                          ? "🟠 Moderate"
+                          : "🟢 Minor"}
+                      </div>
+                      <div className="text-sm text-gray-600 text-center">
+                        {checkResult.drug_a} + {checkResult.drug_b}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-lg border-2 border-green-500 bg-green-50 text-center">
+                      <div className="font-bold text-green-700">
+                        ✅ No Interaction Expected
+                      </div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        {checkResult.drug_a} + {checkResult.drug_b}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="text-[11px] text-gray-400 mt-2 text-center">
+                    This is for information only. Always consult your doctor or pharmacist.
+                  </div>
+                </div>
+              )}
+
+           
+              <button
+                onClick={() => setShowDrugChecker(false)}
+                className="w-full bg-gray-200 text-gray-700 py-2 rounded-lg font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
       <Footer />
     </>
   );
