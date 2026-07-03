@@ -4,6 +4,7 @@ import PickDoctor from "./DoctorConsultation/pickDoctor/PickDoctor";
 import PatientHomePage from "./patientHomePage/PatientHomePage";
 import MySchedules from "./MySchedules/MySchedules";
 import Receipts from "./Receipts/Receipts";
+import LabAnalysis from "./LabAnalysis/LabAnalysis";
 
 const Patient = () => {
 
@@ -15,6 +16,7 @@ const Patient = () => {
         <Route path="consultation/doctor-specialization/:id" element={<PickDoctor />} /> 
         <Route path="my-schedules" element={<MySchedules />} /> 
         <Route path="receipts" element={<Receipts />}/>
+        <Route path="lab-analysis" element={<LabAnalysis />} />
       </Routes>
     </>
   )

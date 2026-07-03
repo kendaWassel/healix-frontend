@@ -42,6 +42,13 @@ const PatientHeader = () => {
         >
           Home
         </NavLink>
+        <NavLink
+          to="/patient/lab-analysis"
+          end
+          className={({ isActive }) => (isActive ? activeStyle : normalStyle)}
+        >
+          Lab test analyser
+        </NavLink>
 
         <NavLink
           to="/patient/my-schedules"
