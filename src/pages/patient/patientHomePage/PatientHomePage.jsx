@@ -17,10 +17,10 @@ const PatientHomePage = () => {
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
   const [physioData, setPhysioData] = useState({
-    full_name: "kenda wassel",
-    email: "kendawassel14@gmail.com",
-    phone: "0943779128",
-    password: "123456",
+    full_name: "",
+    email: "",
+    phone: "",
+    password: "",
     available_time: "",
     session_fee: "100",
     type: "physio",
