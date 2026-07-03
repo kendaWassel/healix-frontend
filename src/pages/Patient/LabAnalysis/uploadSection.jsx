@@ -10,8 +10,7 @@ export default function UploadSection({ file, setFile, onAnalyze, loading }) {
   const triggerFileUpload = () => {
     fileInputRef.current.click();
   };
-
-  return (
+return (
     <div className="border border-[var(--card-border)] rounded-xl p-6 bg-white">
 
       <h2 className="text-xl font-bold text-[#0a3460] mb-4">
