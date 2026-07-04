@@ -361,35 +361,43 @@ console.log('my reciepts: ',data);
     }
   };
 
-  const DDI_URL = "http://localhost:8000";
+ const DDI_URL = "https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/ddi";
 
-  const handleCheckInteraction = async () => {
-    if (!drugA.trim() || !drugB.trim()) {
-      setCheckError("Please enter both drug names");
+const handleCheckInteraction = async () => {
+  if (!drugA.trim() || !drugB.trim()) {
+    setCheckError("Please enter both drug names");
+    return;
+  }
+  setCheckLoading(true);
+  setCheckError("");
+  setCheckResult(null);
+
+  try {
+    const res = await fetch(`${DDI_URL}/interaction`, {
+      method: "POST",                             
+      headers: {
+        "Content-Type": "application/json",       
+        "ngrok-skip-browser-warning": "true",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({                      
+        drug_a: drugA,
+        drug_b: drugB,
+      }),
+    });
+    const result = await res.json();
+
+    if (!res.ok) {
+       setCheckError(result.message || result.detail || "Drug not found");
       return;
     }
-    setCheckLoading(true);
-    setCheckError("");
-    setCheckResult(null);
-
-    try {
-      const res = await fetch(
-        `${DDI_URL}/interaction?drug_a=${encodeURIComponent(drugA)}&drug_b=${encodeURIComponent(drugB)}`,
-        { headers: { "ngrok-skip-browser-warning": "true" } }
-      );
-      const data = await res.json();
-
-      if (!res.ok) {
-        setCheckError(data.detail || "Drug not found");
-        return;
-      }
-      setCheckResult(data);
-    } catch (err) {
-      setCheckError("Connection failed. Try again.");
-    } finally {
-      setCheckLoading(false);
-    }
-  };
+    setCheckResult(result.data || !result.success);
+  } catch (err) {
+    setCheckError("Connection failed. Try again.");
+  } finally {
+    setCheckLoading(false);
+  }
+};
   return (
     <>
       <PatientHeader />

@@ -64,56 +64,64 @@ const [safetyChecking, setSafetyChecking] = useState(false);
   }, [page]);
 
 
-const DDI_URL = "http://localhost:8000";
-
+const DDI_URL = "https://unjuicy-schizogenous-gibson.ngrok-free.dev/api/ddi";
 
 const runSafetyCheck = async (medicines) => {
-
   const drugNames = (medicines || [])
     .map((m) => (m.name || "").trim())
     .filter((n) => n !== "");
 
+  
+  const uniqueDrugNames = [...new Set(drugNames.map(d => d.toLowerCase()))]
+    .map(lower => drugNames.find(d => d.toLowerCase() === lower));
+
   const result = { interactions: [], pregnancy: [], hasWarning: false };
 
-  if (drugNames.length === 0) return result;
+  if (uniqueDrugNames.length === 0) return result;
 
   try {
-
-    if (drugNames.length >= 2) {
+    if (uniqueDrugNames.length >= 2) {
+      console.log("Sending drugs:", uniqueDrugNames);
       const res = await fetch(`${DDI_URL}/screen`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ drugs: drugNames }),
+        body: JSON.stringify({ drugs: uniqueDrugNames }),
       });
+       console.log("Screen status:", res.status); 
       if (res.ok) {
-        const data = await res.json();
-          console.log("Screen result:", data); 
-        result.interactions = (data.findings || []).filter(
+        const result_json = await res.json();
+        console.log("Screen result:", result_json);
+        const findings = result_json.data?.findings || result_json.findings || [];  
+        result.interactions = findings.filter(
           (f) => f.severity === "Major" || f.severity === "Moderate"
         );
-         } else {
-    console.log("Screen failed:", res.status);  
-  }
-      
+      } else {
+        console.log("Screen failed:", res.status);
+      }
     }
 
-
-    for (const drug of drugNames) {
-      const res = await fetch(
-        `${DDI_URL}/pregnancy?drug_a=${encodeURIComponent(drug)}`,
-        { headers: { "ngrok-skip-browser-warning": "true" } }
-      );
+  for (const drug of uniqueDrugNames) { 
+  const res = await fetch(`${DDI_URL}/pregnancy`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ drug_a: drug }),
+  });
       if (res.ok) {
-        const data = await res.json();
-     
-        if (["X", "D", "D*"].includes(data.category)) {
+        const result_json = await res.json();
+        const pregData = result_json.data || result_json;  
+        if (["X", "D", "D*"].includes(pregData.category)) {
           result.pregnancy.push({
             drug: drug,
-            category: data.category,
-            warning: data.warning,
+            category: pregData.category,
+            warning: pregData.warning,
           });
         }
       }
@@ -125,10 +133,9 @@ const runSafetyCheck = async (medicines) => {
     return result;
   } catch (err) {
     console.error("Safety check failed:", err);
-    return result; 
+    return result;
   }
 };
-
 
   const handleAccept = async (prescription_id) => {
     try {
